@@ -517,6 +517,7 @@ See [Samples Guide](docs/samples.md) for detailed walkthroughs.
 - [Plugins Guide](docs/plugins.md) — how to create custom plugin packages
 - [Building & Testing](docs/building-and-testing.md) — how to build from source and run tests
 - [Image Generation Prompts](docs/image-generation-prompts.md) — AI prompts for branding assets
+- [Acknowledgements](docs/acknowledgements.md) — open-source libraries that power this project
 
 ## 🤝 Contributing
 
