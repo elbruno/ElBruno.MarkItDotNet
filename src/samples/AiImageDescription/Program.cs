@@ -1,7 +1,6 @@
 using ElBruno.MarkItDotNet;
 using ElBruno.MarkItDotNet.AI;
 using Microsoft.Extensions.AI;
-using Microsoft.Extensions.DependencyInjection;
 
 Console.WriteLine("╔═══════════════════════════════════════════════════════════╗");
 Console.WriteLine("║  MarkItDotNet - AI Image Description Sample               ║");
@@ -11,13 +10,12 @@ Console.WriteLine("╚═══════════════════�
 // In production, replace with a real client:
 //   services.AddSingleton<IChatClient>(new OpenAIChatClient("gpt-4o", apiKey));
 //   services.AddSingleton<IChatClient>(new AzureOpenAIChatClient(...));
-var services = new ServiceCollection();
-services.AddSingleton<IChatClient>(new MockChatClient());
-services.AddMarkItDotNet();
-services.AddMarkItDotNetAI();
-var sp = services.BuildServiceProvider();
+var mockClient = new MockChatClient();
 
-var markdownService = sp.GetRequiredService<MarkdownService>();
+// Use a fresh registry so the AI converter handles images instead of the built-in one
+var registry = new ConverterRegistry();
+registry.RegisterPlugin(new AiConverterPlugin(mockClient));
+var markdownService = new MarkdownService(registry);
 
 // Create a minimal valid 1x1 PNG in-memory (PNG header + IHDR + IDAT + IEND)
 byte[] pngBytes =
