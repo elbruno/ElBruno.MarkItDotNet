@@ -171,6 +171,53 @@ public class MarkdownService
         }
     }
 
+    /// <summary>
+    /// Converts a web page at the given URL to Markdown.
+    /// </summary>
+    /// <param name="url">The HTTP/HTTPS URL to fetch and convert.</param>
+    /// <param name="cancellationToken">Token to cancel the operation.</param>
+    /// <returns>A <see cref="ConversionResult"/> with the outcome.</returns>
+    public async Task<ConversionResult> ConvertUrlAsync(string url, CancellationToken cancellationToken = default)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(url);
+
+        var converter = _registry.Resolve(".url");
+        if (converter is null)
+        {
+            return ConversionResult.Failure("URL converter is not registered.", ".url");
+        }
+
+        try
+        {
+            var sw = Stopwatch.StartNew();
+            string markdown;
+
+            if (converter is Converters.UrlConverter urlConverter)
+            {
+                markdown = await urlConverter.ConvertUrlAsync(url, cancellationToken).ConfigureAwait(false);
+            }
+            else
+            {
+                using var stream = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(url));
+                markdown = await converter.ConvertAsync(stream, ".url", cancellationToken).ConfigureAwait(false);
+            }
+
+            sw.Stop();
+
+            var metadata = new ConversionMetadata
+            {
+                WordCount = CountWords(markdown),
+                ProcessingTime = sw.Elapsed
+            };
+
+            return ConversionResult.Succeeded(markdown, ".url", metadata);
+        }
+        catch (Exception ex) when (ex is not OperationCanceledException)
+        {
+            return ConversionResult.Failure(ex.Message, ".url");
+        }
+    }
+
     private static int CountWords(string text)
     {
         if (string.IsNullOrWhiteSpace(text))

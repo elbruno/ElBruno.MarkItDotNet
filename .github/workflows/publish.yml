@@ -58,6 +58,7 @@ jobs:
           dotnet pack src/ElBruno.MarkItDotNet.Excel/ElBruno.MarkItDotNet.Excel.csproj -c Release --no-build -p:TargetFrameworks=net8.0 -p:Version=${{ steps.version.outputs.version }} -o artifacts
           dotnet pack src/ElBruno.MarkItDotNet.PowerPoint/ElBruno.MarkItDotNet.PowerPoint.csproj -c Release --no-build -p:TargetFrameworks=net8.0 -p:Version=${{ steps.version.outputs.version }} -o artifacts
           dotnet pack src/ElBruno.MarkItDotNet.AI/ElBruno.MarkItDotNet.AI.csproj -c Release --no-build -p:TargetFrameworks=net8.0 -p:Version=${{ steps.version.outputs.version }} -o artifacts
+          dotnet pack src/ElBruno.MarkItDotNet.Whisper/ElBruno.MarkItDotNet.Whisper.csproj -c Release --no-build -p:TargetFrameworks=net8.0 -p:Version=${{ steps.version.outputs.version }} -o artifacts
 
       - name: NuGet login (OIDC → temp API key)
         uses: NuGet/login@v1

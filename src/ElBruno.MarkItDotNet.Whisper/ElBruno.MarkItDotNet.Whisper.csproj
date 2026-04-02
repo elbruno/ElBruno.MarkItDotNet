@@ -2,20 +2,27 @@
   <PropertyGroup>
     <TargetFrameworks>net8.0;net10.0</TargetFrameworks>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <PackageId>ElBruno.MarkItDotNet.Excel</PackageId>
-    <Description>Excel (.xlsx) to Markdown converter for ElBruno.MarkItDotNet. Converts spreadsheet sheets to Markdown tables.</Description>
+    <PackageId>ElBruno.MarkItDotNet.Whisper</PackageId>
+    <Description>Local audio transcription for ElBruno.MarkItDotNet using OpenAI Whisper via ONNX Runtime. Converts audio files to Markdown transcripts offline.</Description>
     <PackageProjectUrl>https://github.com/elbruno/ElBruno.MarkItDotNet</PackageProjectUrl>
     <PackageIcon>nuget_logo.png</PackageIcon>
     <PackageReadmeFile>README.md</PackageReadmeFile>
-    <PackageTags>markdown;converter;excel;xlsx;spreadsheet;markitdown</PackageTags>
+    <PackageTags>markdown;converter;whisper;audio;transcription;speech-to-text;onnx;offline;markitdown</PackageTags>
     <Version>0.3.0</Version>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <ContinuousIntegrationBuild Condition="'$(GITHUB_ACTIONS)' == 'true'">true</ContinuousIntegrationBuild>
   </PropertyGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\ElBruno.MarkItDotNet\ElBruno.MarkItDotNet.csproj" />
-    <PackageReference Include="ClosedXML" Version="0.105.0" />
   </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="ElBruno.Whisper" Version="0.1.5" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.6" />
+  </ItemGroup>
+
   <ItemGroup>
     <None Include="..\..\README.md" Pack="true" PackagePath="\" />
     <None Include="..\..\images\nuget_logo.png" Pack="true" PackagePath="" />

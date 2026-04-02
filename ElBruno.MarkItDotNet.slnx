@@ -4,12 +4,14 @@
     <Project Path="src/ElBruno.MarkItDotNet.Excel/ElBruno.MarkItDotNet.Excel.csproj" />
     <Project Path="src/ElBruno.MarkItDotNet.PowerPoint/ElBruno.MarkItDotNet.PowerPoint.csproj" />
     <Project Path="src/ElBruno.MarkItDotNet.AI/ElBruno.MarkItDotNet.AI.csproj" />
+    <Project Path="src/ElBruno.MarkItDotNet.Whisper/ElBruno.MarkItDotNet.Whisper.csproj" />
   </Folder>
   <Folder Name="/src/tests/">
     <Project Path="src/tests/ElBruno.MarkItDotNet.Tests/ElBruno.MarkItDotNet.Tests.csproj" />
     <Project Path="src/tests/ElBruno.MarkItDotNet.Excel.Tests/ElBruno.MarkItDotNet.Excel.Tests.csproj" />
     <Project Path="src/tests/ElBruno.MarkItDotNet.PowerPoint.Tests/ElBruno.MarkItDotNet.PowerPoint.Tests.csproj" />
     <Project Path="src/tests/ElBruno.MarkItDotNet.AI.Tests/ElBruno.MarkItDotNet.AI.Tests.csproj" />
+    <Project Path="src/tests/ElBruno.MarkItDotNet.Whisper.Tests/ElBruno.MarkItDotNet.Whisper.Tests.csproj" />
   </Folder>
   <Folder Name="/src/samples/">
     <Project Path="src/samples/BasicConversion/BasicConversion.csproj" />
@@ -28,5 +30,7 @@
     <Project Path="src/samples/MarkItDotNet.WebApi/MarkItDotNet.WebApi.csproj" />
     <Project Path="src/samples/BatchProcessor/BatchProcessor.csproj" />
     <Project Path="src/samples/RagPipeline/RagPipeline.csproj" />
+    <Project Path="src/samples/UrlConversion/UrlConversion.csproj" />
+    <Project Path="src/samples/WhisperTranscription/WhisperTranscription.csproj" />
   </Folder>
 </Solution>

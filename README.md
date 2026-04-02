@@ -1,14 +1,23 @@
 # ElBruno.MarkItDotNet
 
-[![NuGet](https://img.shields.io/nuget/v/ElBruno.MarkItDotNet.svg)](https://www.nuget.org/packages/ElBruno.MarkItDotNet)
 [![Build](https://github.com/elbruno/ElBruno.MarkItDotNet/actions/workflows/ci.yml/badge.svg)](https://github.com/elbruno/ElBruno.MarkItDotNet/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 **.NET library that converts 15+ file formats to Markdown** for AI pipelines, documentation workflows, and developer tools. Inspired by Python [markitdown](https://github.com/microsoft/markitdown).
 
+## 📦 NuGet Packages
+
+| Package | Version | Downloads | Description |
+|---------|---------|-----------|-------------|
+| [ElBruno.MarkItDotNet](https://www.nuget.org/packages/ElBruno.MarkItDotNet) | [![NuGet](https://img.shields.io/nuget/v/ElBruno.MarkItDotNet.svg?style=flat-square)](https://www.nuget.org/packages/ElBruno.MarkItDotNet) | [![Downloads](https://img.shields.io/nuget/dt/ElBruno.MarkItDotNet.svg?style=flat-square)](https://www.nuget.org/packages/ElBruno.MarkItDotNet) | Core library — 12 built-in converters |
+| [ElBruno.MarkItDotNet.Excel](https://www.nuget.org/packages/ElBruno.MarkItDotNet.Excel) | [![NuGet](https://img.shields.io/nuget/v/ElBruno.MarkItDotNet.Excel.svg?style=flat-square)](https://www.nuget.org/packages/ElBruno.MarkItDotNet.Excel) | [![Downloads](https://img.shields.io/nuget/dt/ElBruno.MarkItDotNet.Excel.svg?style=flat-square)](https://www.nuget.org/packages/ElBruno.MarkItDotNet.Excel) | Excel (.xlsx) → Markdown tables |
+| [ElBruno.MarkItDotNet.PowerPoint](https://www.nuget.org/packages/ElBruno.MarkItDotNet.PowerPoint) | [![NuGet](https://img.shields.io/nuget/v/ElBruno.MarkItDotNet.PowerPoint.svg?style=flat-square)](https://www.nuget.org/packages/ElBruno.MarkItDotNet.PowerPoint) | [![Downloads](https://img.shields.io/nuget/dt/ElBruno.MarkItDotNet.PowerPoint.svg?style=flat-square)](https://www.nuget.org/packages/ElBruno.MarkItDotNet.PowerPoint) | PowerPoint (.pptx) → slides + notes |
+| [ElBruno.MarkItDotNet.AI](https://www.nuget.org/packages/ElBruno.MarkItDotNet.AI) | [![NuGet](https://img.shields.io/nuget/v/ElBruno.MarkItDotNet.AI.svg?style=flat-square)](https://www.nuget.org/packages/ElBruno.MarkItDotNet.AI) | [![Downloads](https://img.shields.io/nuget/dt/ElBruno.MarkItDotNet.AI.svg?style=flat-square)](https://www.nuget.org/packages/ElBruno.MarkItDotNet.AI) | AI-powered OCR, captioning, transcription |
+| [ElBruno.MarkItDotNet.Whisper](https://www.nuget.org/packages/ElBruno.MarkItDotNet.Whisper) | [![NuGet](https://img.shields.io/nuget/v/ElBruno.MarkItDotNet.Whisper.svg?style=flat-square)](https://www.nuget.org/packages/ElBruno.MarkItDotNet.Whisper) | [![Downloads](https://img.shields.io/nuget/dt/ElBruno.MarkItDotNet.Whisper.svg?style=flat-square)](https://www.nuget.org/packages/ElBruno.MarkItDotNet.Whisper) | Local audio transcription via Whisper ONNX |
+
 ## Description
 
-ElBruno.MarkItDotNet provides a unified interface to convert 15+ file formats into clean, structured Markdown. The core package handles text, JSON, HTML, Word, PDF, RTF, EPUB, images, CSV, XML, and YAML. Extend with satellite packages for Excel, PowerPoint, and AI-powered features (OCR, image captioning, audio transcription). Designed for AI content pipelines, documentation systems, and any scenario where you need consistent Markdown output from mixed file sources.
+ElBruno.MarkItDotNet provides a unified interface to convert 15+ file formats into clean, structured Markdown. The core package handles text, JSON, HTML, Word, PDF, RTF, EPUB, images, CSV, XML, YAML, and **URLs (web pages)**. Extend with satellite packages for Excel, PowerPoint, AI-powered features (OCR, image captioning, audio transcription), and **local audio transcription via Whisper**. Designed for AI content pipelines, documentation systems, and any scenario where you need consistent Markdown output from mixed file sources.
 
 ## Supported Formats
 
@@ -17,6 +26,7 @@ ElBruno.MarkItDotNet provides a unified interface to convert 15+ file formats in
 | Plain Text | `.txt`, `.md`, `.log` | `PlainTextConverter` | Core | None |
 | JSON | `.json` | `JsonConverter` | Core | None |
 | HTML | `.html`, `.htm` | `HtmlConverter` | Core | `ReverseMarkdown` |
+| URL (Web Pages) | `.url` | `UrlConverter` | Core | `ReverseMarkdown` |
 | Word (DOCX) | `.docx` | `DocxConverter` | Core | `DocumentFormat.OpenXml` |
 | PDF | `.pdf` | `PdfConverter` | Core | `PdfPig` |
 | CSV | `.csv` | `CsvConverter` | Core | None |
@@ -28,8 +38,9 @@ ElBruno.MarkItDotNet provides a unified interface to convert 15+ file formats in
 | Excel (XLSX) | `.xlsx` | `ExcelConverter` | **Excel** | `ClosedXML` |
 | PowerPoint (PPTX) | `.pptx` | `PowerPointConverter` | **PowerPoint** | `DocumentFormat.OpenXml` |
 | Images (AI-OCR) | All image formats | `AiImageConverter` | **AI** | `Microsoft.Extensions.AI` |
-| Audio (Transcription) | `.mp3`, `.wav`, `.m4a`, `.ogg` | `AiAudioConverter` | **AI** | `Microsoft.Extensions.AI` |
+| Audio (AI Transcription) | `.mp3`, `.wav`, `.m4a`, `.ogg` | `AiAudioConverter` | **AI** | `Microsoft.Extensions.AI` |
 | PDF (AI-OCR) | `.pdf` | `AiPdfConverter` | **AI** | `Microsoft.Extensions.AI` |
+| Audio (Local Whisper) | `.wav`, `.mp3`, `.m4a`, `.ogg`, `.flac` | `WhisperAudioConverter` | **Whisper** | `ElBruno.Whisper` |
 
 ## Target Frameworks
 
@@ -42,13 +53,13 @@ ElBruno.MarkItDotNet is distributed across multiple NuGet packages for flexibili
 
 ### Core Package
 
-**ElBruno.MarkItDotNet** — The main library with 11 built-in converters.
+**ElBruno.MarkItDotNet** — The main library with 12 built-in converters.
 
 ```bash
 dotnet add package ElBruno.MarkItDotNet
 ```
 
-Includes: Plain text, JSON, HTML, Word, PDF, RTF, EPUB, images, CSV, XML, YAML.
+Includes: Plain text, JSON, HTML, **URLs (web pages)**, Word, PDF, RTF, EPUB, images, CSV, XML, YAML.
 
 ### Satellite Packages
 
@@ -79,6 +90,14 @@ Requires `Microsoft.Extensions.AI` (for `IChatClient`). Provides:
 - **AiPdfConverter** — OCR for PDFs using LLM vision
 - **AiAudioConverter** — Transcription for audio files using LLM audio APIs
 
+**ElBruno.MarkItDotNet.Whisper** — Local audio transcription via Whisper ONNX (v0.3.0+)
+
+```bash
+dotnet add package ElBruno.MarkItDotNet.Whisper
+```
+
+Uses [ElBruno.Whisper](https://www.nuget.org/packages/ElBruno.Whisper) for offline speech-to-text. No cloud API needed — runs locally via ONNX Runtime. Supports `.wav`, `.mp3`, `.m4a`, `.ogg`, `.flac`.
+
 ## Installation
 
 For the core library only:
@@ -105,6 +124,12 @@ For AI-powered features (requires separate `IChatClient` registration):
 dotnet add package ElBruno.MarkItDotNet.AI
 ```
 
+For local audio transcription (offline, no API key needed):
+
+```bash
+dotnet add package ElBruno.MarkItDotNet.Whisper
+```
+
 ## Quick Start
 
 The simplest way to get started is with the `MarkdownConverter` façade:
@@ -124,6 +149,18 @@ Console.WriteLine(result.Markdown);
 ```
 
 The `MarkdownConverter` class pre-registers all built-in converters (from the core package) and provides synchronous and asynchronous conversion methods.
+
+### URL Conversion
+
+Convert web pages directly to Markdown:
+
+```csharp
+var service = new MarkdownService(registry);
+var result = await service.ConvertUrlAsync("https://example.com");
+Console.WriteLine(result.Markdown);
+```
+
+The URL converter fetches the page, strips navigation/scripts/styles, extracts the title, and converts the content to clean Markdown.
 
 ### With Satellite Packages
 
@@ -226,6 +263,37 @@ services.AddMarkItDotNetAI(options =>
 {
     options.ImageDescriptionPrompt = "Describe this image in detail...";
     options.MaxRetries = 3;
+});
+```
+
+## Local Audio Transcription (Whisper)
+
+The `ElBruno.MarkItDotNet.Whisper` package uses [ElBruno.Whisper](https://www.nuget.org/packages/ElBruno.Whisper) for offline speech-to-text powered by ONNX Runtime. No cloud API needed.
+
+```csharp
+using ElBruno.Whisper;
+using ElBruno.MarkItDotNet;
+using ElBruno.MarkItDotNet.Whisper;
+
+// Create Whisper client (downloads model on first run ~75MB)
+using var whisperClient = await WhisperClient.CreateAsync();
+
+// Register the plugin
+var registry = new ConverterRegistry();
+registry.RegisterPlugin(new WhisperConverterPlugin(whisperClient));
+
+var service = new MarkdownService(registry);
+var result = await service.ConvertAsync("recording.wav");
+Console.WriteLine(result.Markdown);
+```
+
+Or with DI:
+
+```csharp
+services.AddMarkItDotNet();
+services.AddMarkItDotNetWhisper(options =>
+{
+    options.Model = KnownWhisperModels.WhisperBaseEn; // Optional: pick model size
 });
 ```
 
@@ -431,6 +499,8 @@ See [Samples Guide](docs/samples.md) for detailed walkthroughs.
 | [CustomConverter](src/samples/CustomConverter) | Build a custom IMarkdownConverter (.ini files) | `dotnet run --project src/samples/CustomConverter/CustomConverter.csproj` |
 | [PluginPackage](src/samples/PluginPackage) | Build and register a custom IConverterPlugin | `dotnet run --project src/samples/PluginPackage/PluginPackage.csproj` |
 | [AllFormats](src/samples/AllFormats) | Converts all supported formats in one app | `dotnet run --project src/samples/AllFormats/AllFormats.csproj` |
+| [UrlConversion](src/samples/UrlConversion) | Web page URL → Markdown | `dotnet run --project src/samples/UrlConversion/UrlConversion.csproj` |
+| [WhisperTranscription](src/samples/WhisperTranscription) | Local audio transcription via Whisper ONNX | `dotnet run --project src/samples/WhisperTranscription/WhisperTranscription.csproj` |
 
 ### End-to-End Samples
 
@@ -442,7 +512,7 @@ See [Samples Guide](docs/samples.md) for detailed walkthroughs.
 
 ## Documentation
 
-- [Samples Guide](docs/samples.md) — detailed walkthroughs for all 16 sample projects
+- [Samples Guide](docs/samples.md) — detailed walkthroughs for all sample projects
 - [Architecture](docs/architecture.md) — design decisions, plugin system, converter pipeline, and internal structure
 - [Plugins Guide](docs/plugins.md) — how to create custom plugin packages
 - [Building & Testing](docs/building-and-testing.md) — how to build from source and run tests
