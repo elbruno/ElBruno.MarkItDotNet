@@ -29,6 +29,11 @@ public static class ServiceCollectionExtensions
         registry.Register(new DocxConverter());
         registry.Register(new PdfConverter());
         registry.Register(new ImageConverter());
+        registry.Register(new CsvConverter());
+        registry.Register(new XmlConverter());
+        registry.Register(new YamlConverter());
+        registry.Register(new RtfConverter());
+        registry.Register(new EpubConverter());
 
         services.AddSingleton(registry);
         services.AddSingleton<MarkdownService>();
