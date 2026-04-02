@@ -15,3 +15,11 @@
 - **Key files:** `src/ElBruno.MarkItDotNet/IMarkdownConverter.cs`, `ConverterRegistry.cs`, `MarkdownService.cs`, `ConversionResult.cs`, `ServiceCollectionExtensions.cs`, `Converters/PlainTextConverter.cs`
 - **Package added:** Microsoft.Extensions.DependencyInjection.Abstractions 9.0.6
 - **Tests:** 23 total (3 backward-compat + 6 registry + 6 service + 6 plaintext + 2 conversionresult)
+- **Phases 3-6 converters:** Built all 5 remaining converters following PlainTextConverter pattern:
+  - JsonConverter (.json): System.Text.Json for pretty-printing, fenced code blocks with ```json
+  - HtmlConverter (.html/.htm): ReverseMarkdown 4.6.0 for HTML→Markdown
+  - DocxConverter (.docx): DocumentFormat.OpenXml 3.3.0 — headings, bold/italic, lists, tables
+  - PdfConverter (.pdf): PdfPig 0.1.14 — page-by-page extraction with --- separators
+  - ImageConverter (.jpg/.jpeg/.png/.gif/.bmp/.webp/.svg): markdown image refs + dimension detection from file headers
+- **Package note:** PdfPig NuGet package is named `PdfPig` (not `UglyToad.PdfPig`); the `UglyToad.PdfPig` ID only has pre-release versions.
+- **All converters registered** in both ServiceCollectionExtensions (DI) and MarkdownConverter (façade). 41 tests pass after changes.
