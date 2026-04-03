@@ -283,6 +283,96 @@ Top and bottom thirds clear for text.
 
 ---
 
+## Asset 4: Blog Post Promotional Image (16:9)
+
+### Specifications
+- **Dimensions:** 16:9 aspect ratio (1920x1080 pixels)
+- **Use:** Featured image for the ElBruno.MarkItDotNet blog post on elbruno.com
+- **Design Purpose:** Communicate "any file → Markdown" transformation for .NET developers
+- **Requirements:** Eye-catching hero image, clear visual storytelling, space for blog title overlay
+
+### Design Guidelines
+- **Color Palette:** Brand teal/cyan (#00A8E8, #00D9FF) with dark background; optional accent orange (#FF6B35) or purple (#7C3AED)
+- **Style:** Modern, clean, developer-friendly — matches elbruno.com tech blog aesthetic
+- **Composition:** Landscape with clear left-to-right flow; leave top or bottom clear for title text
+- **Content:** Show multiple file format icons converging into a clean Markdown output stream
+- **Mood:** Exciting, innovative, "this tool solves your problem"
+
+### Prompt
+
+#### Blog Post Hero (16:9)
+```
+A vibrant, modern blog post hero image (1920x1080, 16:9 landscape) for a .NET developer library.
+
+Left side: a cluster of colorful file format icons — PDF (red), Word DOCX (blue), HTML (orange), JSON (yellow), Excel (green), PowerPoint (coral), images (purple), and audio waves — arranged in a loose, dynamic spread. Each icon is flat, geometric, and recognizable.
+
+Center: the file icons funnel into a sleek glowing pipeline or transformation beam made of bright teal (#00A8E8) and cyan (#00D9FF) energy streams, with small particles and dots suggesting data being processed.
+
+Right side: clean, crisp Markdown output emerges — stylized # headings, bullet lists, code fences, and table rows rendered as glowing white text floating in space, with subtle AI neural network nodes and connection lines in the far background.
+
+Dark navy-to-black gradient background (#0A1628). A faint .NET purple (#512BD4) glow behind the center pipeline suggests the .NET ecosystem.
+
+Top-left 30% is slightly darker and clear — reserved for blog title text overlay.
+
+Style: flat design, no 3D, no photorealism. Modern tech illustration. High contrast. Glowing elements on dark background. Developer-audience aesthetic.
+```
+
+### Negative Prompts
+- No photorealistic textures or stock photo elements
+- No text, watermarks, or logos in the generated image
+- Avoid cluttered compositions — keep the visual flow clear
+- No 3D rendering or heavy drop shadows
+- Avoid blurry or low-contrast areas
+- No outdated gradients or lens flare effects
+
+---
+
+## Asset 5: LinkedIn Promotional Image (1:1)
+
+### Specifications
+- **Dimensions:** 1:1 square (1080x1080 pixels)
+- **Use:** LinkedIn post promoting the ElBruno.MarkItDotNet library
+- **Design Purpose:** Professional, attention-grabbing in the LinkedIn feed; communicate the library's value at a glance
+- **Requirements:** Must work with text overlay (library name, tagline); readable in mobile feeds
+
+### Design Guidelines
+- **Color Palette:** Professional teal/blue (#00A8E8, #0077B6) with dark or gradient background; less playful than blog, more polished
+- **Style:** Clean, professional, tech-forward — suitable for LinkedIn's professional audience
+- **Composition:** Square format with strong central focus; leave bottom third or top third for text overlay
+- **Content:** Visual metaphor of document conversion — many formats in, clean Markdown out
+- **Mood:** Professional, trustworthy, innovative
+
+### Prompt
+
+#### LinkedIn Square Post (1:1)
+```
+A professional, modern square image (1080x1080, 1:1) for a LinkedIn post promoting a .NET developer library.
+
+Center composition: a large, stylized Markdown hash symbol (#) rendered in bright glowing teal (#00A8E8) with a subtle white inner glow, positioned slightly above center. The hash symbol is clean, bold, and geometric.
+
+Surrounding the hash symbol in a circular orbit: smaller, semi-transparent file format icons — PDF, DOCX, HTML, JSON, XLSX, PPTX, images, audio waveform — each in its own distinctive color (red, blue, orange, yellow, green, coral, purple, cyan). The icons orbit like satellites, connected by thin glowing teal lines suggesting a conversion pipeline.
+
+Below the central composition: a subtle row of clean Markdown output elements — heading lines, bullet points, a small code fence — rendered as faint white text, suggesting the output.
+
+Background: deep navy gradient (#0A1628 to #1A2744) with a very subtle grid pattern suggesting technology and precision.
+
+Bottom 25% is darker and uncluttered — reserved for text overlay (library name and tagline).
+
+Style: flat design, high contrast, professional tech illustration. No 3D, no photorealism. Clean geometric shapes. Suitable for a professional social media audience.
+```
+
+### Negative Prompts
+- No casual or playful elements — keep it professional
+- No photorealistic textures or stock photo aesthetics
+- No text, watermarks, or logos in the generated image
+- Avoid overly complex compositions — must read well at mobile sizes
+- No 3D effects, heavy shadows, or bevels
+- Avoid colors that clash with LinkedIn's blue/white UI
+- No blurry or low-resolution elements
+- Avoid designs that look like ads — keep it editorial
+
+---
+
 ## Next Steps
 
 1. Generate images using the prompts above with your preferred AI tool
