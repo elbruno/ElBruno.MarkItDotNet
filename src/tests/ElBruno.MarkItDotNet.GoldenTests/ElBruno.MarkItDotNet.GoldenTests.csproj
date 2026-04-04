@@ -1,0 +1,29 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net8.0;net10.0</TargetFrameworks>
+    <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.3.0" />
+    <PackageReference Include="xunit" Version="2.9.0" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="3.1.5" />
+    <PackageReference Include="FluentAssertions" Version="8.3.0" />
+    <PackageReference Include="coverlet.collector" Version="6.0.4" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\ElBruno.MarkItDotNet\ElBruno.MarkItDotNet.csproj" />
+    <ProjectReference Include="..\..\ElBruno.MarkItDotNet.Excel\ElBruno.MarkItDotNet.Excel.csproj" />
+    <ProjectReference Include="..\..\ElBruno.MarkItDotNet.PowerPoint\ElBruno.MarkItDotNet.PowerPoint.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="..\SharedTestData\documents\**\*" Link="SharedTestData\documents\%(RecursiveDir)%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="..\SharedTestData\expected\**\*" Link="SharedTestData\expected\%(RecursiveDir)%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+</Project>

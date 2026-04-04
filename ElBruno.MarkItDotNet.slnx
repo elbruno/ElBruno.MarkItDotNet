@@ -12,6 +12,7 @@
     <Project Path="src/tests/ElBruno.MarkItDotNet.PowerPoint.Tests/ElBruno.MarkItDotNet.PowerPoint.Tests.csproj" />
     <Project Path="src/tests/ElBruno.MarkItDotNet.AI.Tests/ElBruno.MarkItDotNet.AI.Tests.csproj" />
     <Project Path="src/tests/ElBruno.MarkItDotNet.Whisper.Tests/ElBruno.MarkItDotNet.Whisper.Tests.csproj" />
+    <Project Path="src/tests/ElBruno.MarkItDotNet.GoldenTests/ElBruno.MarkItDotNet.GoldenTests.csproj" />
   </Folder>
   <Folder Name="/src/samples/">
     <Project Path="src/samples/BasicConversion/BasicConversion.csproj" />
