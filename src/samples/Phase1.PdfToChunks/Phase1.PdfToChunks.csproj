@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\ElBruno.MarkItDotNet\ElBruno.MarkItDotNet.csproj" />
+    <ProjectReference Include="..\..\ElBruno.MarkItDotNet.CoreModel\ElBruno.MarkItDotNet.CoreModel.csproj" />
+    <ProjectReference Include="..\..\ElBruno.MarkItDotNet.Chunking\ElBruno.MarkItDotNet.Chunking.csproj" />
+    <ProjectReference Include="..\..\ElBruno.MarkItDotNet.Citations\ElBruno.MarkItDotNet.Citations.csproj" />
+  </ItemGroup>
+</Project>

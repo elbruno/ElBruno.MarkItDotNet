@@ -187,7 +187,7 @@ public class DocxCoreModelMapper : IStructuredConverter
             Id = Guid.NewGuid().ToString("N"),
             Sections = sections.AsReadOnly(),
             Metadata = metadata,
-            Source = new SourceReference { FilePath = fileName }
+            Source = new CoreModel.SourceReference { FilePath = fileName }
         };
 
         return Task.FromResult(result);
@@ -404,7 +404,7 @@ public class DocxCoreModelMapper : IStructuredConverter
             Id = Guid.NewGuid().ToString("N"),
             Sections = Array.Empty<DocumentSection>(),
             Metadata = new DocumentMetadata { SourceFormat = ".docx" },
-            Source = new SourceReference { FilePath = fileName }
+            Source = new CoreModel.SourceReference { FilePath = fileName }
         };
     }
 

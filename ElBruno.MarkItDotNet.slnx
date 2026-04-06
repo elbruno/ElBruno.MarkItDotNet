@@ -5,6 +5,10 @@
     <Project Path="src/ElBruno.MarkItDotNet.PowerPoint/ElBruno.MarkItDotNet.PowerPoint.csproj" />
     <Project Path="src/ElBruno.MarkItDotNet.AI/ElBruno.MarkItDotNet.AI.csproj" />
     <Project Path="src/ElBruno.MarkItDotNet.Whisper/ElBruno.MarkItDotNet.Whisper.csproj" />
+    <Project Path="src/ElBruno.MarkItDotNet.CoreModel/ElBruno.MarkItDotNet.CoreModel.csproj" />
+    <Project Path="src/ElBruno.MarkItDotNet.Chunking/ElBruno.MarkItDotNet.Chunking.csproj" />
+    <Project Path="src/ElBruno.MarkItDotNet.DocumentIntelligence/ElBruno.MarkItDotNet.DocumentIntelligence.csproj" />
+    <Project Path="src/ElBruno.MarkItDotNet.Citations/ElBruno.MarkItDotNet.Citations.csproj" />
   </Folder>
   <Folder Name="/src/tests/">
     <Project Path="src/tests/ElBruno.MarkItDotNet.Tests/ElBruno.MarkItDotNet.Tests.csproj" />
@@ -13,6 +17,10 @@
     <Project Path="src/tests/ElBruno.MarkItDotNet.AI.Tests/ElBruno.MarkItDotNet.AI.Tests.csproj" />
     <Project Path="src/tests/ElBruno.MarkItDotNet.Whisper.Tests/ElBruno.MarkItDotNet.Whisper.Tests.csproj" />
     <Project Path="src/tests/ElBruno.MarkItDotNet.GoldenTests/ElBruno.MarkItDotNet.GoldenTests.csproj" />
+    <Project Path="src/tests/ElBruno.MarkItDotNet.CoreModel.Tests/ElBruno.MarkItDotNet.CoreModel.Tests.csproj" />
+    <Project Path="src/tests/ElBruno.MarkItDotNet.Chunking.Tests/ElBruno.MarkItDotNet.Chunking.Tests.csproj" />
+    <Project Path="src/tests/ElBruno.MarkItDotNet.DocumentIntelligence.Tests/ElBruno.MarkItDotNet.DocumentIntelligence.Tests.csproj" />
+    <Project Path="src/tests/ElBruno.MarkItDotNet.Citations.Tests/ElBruno.MarkItDotNet.Citations.Tests.csproj" />
   </Folder>
   <Folder Name="/src/samples/">
     <Project Path="src/samples/BasicConversion/BasicConversion.csproj" />
@@ -33,5 +41,6 @@
     <Project Path="src/samples/RagPipeline/RagPipeline.csproj" />
     <Project Path="src/samples/UrlConversion/UrlConversion.csproj" />
     <Project Path="src/samples/WhisperTranscription/WhisperTranscription.csproj" />
+    <Project Path="src/samples/Phase1.PdfToChunks/Phase1.PdfToChunks.csproj" />
   </Folder>
 </Solution>

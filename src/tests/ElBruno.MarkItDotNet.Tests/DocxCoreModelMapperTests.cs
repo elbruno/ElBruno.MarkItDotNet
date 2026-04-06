@@ -219,7 +219,7 @@ public class DocxCoreModelMapperTests
         using (var doc = WordprocessingDocument.Create(ms, WordprocessingDocumentType.Document))
         {
             var mainPart = doc.AddMainDocumentPart();
-            mainPart.Document = new Document();
+            mainPart.Document = new DocumentFormat.OpenXml.Wordprocessing.Document();
             var body = new Body();
             buildBody(body);
             mainPart.Document.Append(body);
