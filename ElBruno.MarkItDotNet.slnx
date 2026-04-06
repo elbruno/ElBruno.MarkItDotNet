@@ -31,6 +31,7 @@
     <Project Path="src/tests/ElBruno.MarkItDotNet.VectorData.Tests/ElBruno.MarkItDotNet.VectorData.Tests.csproj" />
     <Project Path="src/tests/ElBruno.MarkItDotNet.AzureSearch.Tests/ElBruno.MarkItDotNet.AzureSearch.Tests.csproj" />
     <Project Path="src/tests/ElBruno.MarkItDotNet.Sync.Tests/ElBruno.MarkItDotNet.Sync.Tests.csproj" />
+    <Project Path="src/tests/ElBruno.MarkItDotNet.Integration.Tests/ElBruno.MarkItDotNet.Integration.Tests.csproj" />
   </Folder>
   <Folder Name="/src/samples/">
     <Project Path="src/samples/BasicConversion/BasicConversion.csproj" />
@@ -52,5 +53,6 @@
     <Project Path="src/samples/UrlConversion/UrlConversion.csproj" />
     <Project Path="src/samples/WhisperTranscription/WhisperTranscription.csproj" />
     <Project Path="src/samples/Phase1.PdfToChunks/Phase1.PdfToChunks.csproj" />
+    <Project Path="src/samples/Phase2.FullPipeline/Phase2.FullPipeline.csproj" />
   </Folder>
 </Solution>

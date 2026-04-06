@@ -11,6 +11,7 @@
     <PackageReference Include="FluentAssertions" Version="8.3.0" />
     <PackageReference Include="coverlet.collector" Version="6.0.4" />
     <PackageReference Include="NSubstitute" Version="5.3.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.6" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\ElBruno.MarkItDotNet.DocumentIntelligence\ElBruno.MarkItDotNet.DocumentIntelligence.csproj" />

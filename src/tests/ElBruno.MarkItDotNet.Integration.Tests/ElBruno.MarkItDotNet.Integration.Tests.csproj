@@ -10,12 +10,14 @@
     <PackageReference Include="xunit.runner.visualstudio" Version="3.1.5" />
     <PackageReference Include="FluentAssertions" Version="8.3.0" />
     <PackageReference Include="coverlet.collector" Version="6.0.4" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.6" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\ElBruno.MarkItDotNet.AzureSearch\ElBruno.MarkItDotNet.AzureSearch.csproj" />
     <ProjectReference Include="..\..\ElBruno.MarkItDotNet.CoreModel\ElBruno.MarkItDotNet.CoreModel.csproj" />
     <ProjectReference Include="..\..\ElBruno.MarkItDotNet.Chunking\ElBruno.MarkItDotNet.Chunking.csproj" />
     <ProjectReference Include="..\..\ElBruno.MarkItDotNet.Citations\ElBruno.MarkItDotNet.Citations.csproj" />
+    <ProjectReference Include="..\..\ElBruno.MarkItDotNet.Metadata\ElBruno.MarkItDotNet.Metadata.csproj" />
+    <ProjectReference Include="..\..\ElBruno.MarkItDotNet.Quality\ElBruno.MarkItDotNet.Quality.csproj" />
+    <ProjectReference Include="..\..\ElBruno.MarkItDotNet.VectorData\ElBruno.MarkItDotNet.VectorData.csproj" />
+    <ProjectReference Include="..\..\ElBruno.MarkItDotNet.Sync\ElBruno.MarkItDotNet.Sync.csproj" />
   </ItemGroup>
 </Project>
