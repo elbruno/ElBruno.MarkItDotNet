@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFrameworks>net8.0;net10.0</TargetFrameworks>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <PackageId>ElBruno.MarkItDotNet.DocumentIntelligence</PackageId>
+    <Description>Azure Document Intelligence integration for ElBruno.MarkItDotNet. Provides layout-aware OCR extraction with structured CoreModel output.</Description>
+    <PackageProjectUrl>https://github.com/elbruno/ElBruno.MarkItDotNet</PackageProjectUrl>
+    <PackageIcon>nuget_logo.png</PackageIcon>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageTags>markdown;azure;document-intelligence;ocr;layout;ingestion;ai</PackageTags>
+    <Version>0.1.0</Version>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ElBruno.MarkItDotNet.CoreModel\ElBruno.MarkItDotNet.CoreModel.csproj" />
+    <PackageReference Include="Azure.AI.DocumentIntelligence" Version="1.0.0" />
+    <PackageReference Include="Azure.Identity" Version="1.13.2" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.6" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\README.md" Pack="true" PackagePath="\" />
+    <None Include="..\..\images\nuget_logo.png" Pack="true" PackagePath="" />
+  </ItemGroup>
+</Project>

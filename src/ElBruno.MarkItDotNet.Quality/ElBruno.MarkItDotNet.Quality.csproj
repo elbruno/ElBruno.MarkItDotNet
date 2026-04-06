@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFrameworks>net8.0;net10.0</TargetFrameworks>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <PackageId>ElBruno.MarkItDotNet.Quality</PackageId>
+    <Description>Quality analysis and scoring for ElBruno.MarkItDotNet ingestion pipelines. Detects OCR issues, duplicate content, broken reading order, and guides fallback routing.</Description>
+    <PackageProjectUrl>https://github.com/elbruno/ElBruno.MarkItDotNet</PackageProjectUrl>
+    <PackageIcon>nuget_logo.png</PackageIcon>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageTags>markdown;quality;analysis;ocr;ingestion;diagnostics</PackageTags>
+    <Version>0.1.0</Version>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ElBruno.MarkItDotNet.CoreModel\ElBruno.MarkItDotNet.CoreModel.csproj" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.6" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\README.md" Pack="true" PackagePath="\" />
+    <None Include="..\..\images\nuget_logo.png" Pack="true" PackagePath="" />
+  </ItemGroup>
+</Project>

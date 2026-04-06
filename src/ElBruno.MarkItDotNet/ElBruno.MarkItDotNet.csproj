@@ -25,6 +25,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\ElBruno.MarkItDotNet.CoreModel\ElBruno.MarkItDotNet.CoreModel.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Include="..\..\README.md" Pack="true" PackagePath="\" />
     <None Include="..\..\images\nuget_logo.png" Pack="true" PackagePath="" />
   </ItemGroup>

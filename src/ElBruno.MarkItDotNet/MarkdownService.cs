@@ -15,8 +15,33 @@ public class MarkdownService
     /// Creates a new <see cref="MarkdownService"/> with the given converter registry.
     /// </summary>
     public MarkdownService(ConverterRegistry registry)
+        : this(registry, null)
+    {
+    }
+
+    /// <summary>
+    /// Creates a new <see cref="MarkdownService"/> with the given converter registry
+    /// and optional DI-resolved plugins that will be auto-registered into the registry.
+    /// </summary>
+    public MarkdownService(ConverterRegistry registry, IEnumerable<IConverterPlugin>? plugins)
     {
         _registry = registry ?? throw new ArgumentNullException(nameof(registry));
+
+        if (plugins is not null)
+        {
+            var existingPlugins = new HashSet<string>(
+                registry.GetPlugins().Select(p => p.Name),
+                StringComparer.OrdinalIgnoreCase);
+
+            foreach (var plugin in plugins)
+            {
+                if (!existingPlugins.Contains(plugin.Name))
+                {
+                    registry.RegisterPlugin(plugin);
+                    existingPlugins.Add(plugin.Name);
+                }
+            }
+        }
     }
 
     /// <summary>

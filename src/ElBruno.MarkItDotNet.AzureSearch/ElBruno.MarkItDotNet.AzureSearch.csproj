@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFrameworks>net8.0;net10.0</TargetFrameworks>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <PackageId>ElBruno.MarkItDotNet.AzureSearch</PackageId>
+    <Description>Azure AI Search integration for ElBruno.MarkItDotNet ingestion pipelines. Provides index schema, document mapping, and batch upload helpers.</Description>
+    <PackageProjectUrl>https://github.com/elbruno/ElBruno.MarkItDotNet</PackageProjectUrl>
+    <PackageIcon>nuget_logo.png</PackageIcon>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageTags>markdown;azure;search;ai-search;rag;ingestion;vector;indexing</PackageTags>
+    <Version>0.1.0</Version>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ElBruno.MarkItDotNet.CoreModel\ElBruno.MarkItDotNet.CoreModel.csproj" />
+    <ProjectReference Include="..\ElBruno.MarkItDotNet.Chunking\ElBruno.MarkItDotNet.Chunking.csproj" />
+    <ProjectReference Include="..\ElBruno.MarkItDotNet.Citations\ElBruno.MarkItDotNet.Citations.csproj" />
+    <PackageReference Include="Azure.Search.Documents" Version="11.7.0" />
+    <PackageReference Include="Azure.Identity" Version="1.13.2" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.6" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\README.md" Pack="true" PackagePath="\" />
+    <None Include="..\..\images\nuget_logo.png" Pack="true" PackagePath="" />
+  </ItemGroup>
+</Project>

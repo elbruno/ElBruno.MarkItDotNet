@@ -37,7 +37,12 @@ public static class ServiceCollectionExtensions
         registry.Register(new UrlConverter());
 
         services.AddSingleton(registry);
-        services.AddSingleton<MarkdownService>();
+        services.AddSingleton<MarkdownService>(sp =>
+        {
+            var reg = sp.GetRequiredService<ConverterRegistry>();
+            var plugins = sp.GetServices<IConverterPlugin>();
+            return new MarkdownService(reg, plugins);
+        });
 
         return services;
     }
