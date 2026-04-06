@@ -9,6 +9,11 @@
     <Project Path="src/ElBruno.MarkItDotNet.Chunking/ElBruno.MarkItDotNet.Chunking.csproj" />
     <Project Path="src/ElBruno.MarkItDotNet.DocumentIntelligence/ElBruno.MarkItDotNet.DocumentIntelligence.csproj" />
     <Project Path="src/ElBruno.MarkItDotNet.Citations/ElBruno.MarkItDotNet.Citations.csproj" />
+    <Project Path="src/ElBruno.MarkItDotNet.Metadata/ElBruno.MarkItDotNet.Metadata.csproj" />
+    <Project Path="src/ElBruno.MarkItDotNet.Quality/ElBruno.MarkItDotNet.Quality.csproj" />
+    <Project Path="src/ElBruno.MarkItDotNet.VectorData/ElBruno.MarkItDotNet.VectorData.csproj" />
+    <Project Path="src/ElBruno.MarkItDotNet.AzureSearch/ElBruno.MarkItDotNet.AzureSearch.csproj" />
+    <Project Path="src/ElBruno.MarkItDotNet.Sync/ElBruno.MarkItDotNet.Sync.csproj" />
   </Folder>
   <Folder Name="/src/tests/">
     <Project Path="src/tests/ElBruno.MarkItDotNet.Tests/ElBruno.MarkItDotNet.Tests.csproj" />
@@ -21,6 +26,11 @@
     <Project Path="src/tests/ElBruno.MarkItDotNet.Chunking.Tests/ElBruno.MarkItDotNet.Chunking.Tests.csproj" />
     <Project Path="src/tests/ElBruno.MarkItDotNet.DocumentIntelligence.Tests/ElBruno.MarkItDotNet.DocumentIntelligence.Tests.csproj" />
     <Project Path="src/tests/ElBruno.MarkItDotNet.Citations.Tests/ElBruno.MarkItDotNet.Citations.Tests.csproj" />
+    <Project Path="src/tests/ElBruno.MarkItDotNet.Metadata.Tests/ElBruno.MarkItDotNet.Metadata.Tests.csproj" />
+    <Project Path="src/tests/ElBruno.MarkItDotNet.Quality.Tests/ElBruno.MarkItDotNet.Quality.Tests.csproj" />
+    <Project Path="src/tests/ElBruno.MarkItDotNet.VectorData.Tests/ElBruno.MarkItDotNet.VectorData.Tests.csproj" />
+    <Project Path="src/tests/ElBruno.MarkItDotNet.AzureSearch.Tests/ElBruno.MarkItDotNet.AzureSearch.Tests.csproj" />
+    <Project Path="src/tests/ElBruno.MarkItDotNet.Sync.Tests/ElBruno.MarkItDotNet.Sync.Tests.csproj" />
   </Folder>
   <Folder Name="/src/samples/">
     <Project Path="src/samples/BasicConversion/BasicConversion.csproj" />
