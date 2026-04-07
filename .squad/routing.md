@@ -10,6 +10,7 @@ How to decide who handles what.
 | Architecture, scope, code review | Keaton | Review PRs, design decisions, project structure |
 | Tests, quality, edge cases | Hockney | xUnit tests, CLI integration tests, exit code verification |
 | Documentation, skills, README | McManus | CLI docs, AI skills, README updates, copilot instructions |
+| Security review, vulnerability analysis, threat modeling | Kobayashi | Code audits, dependency scanning, security findings |
 | Session logging | Scribe | Automatic — never needs routing |
 
 ## Issue Routing
@@ -21,6 +22,7 @@ How to decide who handles what.
 | `squad:fenster` | CLI implementation tasks | Fenster |
 | `squad:hockney` | Testing tasks | Hockney |
 | `squad:mcmanus` | Documentation tasks | McManus |
+| `squad:kobayashi` | Security review tasks | Kobayashi |
 
 ## Rules
 

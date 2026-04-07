@@ -16,6 +16,7 @@
 | Fenster | CLI Dev | `.squad/agents/fenster/charter.md` | ✅ Active |
 | Hockney | Tester | `.squad/agents/hockney/charter.md` | ✅ Active |
 | McManus | DevRel | `.squad/agents/mcmanus/charter.md` | ✅ Active |
+| Kobayashi | Security Reviewer | `.squad/agents/kobayashi/charter.md` | ✅ Active |
 | Scribe | Session Logger | `.squad/agents/scribe/charter.md` | 📋 Silent |
 | Ralph | Work Monitor | — | 🔄 Monitor |
 

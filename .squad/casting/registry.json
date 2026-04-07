@@ -30,5 +30,13 @@
     "created_at": "2026-04-07T14:37:00Z",
     "legacy_named": false,
     "status": "active"
+  },
+  {
+    "persistent_name": "Kobayashi",
+    "universe": "The Usual Suspects",
+    "role": "Security Reviewer",
+    "created_at": "2026-04-07T14:59:00Z",
+    "legacy_named": false,
+    "status": "active"
   }
 ]
