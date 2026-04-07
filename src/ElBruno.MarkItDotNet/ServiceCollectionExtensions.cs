@@ -41,7 +41,8 @@ public static class ServiceCollectionExtensions
         {
             var reg = sp.GetRequiredService<ConverterRegistry>();
             var plugins = sp.GetServices<IConverterPlugin>();
-            return new MarkdownService(reg, plugins);
+            var opts = sp.GetRequiredService<MarkItDotNetOptions>();
+            return new MarkdownService(reg, plugins, opts);
         });
 
         return services;

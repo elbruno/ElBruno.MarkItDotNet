@@ -36,10 +36,12 @@ public class WhisperAudioConverter : IMarkdownConverter
         ArgumentNullException.ThrowIfNull(fileStream);
 
         // WhisperClient needs a file path, so we write to a temp file
-        var tempPath = Path.Combine(Path.GetTempPath(), $"markitdotnet-whisper-{Guid.NewGuid()}{fileExtension}");
+        var tempDir = Path.Combine(Path.GetTempPath(), "markitdotnet");
+        Directory.CreateDirectory(tempDir);
+        var tempPath = Path.Combine(tempDir, $"whisper-{Guid.NewGuid()}{fileExtension}");
         try
         {
-            using (var fs = File.Create(tempPath))
+            using (var fs = new FileStream(tempPath, FileMode.CreateNew, FileAccess.Write, FileShare.None))
             {
                 await fileStream.CopyToAsync(fs, cancellationToken).ConfigureAwait(false);
             }

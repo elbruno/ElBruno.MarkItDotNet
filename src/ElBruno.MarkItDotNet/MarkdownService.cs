@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
+using System.Text.RegularExpressions;
 
 namespace ElBruno.MarkItDotNet;
 
@@ -10,12 +11,13 @@ namespace ElBruno.MarkItDotNet;
 public class MarkdownService
 {
     private readonly ConverterRegistry _registry;
+    private readonly MarkItDotNetOptions _options;
 
     /// <summary>
     /// Creates a new <see cref="MarkdownService"/> with the given converter registry.
     /// </summary>
     public MarkdownService(ConverterRegistry registry)
-        : this(registry, null)
+        : this(registry, null, null)
     {
     }
 
@@ -24,8 +26,18 @@ public class MarkdownService
     /// and optional DI-resolved plugins that will be auto-registered into the registry.
     /// </summary>
     public MarkdownService(ConverterRegistry registry, IEnumerable<IConverterPlugin>? plugins)
+        : this(registry, plugins, null)
+    {
+    }
+
+    /// <summary>
+    /// Creates a new <see cref="MarkdownService"/> with the given converter registry,
+    /// optional DI-resolved plugins, and configuration options.
+    /// </summary>
+    public MarkdownService(ConverterRegistry registry, IEnumerable<IConverterPlugin>? plugins, MarkItDotNetOptions? options)
     {
         _registry = registry ?? throw new ArgumentNullException(nameof(registry));
+        _options = options ?? new MarkItDotNetOptions();
 
         if (plugins is not null)
         {
@@ -65,6 +77,16 @@ public class MarkdownService
 
         try
         {
+            if (_options.MaxFileSizeBytes > 0)
+            {
+                var fileInfo = new FileInfo(filePath);
+                if (fileInfo.Length > _options.MaxFileSizeBytes)
+                {
+                    return ConversionResult.Failure(
+                        $"File exceeds maximum allowed size of {_options.MaxFileSizeBytes} bytes.", extension);
+                }
+            }
+
             var sw = Stopwatch.StartNew();
             using var stream = File.OpenRead(filePath);
             var markdown = await converter.ConvertAsync(stream, extension, cancellationToken).ConfigureAwait(false);
@@ -80,7 +102,7 @@ public class MarkdownService
         }
         catch (Exception ex) when (ex is not OperationCanceledException)
         {
-            return ConversionResult.Failure(ex.Message, extension);
+            return ConversionResult.Failure(SanitizeErrorMessage(ex.Message), extension);
         }
     }
 
@@ -107,6 +129,12 @@ public class MarkdownService
 
         try
         {
+            if (_options.MaxFileSizeBytes > 0 && stream.CanSeek && stream.Length > _options.MaxFileSizeBytes)
+            {
+                return ConversionResult.Failure(
+                    $"File exceeds maximum allowed size of {_options.MaxFileSizeBytes} bytes.", extension);
+            }
+
             var sw = Stopwatch.StartNew();
             var markdown = await converter.ConvertAsync(stream, extension, cancellationToken).ConfigureAwait(false);
             sw.Stop();
@@ -121,7 +149,7 @@ public class MarkdownService
         }
         catch (Exception ex) when (ex is not OperationCanceledException)
         {
-            return ConversionResult.Failure(ex.Message, extension);
+            return ConversionResult.Failure(SanitizeErrorMessage(ex.Message), extension);
         }
     }
 
@@ -239,8 +267,18 @@ public class MarkdownService
         }
         catch (Exception ex) when (ex is not OperationCanceledException)
         {
-            return ConversionResult.Failure(ex.Message, ".url");
+            return ConversionResult.Failure(SanitizeErrorMessage(ex.Message), ".url");
         }
+    }
+
+    private static string SanitizeErrorMessage(string message)
+    {
+        // Remove file path information to prevent information leakage
+        var sanitized = Regex.Replace(
+            message,
+            @"[A-Za-z]:\\[^\s""']+|/[^\s""']+",
+            "[path]");
+        return sanitized;
     }
 
     private static int CountWords(string text)

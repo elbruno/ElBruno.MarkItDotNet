@@ -30,8 +30,15 @@ public class EpubConverter : IMarkdownConverter
         }
         else
         {
+            const long MaxEpubSizeBytes = 100 * 1024 * 1024; // 100 MB
             var ms = new MemoryStream();
             await fileStream.CopyToAsync(ms, cancellationToken).ConfigureAwait(false);
+            if (ms.Length > MaxEpubSizeBytes)
+            {
+                await ms.DisposeAsync().ConfigureAwait(false);
+                throw new InvalidOperationException(
+                    $"EPUB file exceeds maximum allowed size of {MaxEpubSizeBytes / (1024 * 1024)} MB.");
+            }
             ms.Position = 0;
             seekableStream = ms;
             ownsStream = true;

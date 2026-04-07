@@ -26,8 +26,16 @@ public class XmlConverter : IMarkdownConverter
 
         try
         {
-            var doc = XDocument.Parse(content);
-            var formatted = doc.ToString();
+            var settings = new System.Xml.XmlReaderSettings
+            {
+                DtdProcessing = System.Xml.DtdProcessing.Prohibit,
+                XmlResolver = null,
+                IgnoreWhitespace = true
+            };
+            using var stringReader = new StringReader(content);
+            using var xmlReader = System.Xml.XmlReader.Create(stringReader, settings);
+            var doc = XDocument.Load(xmlReader);
+            var formatted = doc.ToString().Trim();
             return $"```xml\n{formatted}\n```";
         }
         catch (System.Xml.XmlException)

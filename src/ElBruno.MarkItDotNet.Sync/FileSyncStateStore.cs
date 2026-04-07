@@ -125,6 +125,15 @@ public class FileSyncStateStore : ISyncStateStore
     {
         // Sanitize documentId for use as a filename
         var safeName = string.Join("_", documentId.Split(Path.GetInvalidFileNameChars()));
-        return Path.Combine(_basePath, safeName + ".json");
+        var filePath = Path.Combine(_basePath, safeName + ".json");
+        var fullPath = Path.GetFullPath(filePath);
+        var baseFullPath = Path.GetFullPath(_basePath);
+
+        if (!fullPath.StartsWith(baseFullPath, StringComparison.OrdinalIgnoreCase))
+        {
+            throw new InvalidOperationException("Document ID would result in a path outside the base directory.");
+        }
+
+        return fullPath;
     }
 }

@@ -3,6 +3,11 @@ namespace ElBruno.MarkItDotNet;
 /// <summary>
 /// Registry of <see cref="IMarkdownConverter"/> implementations.
 /// Resolves the appropriate converter for a given file extension.
+/// <para>
+/// ⚠️ Thread Safety: This class is not thread-safe for concurrent registration.
+/// Register all converters during startup before resolving. Once configured,
+/// <see cref="Resolve"/> and <see cref="GetAll"/> are safe for concurrent reads.
+/// </para>
 /// </summary>
 public class ConverterRegistry
 {

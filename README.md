@@ -571,6 +571,19 @@ Contributions are welcome! Please:
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
 
+## Security
+
+ElBruno.MarkItDotNet processes untrusted file content and includes built-in security protections:
+
+- **SSRF Protection** — URL converter blocks private/internal IP addresses
+- **File Size Limits** — Configurable maximum file size (default 100MB)
+- **XXE Prevention** — XML parser explicitly prohibits DTD processing
+- **Prompt Injection Mitigation** — AI converters use system/user message separation
+
+For detailed security guidance, see [docs/security.md](docs/security.md).
+
+To report a security vulnerability, please use [GitHub Security Advisories](https://github.com/elbruno/ElBruno.MarkItDotNet/security/advisories).
+
 ## 📄 License
 
 This project is licensed under the MIT License — see the [LICENSE](LICENSE) file for details.
