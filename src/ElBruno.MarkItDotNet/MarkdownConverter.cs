@@ -28,6 +28,7 @@ public class MarkdownConverter
         registry.Register(new RtfConverter());
         registry.Register(new EpubConverter());
         registry.Register(new UrlConverter());
+        registry.Register(new MarkdownPassthroughConverter());
         _service = new MarkdownService(registry);
     }
 
