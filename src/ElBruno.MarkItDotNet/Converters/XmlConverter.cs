@@ -35,12 +35,12 @@ public class XmlConverter : IMarkdownConverter
             using var stringReader = new StringReader(content);
             using var xmlReader = System.Xml.XmlReader.Create(stringReader, settings);
             var doc = XDocument.Load(xmlReader);
-            var formatted = doc.ToString().Trim();
+            var formatted = doc.ToString().ReplaceLineEndings("\n").Trim();
             return $"```xml\n{formatted}\n```";
         }
         catch (System.Xml.XmlException)
         {
-            return $"```\n{content}\n```";
+            return $"```\n{content.ReplaceLineEndings("\n")}\n```";
         }
     }
 }

@@ -27,6 +27,6 @@ public class YamlConverter : IMarkdownConverter
             return string.Empty;
         }
 
-        return $"```yaml\n{content.TrimEnd()}\n```";
+        return $"```yaml\n{content.ReplaceLineEndings("\n").TrimEnd()}\n```";
     }
 }

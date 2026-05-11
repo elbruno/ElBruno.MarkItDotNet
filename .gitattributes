@@ -3,3 +3,8 @@
 .squad/agents/*/history.md merge=union
 .squad/log/** merge=union
 .squad/orchestration-log/** merge=union
+
+# Golden snapshots for converters that emit deterministic LF line endings.
+src/tests/SharedTestData/expected/markitdotnet/sample_json.md text eol=lf
+src/tests/SharedTestData/expected/markitdotnet/sample_xml.md text eol=lf
+src/tests/SharedTestData/expected/markitdotnet/sample_yaml.md text eol=lf

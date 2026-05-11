@@ -63,6 +63,17 @@ public class YamlConverterTests
     }
 
     [Fact]
+    public async Task ConvertAsync_NormalizesLineEndingsToLf()
+    {
+        var yaml = "name: test\r\nitems:\r\n  - one";
+        using var stream = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(yaml));
+
+        var result = await _converter.ConvertAsync(stream, ".yaml");
+
+        result.Should().NotContain("\r\n");
+    }
+
+    [Fact]
     public async Task ConvertAsync_EmptyContent_ReturnsEmpty()
     {
         using var stream = new MemoryStream(Array.Empty<byte>());
