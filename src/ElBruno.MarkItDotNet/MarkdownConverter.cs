@@ -43,6 +43,44 @@ public class MarkdownConverter
         ArgumentException.ThrowIfNullOrWhiteSpace(filePath);
 
         var result = _service.ConvertAsync(filePath, cancellationToken).GetAwaiter().GetResult();
+        return GetMarkdownOrThrow(result);
+    }
+
+    /// <summary>
+    /// Converts the content of a file to Markdown asynchronously.
+    /// </summary>
+    /// <param name="filePath">Path to the file to convert.</param>
+    /// <param name="cancellationToken">Token to cancel the operation.</param>
+    /// <returns>The Markdown representation of the file content.</returns>
+    public async Task<string> ConvertAsync(string filePath, CancellationToken cancellationToken = default)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(filePath);
+
+        var result = await _service.ConvertAsync(filePath, cancellationToken).ConfigureAwait(false);
+        return GetMarkdownOrThrow(result);
+    }
+
+    /// <summary>
+    /// Converts the content of a stream to Markdown asynchronously.
+    /// </summary>
+    /// <param name="stream">The input stream containing file content.</param>
+    /// <param name="fileExtension">File extension including the leading dot (e.g., ".txt").</param>
+    /// <param name="cancellationToken">Token to cancel the operation.</param>
+    /// <returns>The Markdown representation of the stream content.</returns>
+    public async Task<string> ConvertAsync(
+        Stream stream,
+        string fileExtension,
+        CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(stream);
+        ArgumentException.ThrowIfNullOrWhiteSpace(fileExtension);
+
+        var result = await _service.ConvertAsync(stream, fileExtension, cancellationToken).ConfigureAwait(false);
+        return GetMarkdownOrThrow(result);
+    }
+
+    private static string GetMarkdownOrThrow(ConversionResult result)
+    {
         if (!result.Success)
         {
             throw new NotSupportedException(result.ErrorMessage);

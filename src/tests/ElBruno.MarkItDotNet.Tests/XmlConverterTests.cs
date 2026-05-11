@@ -58,6 +58,17 @@ public class XmlConverterTests
     }
 
     [Fact]
+    public async Task ConvertAsync_NormalizesLineEndingsToLf()
+    {
+        var xml = "<root>\r\n  <item>Hello</item>\r\n</root>";
+        using var stream = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(xml));
+
+        var result = await _converter.ConvertAsync(stream, ".xml");
+
+        result.Should().NotContain("\r\n");
+    }
+
+    [Fact]
     public async Task ConvertAsync_EmptyContent_ReturnsEmpty()
     {
         using var stream = new MemoryStream(Array.Empty<byte>());

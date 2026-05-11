@@ -58,6 +58,17 @@ public class JsonConverterTests
     }
 
     [Fact]
+    public async Task ConvertAsync_NormalizesLineEndingsToLf()
+    {
+        var json = "{\r\n  \"a\": \"b\"\r\n}";
+        using var stream = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(json));
+
+        var result = await _converter.ConvertAsync(stream, ".json");
+
+        result.Should().NotContain("\r\n");
+    }
+
+    [Fact]
     public async Task ConvertAsync_EmptyContent_ReturnsEmpty()
     {
         using var stream = new MemoryStream(Array.Empty<byte>());

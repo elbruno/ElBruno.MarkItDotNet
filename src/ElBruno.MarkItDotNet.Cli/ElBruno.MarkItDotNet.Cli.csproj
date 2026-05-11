@@ -10,7 +10,7 @@
     <PackageIcon>nuget_logo.png</PackageIcon>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageTags>markdown;converter;cli;dotnet-tool;markitdown;pdf;docx;html;excel;powerpoint</PackageTags>
-    <Version>0.1.0</Version>
+    <Version>0.3.1</Version>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>

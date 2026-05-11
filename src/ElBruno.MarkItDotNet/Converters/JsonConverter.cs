@@ -33,12 +33,12 @@ public class JsonConverter : IMarkdownConverter
         try
         {
             using var doc = JsonDocument.Parse(content);
-            formatted = JsonSerializer.Serialize(doc.RootElement, PrettyPrintOptions);
+            formatted = JsonSerializer.Serialize(doc.RootElement, PrettyPrintOptions).ReplaceLineEndings("\n");
         }
         catch (JsonException)
         {
             // Invalid JSON — return raw content with a note
-            return $"> **Note:** The following content could not be parsed as valid JSON.\n\n```\n{content}\n```";
+            return $"> **Note:** The following content could not be parsed as valid JSON.\n\n```\n{content.ReplaceLineEndings("\n")}\n```";
         }
 
         return $"```json\n{formatted}\n```";

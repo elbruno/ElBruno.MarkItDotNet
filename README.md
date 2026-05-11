@@ -179,15 +179,24 @@ The simplest way to get started is with the `MarkdownConverter` façade:
 ```csharp
 using ElBruno.MarkItDotNet;
 
-// Convert a file to Markdown
 var converter = new MarkdownConverter();
+
+// Synchronous: Convert a file by path
 var markdown = converter.ConvertToMarkdown("document.txt");
 Console.WriteLine(markdown);
+```
 
-// Or convert from a stream
+Or use asynchronous methods:
+
+```csharp
+// Asynchronous: Convert a file by path
+var markdown = await converter.ConvertAsync("document.pdf");
+Console.WriteLine(markdown);
+
+// Asynchronous: Convert from a stream (provide file extension)
 using var stream = File.OpenRead("document.pdf");
-var result = await converter.ConvertAsync(stream, ".pdf");
-Console.WriteLine(result.Markdown);
+var markdownFromStream = await converter.ConvertAsync(stream, ".pdf");
+Console.WriteLine(markdownFromStream);
 ```
 
 The `MarkdownConverter` class pre-registers all built-in converters (from the core package) and provides synchronous and asynchronous conversion methods.
@@ -340,6 +349,26 @@ services.AddMarkItDotNetWhisper(options =>
 ```
 
 ## API Reference
+
+### MarkdownConverter
+
+The public convenience façade for simple (non-DI) scenarios. Pre-registers all built-in converters.
+
+```csharp
+public class MarkdownConverter
+{
+    // Synchronous file conversion
+    public string ConvertToMarkdown(string filePath, CancellationToken cancellationToken = default);
+
+    // Asynchronous file conversion by path
+    public Task<string> ConvertAsync(string filePath, CancellationToken cancellationToken = default);
+
+    // Asynchronous stream conversion (requires explicit file extension)
+    public Task<string> ConvertAsync(Stream stream, string fileExtension, CancellationToken cancellationToken = default);
+}
+```
+
+All methods return the Markdown text directly. On unsupported formats, they throw `NotSupportedException`.
 
 ### MarkdownService
 
