@@ -105,6 +105,7 @@ static void AddSlide(PresentationPart presPart, ref uint slideId, string[] texts
             new GroupShapeProperties(), notesShape)));
     }
 
-    var slideIdList = presPart.Presentation.SlideIdList!;
+    var presentation = presPart.Presentation ??= new Presentation(new SlideIdList());
+    var slideIdList = presentation.SlideIdList ??= new SlideIdList();
     slideIdList.Append(new SlideId { Id = slideId++, RelationshipId = presPart.GetIdOfPart(slidePart) });
 }

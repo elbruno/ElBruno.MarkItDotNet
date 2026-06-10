@@ -80,3 +80,4 @@ $RECYCLE.BIN/
 
 ## dotnet tool
 .config/dotnet-tools.json
+.squad-workstream

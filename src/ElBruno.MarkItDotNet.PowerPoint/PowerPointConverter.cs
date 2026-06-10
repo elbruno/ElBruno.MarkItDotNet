@@ -21,8 +21,13 @@ public class PowerPointConverter : IMarkdownConverter
 
         using var presentationDocument = PresentationDocument.Open(fileStream, false);
         var presentationPart = presentationDocument.PresentationPart;
+        if (presentationPart is null)
+        {
+            return Task.FromResult(string.Empty);
+        }
 
-        if (presentationPart?.Presentation.SlideIdList is null)
+        var slideIdList = presentationPart.Presentation?.SlideIdList;
+        if (slideIdList is null)
         {
             return Task.FromResult(string.Empty);
         }
@@ -30,7 +35,7 @@ public class PowerPointConverter : IMarkdownConverter
         var sb = new StringBuilder();
         var slideNumber = 1;
 
-        foreach (var slideId in presentationPart.Presentation.SlideIdList.Elements<SlideId>())
+        foreach (var slideId in slideIdList.Elements<SlideId>())
         {
             cancellationToken.ThrowIfCancellationRequested();
 
@@ -69,6 +74,11 @@ public class PowerPointConverter : IMarkdownConverter
 
     private static string ExtractTextFromSlide(SlidePart slidePart)
     {
+        if (slidePart.Slide is null)
+        {
+            return string.Empty;
+        }
+
         var sb = new StringBuilder();
         var shapes = slidePart.Slide.Descendants<Shape>();
 
@@ -132,7 +142,7 @@ public class PowerPointConverter : IMarkdownConverter
     private static string ExtractSpeakerNotes(SlidePart slidePart)
     {
         var notesSlidePart = slidePart.NotesSlidePart;
-        if (notesSlidePart is null)
+        if (notesSlidePart?.NotesSlide is null)
         {
             return string.Empty;
         }

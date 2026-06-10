@@ -2,7 +2,7 @@
 
 ## Overview
 
-ElBruno.MarkItDotNet ships with **16 sample projects** organized into two tiers. **Simple samples** (1–13) are self-contained console apps that each demonstrate a single feature or format conversion — ideal for learning one concept at a time. **End-to-end samples** (14–16) show how to integrate the library into real-world architectures: a REST API, a batch-processing tool, and a RAG ingestion pipeline.
+ElBruno.MarkItDotNet ships with **17 sample projects** organized into two tiers. **Simple samples** (1–13) are self-contained console apps that each demonstrate a single feature or format conversion — ideal for learning one concept at a time. **End-to-end samples** (14–17) show how to integrate the library into real-world architectures: a REST API, a batch-processing tool, a RAG ingestion pipeline, and a hosted-agent service for Foundry deployment.
 
 All samples live under `src/samples/` and are included in the solution file.
 
@@ -26,6 +26,7 @@ All samples live under `src/samples/` and are included in the solution file.
 | 14 | MarkItDotNet.WebApi | `src/samples/MarkItDotNet.WebApi` | ASP.NET Core Minimal API with file upload |
 | 15 | BatchProcessor | `src/samples/BatchProcessor` | Watches a folder and batch-converts files to .md |
 | 16 | RagPipeline | `src/samples/RagPipeline` | RAG ingestion: files → Markdown → chunked JSON |
+| 17 | MarkItDotNet.FoundryHostedAgent | `src/samples/MarkItDotNet.FoundryHostedAgent` | Hosted agent + Aspire AppHost reference for Foundry |
 
 ---
 
@@ -317,3 +318,19 @@ dotnet run --project src/samples/RagPipeline/RagPipeline.csproj
 6. **Report** — Print statistics (document count, chunk count, words, characters, average chunk size)
 
 **Expected output:** Step-by-step progress, serialized JSON chunks, and a statistics summary. The JSON output is ready to feed into an embedding API and vector database.
+
+---
+
+### MarkItDotNet.FoundryHostedAgent
+
+**What it demonstrates:** A hosted-agent oriented service that exposes document-to-Markdown conversion through an `invocations` endpoint, plus deployment assets for Microsoft Foundry and an Aspire 13 AppHost reference.
+
+**How to run:**
+
+```bash
+dotnet run --project src/samples/MarkItDotNet.FoundryHostedAgent/MarkItDotNet.FoundryHostedAgent.csproj
+```
+
+**Key code pattern:** Registers MarkItDotNet services, accepts base64-encoded document content via `POST /invocations`, converts by extension, and returns Markdown output in a structured response payload.
+
+**Expected output:** `200 OK` responses from `/health` and `/invocations` with converted Markdown, plus deployment-ready `agent.yaml`, `Dockerfile`, and `apphost.cs` assets in the sample folder.

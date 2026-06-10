@@ -551,6 +551,7 @@ See [Samples Guide](docs/samples.md) for detailed walkthroughs.
 | [MarkItDotNet.WebApi](src/samples/MarkItDotNet.WebApi) | ASP.NET Core Minimal API with file upload + streaming | `dotnet run --project src/samples/MarkItDotNet.WebApi/MarkItDotNet.WebApi.csproj` |
 | [BatchProcessor](src/samples/BatchProcessor) | Watches folder and batch-converts files to .md | `dotnet run --project src/samples/BatchProcessor/BatchProcessor.csproj` |
 | [RagPipeline](src/samples/RagPipeline) | RAG ingestion: files → Markdown → chunked JSON | `dotnet run --project src/samples/RagPipeline/RagPipeline.csproj` |
+| [MarkItDotNet.FoundryHostedAgent](src/samples/MarkItDotNet.FoundryHostedAgent) | Hosted agent service + Aspire AppHost reference for Foundry deployment | `dotnet run --project src/samples/MarkItDotNet.FoundryHostedAgent/MarkItDotNet.FoundryHostedAgent.csproj` |
 
 ## Documentation
 
