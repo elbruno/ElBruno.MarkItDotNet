@@ -1,0 +1,10 @@
+name: markitdotnet-foundry-agent
+description: Hosted agent that converts documents to Markdown using ElBruno.MarkItDotNet.
+template:
+  kind: hosted
+  protocols:
+    - protocol: invocations
+      version: 1.0.0
+  environment_variables:
+    - name: ASPNETCORE_URLS
+      value: http://0.0.0.0:8088

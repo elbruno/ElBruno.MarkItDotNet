@@ -2,17 +2,10 @@
 
 ## Chapter 1
 
-<nav epub:type="toc" id="id" role="doc-toc">
-      <h2>Sample Document</h2>
-      <ol>
-        <li>
-          <a href="chap_01.xhtml">Introduction</a>
-        </li>
-        <li>
-          <a href="chap_02.xhtml">Supported Formats</a>
-        </li>
-      </ol>
-    </nav>
+## Sample Document
+
+1. [Introduction](chap_01.xhtml)
+2. [Supported Formats](chap_02.xhtml)
 
 ## Chapter 2
 
