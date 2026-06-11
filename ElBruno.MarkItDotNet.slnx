@@ -58,6 +58,8 @@
     <Project Path="src/samples/WhisperTranscription/WhisperTranscription.csproj" />
     <Project Path="src/samples/Phase1.PdfToChunks/Phase1.PdfToChunks.csproj" />
     <Project Path="src/samples/Phase2.FullPipeline/Phase2.FullPipeline.csproj" />
-    <Project Path="src/samples/MarkItDotNet.FoundryHostedAgent/MarkItDotNet.FoundryHostedAgent.csproj" />
+    <Project Path="src/samples/MarkItDotNet.FoundryHostedAgent.WebUi/MarkItDotNet.FoundryHostedAgent.WebUi.csproj" />
+    <Project Path="src/samples/MarkItDotNet.FoundryHostedAgent/Agent/MarkItDotNet.FoundryHostedAgent.csproj" />
+    <Project Path="src/samples/MarkItDotNet.FoundryHostedAgent/WebUi/MarkItDotNet.FoundryHostedAgent.WebUi.csproj" />
   </Folder>
 </Solution>

@@ -1,54 +1,45 @@
-# MarkItDotNet.FoundryHostedAgent
+# MarkItDotNet.FoundryHostedAgent Scenario
 
-Sample hosted agent service that converts document bytes to Markdown with `ElBruno.MarkItDotNet`.
+Complete sample scenario for a hosted-agent backend plus a Blazor test frontend, orchestrated with Aspire.
 
-## What this sample includes
+## Folder layout
 
-- `Program.cs`: `POST /invocations` endpoint (Foundry hosted-agent style payload)
-- `agent.yaml`: hosted agent metadata contract
-- `Dockerfile`: container build for deployment
-- `apphost.cs`: Aspire 13 single-file AppHost reference for local orchestration
+- `apphost.cs` — Aspire AppHost entry point (orchestrates both projects)
+- `Agent/` — hosted agent backend (`/health`, `/invocations`)
+- `WebUi/` — Blazor Server frontend to upload files, call the agent, and preview Markdown
 
-## Local run
+## Run with Aspire (recommended)
 
-```bash
-dotnet run --project src/samples/MarkItDotNet.FoundryHostedAgent/MarkItDotNet.FoundryHostedAgent.csproj
-```
-
-The API listens on `http://localhost:8088`.
-
-Health check:
-
-```bash
-curl http://localhost:8088/health
-```
-
-Invocation example:
-
-```bash
-curl -X POST http://localhost:8088/invocations ^
-  -H "Content-Type: application/json" ^
-  -d "{ \"input\": { \"fileName\": \"sample.txt\", \"extension\": \".txt\", \"contentBase64\": \"SGVsbG8gTWFya2Rvd24h\" } }"
-```
-
-## Aspire reference (latest line)
-
-Use the single-file AppHost with Aspire 13:
+From repository root:
 
 ```bash
 dotnet run src/samples/MarkItDotNet.FoundryHostedAgent/apphost.cs
 ```
 
-## Deploy as Hosted Agent to Microsoft Foundry (azd-first)
+Aspire starts:
 
-Use the current hosted-agent quickstart workflow:
+- `markitdotnet-foundry-agent`
+- `markitdotnet-foundry-agent-ui`
 
-- Quickstart: https://learn.microsoft.com/azure/foundry/agents/quickstarts/quickstart-hosted-agent
-- Source-code deploy: https://learn.microsoft.com/azure/foundry/agents/how-to/deploy-hosted-agent-code
+The UI gets the backend endpoint automatically through environment wiring (`AgentUi__DefaultAgentUrl`).
 
-Suggested flow:
+## Run projects independently
 
-1. Initialize hosted-agent project/deployment configuration with `azd ai agent init`.
-2. Ensure `agent.yaml` points to hosted + `invocations` protocol.
-3. Validate locally (`azd ai agent run` or direct `dotnet run`).
-4. Deploy with `azd deploy`.
+Backend:
+
+```bash
+dotnet run --project src/samples/MarkItDotNet.FoundryHostedAgent/Agent/MarkItDotNet.FoundryHostedAgent.csproj
+```
+
+Frontend:
+
+```bash
+dotnet run --project src/samples/MarkItDotNet.FoundryHostedAgent/WebUi/MarkItDotNet.FoundryHostedAgent.WebUi.csproj
+```
+
+When running independently, set the agent URL in the UI textbox (or configure `AgentUi__DefaultAgentUrl`).
+
+## Deployment notes
+
+- `Agent/agent.yaml` and `Agent/Dockerfile` are used for hosted-agent/container deployment.
+- The Web UI can target local or cloud endpoints by changing the agent URL textbox or `AgentUi__DefaultAgentUrl`.

@@ -1,0 +1,105 @@
+:root {
+    color-scheme: light;
+    font-family: Segoe UI, system-ui, Arial, sans-serif;
+}
+
+body {
+    margin: 0;
+    background: #f4f6fb;
+    color: #1a1a1a;
+}
+
+.container {
+    max-width: 960px;
+    margin: 2rem auto;
+    padding: 0 1rem 3rem;
+}
+
+.subtitle {
+    color: #4d5b76;
+    margin-bottom: 1.5rem;
+}
+
+.panel {
+    background: #fff;
+    border-radius: 12px;
+    padding: 1.25rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+label {
+    font-weight: 600;
+}
+
+input[type="url"] {
+    border: 1px solid #c5cee0;
+    border-radius: 8px;
+    padding: 0.6rem 0.8rem;
+    font-size: 0.95rem;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+button {
+    width: fit-content;
+    background: #2563eb;
+    color: #fff;
+    border: 0;
+    border-radius: 8px;
+    padding: 0.6rem 1.2rem;
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+}
+
+button:disabled {
+    opacity: 0.6;
+    cursor: wait;
+}
+
+.file-info {
+    margin: 0;
+    color: #334155;
+    font-size: 0.9rem;
+}
+
+.status {
+    margin-top: 1rem;
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    font-size: 0.95rem;
+}
+
+.status.ok {
+    background: #ecfdf5;
+    color: #166534;
+    border: 1px solid #86efac;
+}
+
+.status.error {
+    background: #fef2f2;
+    color: #991b1b;
+    border: 1px solid #fca5a5;
+}
+
+.result {
+    margin-top: 1.5rem;
+}
+
+.result h2 {
+    margin-bottom: 0.5rem;
+}
+
+pre {
+    background: #0f172a;
+    color: #e2e8f0;
+    border-radius: 12px;
+    padding: 1.25rem;
+    overflow-x: auto;
+    white-space: pre-wrap;
+    word-break: break-word;
+    line-height: 1.6;
+}

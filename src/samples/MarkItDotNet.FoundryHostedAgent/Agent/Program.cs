@@ -1,7 +1,11 @@
 using ElBruno.MarkItDotNet;
+using MarkItDotNet.FoundryHostedAgent;
 
 var builder = WebApplication.CreateBuilder(args);
-builder.WebHost.UseUrls("http://0.0.0.0:8088");
+
+var portValue = builder.Configuration["PORT"];
+var port = int.TryParse(portValue, out var parsedPort) ? parsedPort : 8088;
+builder.WebHost.UseUrls($"http://0.0.0.0:{port}");
 
 builder.Services.AddMarkItDotNet();
 
@@ -37,7 +41,7 @@ app.MapPost("/invocations", async (InvocationEnvelope request, MarkdownService m
     }
 
     await using var stream = new MemoryStream(bytes);
-    var result = await markdownService.ConvertAsync(stream, request.Input.Extension);
+    var result = await markdownService.ConvertAsync(stream, request.Input.Extension, cancellationToken);
 
     if (!result.Success)
     {
@@ -52,17 +56,3 @@ app.MapPost("/invocations", async (InvocationEnvelope request, MarkdownService m
 });
 
 await app.RunAsync();
-
-public sealed record InvocationEnvelope(InvocationInput Input);
-
-public sealed record InvocationInput(
-    string? FileName,
-    string Extension,
-    string ContentBase64);
-
-public sealed record InvocationResponse(InvocationOutput Output);
-
-public sealed record InvocationOutput(
-    string FileName,
-    string Extension,
-    string Markdown);

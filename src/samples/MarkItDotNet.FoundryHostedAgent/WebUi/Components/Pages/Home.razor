@@ -1,0 +1,104 @@
+@page "/"
+@inject HostedAgentClient AgentClient
+
+<PageTitle>MarkItDotNet – Foundry Agent Demo</PageTitle>
+
+<div class="container">
+    <h1>MarkItDotNet Foundry Agent</h1>
+    <p class="subtitle">
+        Upload a file and convert it to Markdown via the hosted agent endpoint.
+        Change the URL to target a local or Azure-hosted instance.
+    </p>
+
+    <div class="panel">
+        <label for="agentUrl">Agent URL</label>
+        <input id="agentUrl" type="url" @bind="AgentUrl" placeholder="https://your-agent-host/invocations" />
+        <small>
+            When running under Aspire the URL is pre-filled automatically.
+            Change it to point at your Azure Container Apps endpoint.
+        </small>
+
+        <label for="fileInput">File to convert</label>
+        <InputFile id="fileInput" OnChange="OnFileSelected" />
+
+        @if (_selectedFile is not null)
+        {
+            <p class="file-info">
+                Selected: <strong>@_selectedFile.Name</strong>
+                &nbsp;(@FormatBytes(_selectedFile.Size))
+            </p>
+        }
+
+        <button @onclick="ConvertAsync" disabled="@_isBusy">
+            @(_isBusy ? "Converting…" : "Convert to Markdown")
+        </button>
+    </div>
+
+    @if (!string.IsNullOrWhiteSpace(_statusMessage))
+    {
+        <div class="status @(_isSuccess ? "ok" : "error")">@_statusMessage</div>
+    }
+
+    @if (!string.IsNullOrWhiteSpace(_markdownResult))
+    {
+        <div class="result">
+            <h2>Result</h2>
+            <pre>@_markdownResult</pre>
+        </div>
+    }
+</div>
+
+@code {
+    private IBrowserFile? _selectedFile;
+    private bool _isBusy;
+    private bool _isSuccess;
+    private string? _statusMessage;
+    private string? _markdownResult;
+
+    private string AgentUrl { get; set; } = string.Empty;
+
+    protected override void OnInitialized() =>
+        AgentUrl = AgentClient.DefaultAgentUrl;
+
+    private void OnFileSelected(InputFileChangeEventArgs e)
+    {
+        _selectedFile = e.File;
+        _statusMessage = null;
+        _markdownResult = null;
+    }
+
+    private async Task ConvertAsync()
+    {
+        if (_selectedFile is null)
+        {
+            _isSuccess = false;
+            _statusMessage = "Please select a file first.";
+            return;
+        }
+
+        _isBusy = true;
+        _statusMessage = "Sending file to the agent…";
+        _markdownResult = null;
+
+        try
+        {
+            var result = await AgentClient.ConvertAsync(_selectedFile, AgentUrl, CancellationToken.None);
+            _isSuccess = result.Success;
+            _statusMessage = result.Success
+                ? $"Converted successfully ({result.FileName}{result.Extension})."
+                : result.ErrorMessage;
+            _markdownResult = result.Markdown;
+        }
+        finally
+        {
+            _isBusy = false;
+        }
+    }
+
+    private static string FormatBytes(long bytes) => bytes switch
+    {
+        >= 1024 * 1024 => $"{bytes / (1024.0 * 1024.0):F2} MB",
+        >= 1024 => $"{bytes / 1024.0:F2} KB",
+        _ => $"{bytes} B"
+    };
+}

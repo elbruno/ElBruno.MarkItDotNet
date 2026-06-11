@@ -6,10 +6,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\ElBruno.MarkItDotNet\ElBruno.MarkItDotNet.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Remove="apphost.cs" />
+    <ProjectReference Include="..\..\..\ElBruno.MarkItDotNet\ElBruno.MarkItDotNet.csproj" />
   </ItemGroup>
 </Project>

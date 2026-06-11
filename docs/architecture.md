@@ -134,6 +134,16 @@ The `ConverterRegistry` singleton discovers plugins registered as `IConverterPlu
 
 Satellite packages register additional `IConverterPlugin` instances that are auto-discovered by `ConverterRegistry`.
 
+## Hosted-Agent Web UI Bridge Pattern (Sample)
+
+The `src/samples/MarkItDotNet.FoundryHostedAgent` sample demonstrates a browser-facing integration pattern for hosted agents:
+
+- A **Blazor Server UI** accepts file uploads and allows runtime configuration of the hosted-agent endpoint URL.
+- A thin HTTP client service (`HostedAgentClient`) converts uploaded bytes to the hosted-agent invocation contract (`fileName`, `extension`, `contentBase64`) and calls `POST /invocations`.
+- The same sample also keeps a local `POST /invocations` endpoint for protocol compatibility and local loopback testing.
+
+This pattern separates UI concerns from conversion protocol concerns and supports local development (localhost endpoint) and cloud-hosted endpoints (for example, Azure-hosted agent URLs) without code changes.
+
 ## Extending with Custom Converters
 
 ### Single Converter

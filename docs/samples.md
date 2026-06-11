@@ -26,7 +26,7 @@ All samples live under `src/samples/` and are included in the solution file.
 | 14 | MarkItDotNet.WebApi | `src/samples/MarkItDotNet.WebApi` | ASP.NET Core Minimal API with file upload |
 | 15 | BatchProcessor | `src/samples/BatchProcessor` | Watches a folder and batch-converts files to .md |
 | 16 | RagPipeline | `src/samples/RagPipeline` | RAG ingestion: files → Markdown → chunked JSON |
-| 17 | MarkItDotNet.FoundryHostedAgent | `src/samples/MarkItDotNet.FoundryHostedAgent` | Hosted agent + Aspire AppHost reference for Foundry |
+| 17 | MarkItDotNet.FoundryHostedAgent | `src/samples/MarkItDotNet.FoundryHostedAgent` | Blazor web UI + hosted agent endpoint + Aspire AppHost reference for Foundry |
 
 ---
 
@@ -323,7 +323,7 @@ dotnet run --project src/samples/RagPipeline/RagPipeline.csproj
 
 ### MarkItDotNet.FoundryHostedAgent
 
-**What it demonstrates:** A hosted-agent oriented service that exposes document-to-Markdown conversion through an `invocations` endpoint, plus deployment assets for Microsoft Foundry and an Aspire 13 AppHost reference.
+**What it demonstrates:** A Blazor Server app that lets you upload files from the browser, set the hosted agent URL in a textbox, call a hosted agent `invocations` endpoint, and display converted Markdown results. Includes deployment assets for Microsoft Foundry and an Aspire 13 AppHost reference.
 
 **How to run:**
 
@@ -331,6 +331,11 @@ dotnet run --project src/samples/RagPipeline/RagPipeline.csproj
 dotnet run --project src/samples/MarkItDotNet.FoundryHostedAgent/MarkItDotNet.FoundryHostedAgent.csproj
 ```
 
-**Key code pattern:** Registers MarkItDotNet services, accepts base64-encoded document content via `POST /invocations`, converts by extension, and returns Markdown output in a structured response payload.
+**Key code pattern:**
 
-**Expected output:** `200 OK` responses from `/health` and `/invocations` with converted Markdown, plus deployment-ready `agent.yaml`, `Dockerfile`, and `apphost.cs` assets in the sample folder.
+- Browser UI in `Components/Pages/Home.razor` collects file + agent URL
+- `HostedAgentClient` forwards file content to the configured agent endpoint using the hosted-agent payload contract
+- `POST /invocations` remains available for Foundry-hosted-agent protocol compatibility
+- Aspire local orchestration remains available through `apphost.cs`
+
+**Expected output:** Browser-based Markdown preview for uploaded files, plus `200 OK` responses from `/health` and `/invocations`, with deployment-ready `agent.yaml`, `Dockerfile`, and `apphost.cs` assets in the sample folder.

@@ -44,6 +44,20 @@ The test suite uses [xUnit](https://xunit.net/) with [FluentAssertions](https://
 dotnet run --project src/samples/BasicConversion/BasicConversion.csproj
 ```
 
+Run the hosted-agent + web UI sample:
+
+```bash
+dotnet run --project src/samples/MarkItDotNet.FoundryHostedAgent/MarkItDotNet.FoundryHostedAgent.csproj
+```
+
+Open `http://localhost:8088` to upload a file, set an agent URL, and view converted Markdown output.
+
+Run with Aspire orchestration reference:
+
+```bash
+dotnet run src/samples/MarkItDotNet.FoundryHostedAgent/apphost.cs
+```
+
 ## Project Structure
 
 ```
@@ -76,3 +90,17 @@ ElBruno.MarkItDotNet/
 1. Ensure all tests pass
 2. Create a GitHub release with a tag like `v0.1.0`
 3. The publish workflow automatically builds, packs, and pushes to NuGet.org
+
+## Azure Container Apps Notes (FoundryHostedAgent sample)
+
+The `MarkItDotNet.FoundryHostedAgent` sample is container-ready:
+
+- Dockerfile builds and publishes the app
+- Runtime listens on port `8088` and honors `PORT`-based hosting configuration
+- Configure `AgentUi__DefaultAgentUrl` to point the web UI at your deployed hosted-agent endpoint
+
+When deploying to Azure Container Apps:
+
+1. Configure ingress target port to `8088`
+2. Set environment variables as needed (`PORT`, `AgentUi__DefaultAgentUrl`, `AgentUi__MaxUploadBytes`)
+3. Validate `/health` and then test browser upload flow
