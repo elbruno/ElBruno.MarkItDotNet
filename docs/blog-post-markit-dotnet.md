@@ -175,7 +175,7 @@ Or bundle multiple converters into a plugin with `IConverterPlugin`. The archite
 
 ---
 
-## 🎮 18 Sample Apps
+## 🎮 17 Sample Apps
 
 Yes, **18 samples**. I went a bit overboard 😅 but they cover everything:
 
@@ -186,7 +186,6 @@ Yes, **18 samples**. I went a bit overboard 😅 but they cover everything:
 - **PowerPointConversion** — slides
 - **AiImageDescription** — AI image analysis
 - **WhisperTranscription** — local audio
-- **MarkItDotNet.WebApi** — minimal API with uploads + SSE
 - **BatchProcessor** — folder batch conversion
 - **RagPipeline** — RAG ingestion pipeline
 - …and more!

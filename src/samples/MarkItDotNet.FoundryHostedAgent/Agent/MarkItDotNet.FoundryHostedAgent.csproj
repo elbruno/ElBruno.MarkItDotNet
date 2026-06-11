@@ -7,6 +7,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\ElBruno.MarkItDotNet\ElBruno.MarkItDotNet.csproj" />
-    <ProjectReference Include="..\..\..\MarkItDotNet.ServiceDefaults\MarkItDotNet.ServiceDefaults.csproj" />
+    <ProjectReference Include="..\MarkItDotNet.ServiceDefaults\MarkItDotNet.ServiceDefaults.csproj" />
   </ItemGroup>
 </Project>

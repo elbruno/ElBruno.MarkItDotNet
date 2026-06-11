@@ -2,7 +2,7 @@
 
 ## Overview
 
-ElBruno.MarkItDotNet ships with **17 sample projects** organized into two tiers. **Simple samples** (1–13) are self-contained console apps that each demonstrate a single feature or format conversion — ideal for learning one concept at a time. **End-to-end samples** (14–17) show how to integrate the library into real-world architectures: a REST API, a batch-processing tool, a RAG ingestion pipeline, and a hosted-agent service for Foundry deployment.
+ElBruno.MarkItDotNet ships with **16 sample projects** organized into two tiers. **Simple samples** (1–13) are self-contained console apps that each demonstrate a single feature or format conversion — ideal for learning one concept at a time. **End-to-end samples** (14–16) show how to integrate the library into real-world architectures: a batch-processing tool, a RAG ingestion pipeline, and a hosted-agent service for Foundry deployment.
 
 All samples live under `src/samples/` and are included in the solution file.
 
@@ -23,10 +23,9 @@ All samples live under `src/samples/` and are included in the solution file.
 | 11 | CustomConverter | `src/samples/CustomConverter` | Build a custom IMarkdownConverter (.ini files) |
 | 12 | PluginPackage | `src/samples/PluginPackage` | Build and register a custom IConverterPlugin |
 | 13 | AllFormats | `src/samples/AllFormats` | Converts all supported formats in one app |
-| 14 | MarkItDotNet.WebApi | `src/samples/MarkItDotNet.WebApi` | ASP.NET Core Minimal API with file upload |
-| 15 | BatchProcessor | `src/samples/BatchProcessor` | Watches a folder and batch-converts files to .md |
-| 16 | RagPipeline | `src/samples/RagPipeline` | RAG ingestion: files → Markdown → chunked JSON |
-| 17 | MarkItDotNet.FoundryHostedAgent | `src/samples/MarkItDotNet.FoundryHostedAgent` | Blazor web UI + hosted agent endpoint + Aspire AppHost reference for Foundry |
+| 14 | BatchProcessor | `src/samples/BatchProcessor` | Watches a folder and batch-converts files to .md |
+| 15 | RagPipeline | `src/samples/RagPipeline` | RAG ingestion: files → Markdown → chunked JSON |
+| 16 | MarkItDotNet.FoundryHostedAgent | `src/samples/MarkItDotNet.FoundryHostedAgent` | Blazor web UI + hosted agent endpoint + Aspire AppHost reference for Foundry |
 
 ---
 
@@ -36,8 +35,8 @@ All samples require **.NET 8.0 SDK** or later. Beyond that:
 
 | Requirement | Samples |
 |-------------|---------|
-| **ElBruno.MarkItDotNet.Excel** package | ExcelConversion, AllFormats, WebApi, BatchProcessor |
-| **ElBruno.MarkItDotNet.PowerPoint** package | PowerPointConversion, AllFormats, WebApi, BatchProcessor |
+| **ElBruno.MarkItDotNet.Excel** package | ExcelConversion, AllFormats, BatchProcessor |
+| **ElBruno.MarkItDotNet.PowerPoint** package | PowerPointConversion, AllFormats, BatchProcessor |
 | **ElBruno.MarkItDotNet.AI** package + an `IChatClient` implementation (e.g., OpenAI, Azure OpenAI) | AiImageDescription |
 | **PdfPig** (bundled with core) | PdfConversion, StreamingConversion |
 
@@ -258,27 +257,6 @@ dotnet run --project src/samples/AllFormats/AllFormats.csproj
 ---
 
 ## End-to-End Samples
-
-### MarkItDotNet.WebApi
-
-**What it demonstrates:** A production-ready ASP.NET Core Minimal API that accepts file uploads and returns Markdown. Includes both synchronous and streaming endpoints, plus Swagger documentation.
-
-**How to run:**
-
-```bash
-dotnet run --project src/samples/MarkItDotNet.WebApi/MarkItDotNet.WebApi.csproj
-```
-
-Then open `https://localhost:<port>/swagger` to explore the API.
-
-**Key code pattern:** Registers `AddMarkItDotNet()`, `AddMarkItDotNetExcel()`, and `AddMarkItDotNetPowerPoint()` in the DI container. Exposes two endpoints:
-
-- `POST /api/convert` — Accepts a file upload, returns JSON with `{ success, markdown, sourceFormat, errorMessage, metadata }`.
-- `POST /api/convert/streaming` — Streams Markdown chunks as Server-Sent Events (`text/event-stream`).
-
-**Expected output:** JSON response with converted Markdown, or a stream of SSE events for large files.
-
----
 
 ### BatchProcessor
 
