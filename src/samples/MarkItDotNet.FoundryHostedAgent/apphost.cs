@@ -6,6 +6,7 @@ var agent = builder.AddProject("markitdotnet-agent", "./Agent/MarkItDotNet.Found
     .WithHttpEndpoint(env: "PORT");
 
 builder.AddProject("markitdotnet-webapp", "./WebUi/MarkItDotNet.FoundryHostedAgent.WebUi.csproj")
+    .WithExternalHttpEndpoints()
     .WithReference(agent)
     .WaitFor(agent);
 
