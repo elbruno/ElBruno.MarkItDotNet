@@ -41,7 +41,7 @@ public sealed class HostedAgentClient(HttpClient httpClient, IHttpClientFactory 
             extension,
             Convert.ToBase64String(memory.ToArray())));
 
-        // Use custom URL if provided, otherwise use the pre-configured HTTP client
+        // Use custom URL if provided, otherwise use the service discovery mechanism
         HttpClient client;
         if (!string.IsNullOrWhiteSpace(customUrl))
         {
@@ -49,7 +49,15 @@ public sealed class HostedAgentClient(HttpClient httpClient, IHttpClientFactory 
         }
         else
         {
+            // Use the pre-configured HTTP client which has service discovery enabled
+            // Service discovery will resolve "http://markitdotnet-agent" to the actual endpoint
             client = _httpClient;
+
+            // Set the BaseAddress to use service discovery for the agent
+            if (client.BaseAddress == null)
+            {
+                client.BaseAddress = new Uri("http://markitdotnet-agent");
+            }
         }
 
         HttpResponseMessage response;
@@ -60,7 +68,7 @@ public sealed class HostedAgentClient(HttpClient httpClient, IHttpClientFactory 
         catch (Exception ex)
         {
             var endpoint = string.IsNullOrWhiteSpace(customUrl)
-                ? $"service '{_options.AgentServiceName}'"
+                ? $"service 'markitdotnet-agent'"
                 : $"custom URL '{customUrl}'";
             return new AgentConversionResult(
                 false, null, $"Could not reach the agent at {endpoint}: {ex.Message}", file.Name, extension);

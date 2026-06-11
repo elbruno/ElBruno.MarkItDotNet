@@ -14,6 +14,7 @@
     <Project Path="src/ElBruno.MarkItDotNet.VectorData/ElBruno.MarkItDotNet.VectorData.csproj" />
     <Project Path="src/ElBruno.MarkItDotNet.AzureSearch/ElBruno.MarkItDotNet.AzureSearch.csproj" />
     <Project Path="src/ElBruno.MarkItDotNet.Sync/ElBruno.MarkItDotNet.Sync.csproj" />
+    <Project Path="src/MarkItDotNet.ServiceDefaults/MarkItDotNet.ServiceDefaults.csproj" />
   </Folder>
   <Folder Name="/src/tests/">
     <Project Path="src/tests/ElBruno.MarkItDotNet.Tests/ElBruno.MarkItDotNet.Tests.csproj" />
@@ -58,7 +59,6 @@
     <Project Path="src/samples/WhisperTranscription/WhisperTranscription.csproj" />
     <Project Path="src/samples/Phase1.PdfToChunks/Phase1.PdfToChunks.csproj" />
     <Project Path="src/samples/Phase2.FullPipeline/Phase2.FullPipeline.csproj" />
-    <Project Path="src/samples/MarkItDotNet.FoundryHostedAgent.WebUi/MarkItDotNet.FoundryHostedAgent.WebUi.csproj" />
     <Project Path="src/samples/MarkItDotNet.FoundryHostedAgent/Agent/MarkItDotNet.FoundryHostedAgent.csproj" />
     <Project Path="src/samples/MarkItDotNet.FoundryHostedAgent/WebUi/MarkItDotNet.FoundryHostedAgent.WebUi.csproj" />
   </Folder>

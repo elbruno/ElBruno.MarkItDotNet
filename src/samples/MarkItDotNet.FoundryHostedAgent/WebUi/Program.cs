@@ -1,35 +1,31 @@
 using MarkItDotNet.FoundryHostedAgent.WebUi;
 using MarkItDotNet.FoundryHostedAgent.WebUi.Components;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Add Aspire Service Defaults (includes OpenTelemetry, health checks, service discovery)
+builder.AddServiceDefaults();
+
 builder.Services.Configure<AgentUiOptions>(builder.Configuration.GetSection(AgentUiOptions.SectionName));
 
 // Add HttpClient for the agent
-// Aspire sets environment variables for referenced services, e.g.:
-// MARKITDOTNET_AGENT_HTTP_PORT, MARKITDOTNET_AGENT_HTTP_HOST, or in connection string format
-builder.Services.AddHttpClient<HostedAgentClient>((serviceProvider, client) =>
-{
-    // Try various environment variable naming patterns that Aspire might use
-    var agentPort = Environment.GetEnvironmentVariable("MARKITDOTNET_AGENT_HTTP_PORT")
-                    ?? Environment.GetEnvironmentVariable("Services__markitdotnet-agent__http__0__port")
-                    ?? Environment.GetEnvironmentVariable("Services__markitdotnet-agent__http__port")
-                    ?? "8088";
-    var agentHost = Environment.GetEnvironmentVariable("MARKITDOTNET_AGENT_HTTP_HOST")
-                    ?? Environment.GetEnvironmentVariable("Services__markitdotnet-agent__http__host")
-                    ?? "localhost";
-    var agentScheme = Environment.GetEnvironmentVariable("MARKITDOTNET_AGENT_HTTP_SCHEME")
-                      ?? Environment.GetEnvironmentVariable("Services__markitdotnet-agent__http__scheme")
-                      ?? "http";
-
-    client.BaseAddress = new Uri($"{agentScheme}://{agentHost}:{agentPort}");
-});
+// When using service discovery (default), the agent service name is resolved automatically
+// by the ServiceDefaults AddServiceDiscovery() configuration.
+// Custom URLs can be provided by the user in the UI.
+builder.Services.AddHttpClient<HostedAgentClient>();
 
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
 var app = builder.Build();
+
+// Map default endpoints (health checks)
+app.MapDefaultEndpoints();
+
+var logger = app.Services.GetRequiredService<ILogger<Program>>();
+logger.LogInformation("WebUi application starting");
 
 if (!app.Environment.IsDevelopment())
 {
@@ -42,4 +38,5 @@ app.UseAntiforgery();
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();
 
+logger.LogInformation("WebUi application started successfully");
 await app.RunAsync();
