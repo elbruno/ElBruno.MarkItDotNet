@@ -4,26 +4,20 @@ using Microsoft.Extensions.Options;
 
 namespace MarkItDotNet.FoundryHostedAgent.WebUi;
 
-public sealed class HostedAgentClient(HttpClient httpClient, IOptions<AgentUiOptions> options)
+public sealed class HostedAgentClient(HttpClient httpClient, IHttpClientFactory httpClientFactory, IOptions<AgentUiOptions> options)
 {
     private readonly HttpClient _httpClient = httpClient;
+    private readonly IHttpClientFactory _httpClientFactory = httpClientFactory;
     private readonly AgentUiOptions _options = options.Value;
 
-    public string DefaultAgentUrl => _options.DefaultAgentUrl;
+    public string AgentServiceName => _options.AgentServiceName;
     public long MaxUploadBytes => _options.MaxUploadBytes;
 
     public async Task<AgentConversionResult> ConvertAsync(
-        IBrowserFile file, string agentUrl, CancellationToken cancellationToken)
+        IBrowserFile file, string? customUrl, CancellationToken cancellationToken)
     {
         if (file is null)
             return new AgentConversionResult(false, null, "No file was selected.", null, null);
-
-        var useDefaultEndpoint = string.IsNullOrWhiteSpace(agentUrl)
-            || string.Equals(agentUrl, AgentUiOptions.DefaultServiceDiscoveryUrl, StringComparison.OrdinalIgnoreCase);
-
-        Uri? uri = null;
-        if (!useDefaultEndpoint && !Uri.TryCreate(agentUrl, UriKind.Absolute, out uri))
-            return new AgentConversionResult(false, null, "Please provide a valid absolute agent URL.", file.Name, null);
 
         var extension = Path.GetExtension(file.Name);
         if (string.IsNullOrWhiteSpace(extension))
@@ -47,17 +41,29 @@ public sealed class HostedAgentClient(HttpClient httpClient, IOptions<AgentUiOpt
             extension,
             Convert.ToBase64String(memory.ToArray())));
 
+        // Use custom URL if provided, otherwise use the pre-configured HTTP client
+        HttpClient client;
+        if (!string.IsNullOrWhiteSpace(customUrl))
+        {
+            client = new HttpClient { BaseAddress = new Uri(customUrl.TrimEnd('/')) };
+        }
+        else
+        {
+            client = _httpClient;
+        }
+
         HttpResponseMessage response;
         try
         {
-            response = useDefaultEndpoint
-                ? await _httpClient.PostAsJsonAsync("/invocations", payload, cancellationToken)
-                : await _httpClient.PostAsJsonAsync(uri!, payload, cancellationToken);
+            response = await client.PostAsJsonAsync("/invocations", payload, cancellationToken);
         }
         catch (Exception ex)
         {
+            var endpoint = string.IsNullOrWhiteSpace(customUrl)
+                ? $"service '{_options.AgentServiceName}'"
+                : $"custom URL '{customUrl}'";
             return new AgentConversionResult(
-                false, null, $"Could not reach the agent endpoint: {ex.Message}", file.Name, extension);
+                false, null, $"Could not reach the agent at {endpoint}: {ex.Message}", file.Name, extension);
         }
 
         if (!response.IsSuccessStatusCode)

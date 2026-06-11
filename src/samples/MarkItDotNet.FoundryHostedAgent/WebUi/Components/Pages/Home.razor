@@ -6,17 +6,30 @@
 <div class="container">
     <h1>MarkItDotNet Foundry Agent</h1>
     <p class="subtitle">
-        Upload a file and convert it to Markdown via the hosted agent endpoint.
-        Change the URL to target a local or Azure-hosted instance.
+        Upload a file and convert it to Markdown via Aspire service discovery.
     </p>
 
     <div class="panel">
-        <label for="agentUrl">Agent URL</label>
-        <input id="agentUrl" type="url" @bind="AgentUrl" placeholder="https://your-agent-host/invocations" />
+        <label>Configuration</label>
         <small>
-            When running under Aspire the URL is pre-filled automatically.
-            Change it to point at your Azure Container Apps endpoint.
+            By default, this sample uses Aspire service discovery to reach the agent at <strong>@AgentClient.AgentServiceName</strong>.
         </small>
+
+        <div style="margin-top: 12px; margin-bottom: 12px;">
+            <input type="checkbox" id="useCustomUrl" @bind="_useCustomUrl" />
+            <label for="useCustomUrl" style="display: inline; margin-left: 8px;">
+                Use custom URL
+            </label>
+        </div>
+
+        @if (_useCustomUrl)
+        {
+            <label for="customUrl">Custom agent URL</label>
+            <input id="customUrl" type="text" @bind="_customUrl" placeholder="e.g., http://localhost:8088" />
+            <small>
+                Leave blank to fall back to service discovery.
+            </small>
+        }
 
         <label for="fileInput">File to convert</label>
         <InputFile id="fileInput" OnChange="OnFileSelected" />
@@ -54,11 +67,9 @@
     private bool _isSuccess;
     private string? _statusMessage;
     private string? _markdownResult;
+    private bool _useCustomUrl;
+    private string _customUrl = string.Empty;
 
-    private string AgentUrl { get; set; } = string.Empty;
-
-    protected override void OnInitialized() =>
-        AgentUrl = AgentClient.DefaultAgentUrl;
 
     private void OnFileSelected(InputFileChangeEventArgs e)
     {
@@ -82,7 +93,8 @@
 
         try
         {
-            var result = await AgentClient.ConvertAsync(_selectedFile, AgentUrl, CancellationToken.None);
+            var customUrl = _useCustomUrl && !string.IsNullOrWhiteSpace(_customUrl) ? _customUrl : null;
+            var result = await AgentClient.ConvertAsync(_selectedFile, customUrl, CancellationToken.None);
             _isSuccess = result.Success;
             _statusMessage = result.Success
                 ? $"Converted successfully ({result.FileName}{result.Extension})."

@@ -6,11 +6,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <base href="/" />
     <link rel="stylesheet" href="app.css" />
-    <HeadOutlet />
+    <HeadOutlet @rendermode="RenderMode.InteractiveServer" />
 </head>
 
 <body>
-    <Routes />
+    <Routes @rendermode="RenderMode.InteractiveServer" />
     <script src="_framework/blazor.web.js"></script>
 </body>
 
