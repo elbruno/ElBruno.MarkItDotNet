@@ -3,13 +3,14 @@ namespace MarkItDotNet.FoundryHostedAgent.WebUi;
 public sealed class AgentUiOptions
 {
     public const string SectionName = "AgentUi";
+    public const string DefaultServiceDiscoveryUrl = "http+https://markitdotnet-agent";
 
     /// <summary>
-    /// Default agent invocations URL shown in the textbox.
-    /// Overridden at runtime by Aspire via AgentUi__DefaultAgentUrl when running locally,
-    /// or by environment variable when deployed to Azure Container Apps.
+    /// Default agent URL shown in the textbox.
+    /// Under Aspire, this is the service discovery name for the backend resource.
+    /// Override with an absolute URL when running standalone or targeting a cloud endpoint.
     /// </summary>
-    public string DefaultAgentUrl { get; set; } = "http://localhost:8088/invocations";
+    public string DefaultAgentUrl { get; set; } = DefaultServiceDiscoveryUrl;
 
     public long MaxUploadBytes { get; set; } = 20 * 1024 * 1024;
 }

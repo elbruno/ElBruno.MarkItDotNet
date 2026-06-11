@@ -18,7 +18,11 @@ public sealed class HostedAgentClient(HttpClient httpClient, IOptions<AgentUiOpt
         if (file is null)
             return new AgentConversionResult(false, null, "No file was selected.", null, null);
 
-        if (string.IsNullOrWhiteSpace(agentUrl) || !Uri.TryCreate(agentUrl, UriKind.Absolute, out var uri))
+        var useDefaultEndpoint = string.IsNullOrWhiteSpace(agentUrl)
+            || string.Equals(agentUrl, AgentUiOptions.DefaultServiceDiscoveryUrl, StringComparison.OrdinalIgnoreCase);
+
+        Uri? uri = null;
+        if (!useDefaultEndpoint && !Uri.TryCreate(agentUrl, UriKind.Absolute, out uri))
             return new AgentConversionResult(false, null, "Please provide a valid absolute agent URL.", file.Name, null);
 
         var extension = Path.GetExtension(file.Name);
@@ -46,7 +50,9 @@ public sealed class HostedAgentClient(HttpClient httpClient, IOptions<AgentUiOpt
         HttpResponseMessage response;
         try
         {
-            response = await _httpClient.PostAsJsonAsync(uri, payload, cancellationToken);
+            response = useDefaultEndpoint
+                ? await _httpClient.PostAsJsonAsync("/invocations", payload, cancellationToken)
+                : await _httpClient.PostAsJsonAsync(uri!, payload, cancellationToken);
         }
         catch (Exception ex)
         {

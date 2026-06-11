@@ -18,8 +18,8 @@ dotnet run src/samples/MarkItDotNet.FoundryHostedAgent/apphost.cs
 
 Aspire starts:
 
-- `markitdotnet-foundry-agent`
-- `markitdotnet-foundry-agent-ui`
+- `markitdotnet-agent`
+- `markitdotnet-webapp`
 
 The UI gets the backend endpoint automatically through environment wiring (`AgentUi__DefaultAgentUrl`).
 
