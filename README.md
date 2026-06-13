@@ -8,12 +8,14 @@
 ## 📦 NuGet Packages
 
 | Package | Version | Downloads | Description |
-|---------|---------|-----------|-------------|
+| --------- | --------- | ----------- | ------------- |
 | [ElBruno.MarkItDotNet](https://www.nuget.org/packages/ElBruno.MarkItDotNet) | [![NuGet](https://img.shields.io/nuget/v/ElBruno.MarkItDotNet.svg?style=flat-square)](https://www.nuget.org/packages/ElBruno.MarkItDotNet) | [![Downloads](https://img.shields.io/nuget/dt/ElBruno.MarkItDotNet.svg?style=flat-square)](https://www.nuget.org/packages/ElBruno.MarkItDotNet) | Core library — 12 built-in converters |
 | [ElBruno.MarkItDotNet.Excel](https://www.nuget.org/packages/ElBruno.MarkItDotNet.Excel) | [![NuGet](https://img.shields.io/nuget/v/ElBruno.MarkItDotNet.Excel.svg?style=flat-square)](https://www.nuget.org/packages/ElBruno.MarkItDotNet.Excel) | [![Downloads](https://img.shields.io/nuget/dt/ElBruno.MarkItDotNet.Excel.svg?style=flat-square)](https://www.nuget.org/packages/ElBruno.MarkItDotNet.Excel) | Excel (.xlsx) → Markdown tables |
 | [ElBruno.MarkItDotNet.PowerPoint](https://www.nuget.org/packages/ElBruno.MarkItDotNet.PowerPoint) | [![NuGet](https://img.shields.io/nuget/v/ElBruno.MarkItDotNet.PowerPoint.svg?style=flat-square)](https://www.nuget.org/packages/ElBruno.MarkItDotNet.PowerPoint) | [![Downloads](https://img.shields.io/nuget/dt/ElBruno.MarkItDotNet.PowerPoint.svg?style=flat-square)](https://www.nuget.org/packages/ElBruno.MarkItDotNet.PowerPoint) | PowerPoint (.pptx) → slides + notes |
 | [ElBruno.MarkItDotNet.AI](https://www.nuget.org/packages/ElBruno.MarkItDotNet.AI) | [![NuGet](https://img.shields.io/nuget/v/ElBruno.MarkItDotNet.AI.svg?style=flat-square)](https://www.nuget.org/packages/ElBruno.MarkItDotNet.AI) | [![Downloads](https://img.shields.io/nuget/dt/ElBruno.MarkItDotNet.AI.svg?style=flat-square)](https://www.nuget.org/packages/ElBruno.MarkItDotNet.AI) | AI-powered OCR, captioning, transcription |
 | [ElBruno.MarkItDotNet.Whisper](https://www.nuget.org/packages/ElBruno.MarkItDotNet.Whisper) | [![NuGet](https://img.shields.io/nuget/v/ElBruno.MarkItDotNet.Whisper.svg?style=flat-square)](https://www.nuget.org/packages/ElBruno.MarkItDotNet.Whisper) | [![Downloads](https://img.shields.io/nuget/dt/ElBruno.MarkItDotNet.Whisper.svg?style=flat-square)](https://www.nuget.org/packages/ElBruno.MarkItDotNet.Whisper) | Local audio transcription via Whisper ONNX |
+| [ElBruno.MarkItDotNet.Security](https://www.nuget.org/packages/ElBruno.MarkItDotNet.Security) | [![NuGet](https://img.shields.io/nuget/v/ElBruno.MarkItDotNet.Security.svg?style=flat-square)](https://www.nuget.org/packages/ElBruno.MarkItDotNet.Security) | [![Downloads](https://img.shields.io/nuget/dt/ElBruno.MarkItDotNet.Security.svg?style=flat-square)](https://www.nuget.org/packages/ElBruno.MarkItDotNet.Security) | Markdown security scanning and issue reporting |
+| [ElBruno.MarkItDotNet.Evals](https://www.nuget.org/packages/ElBruno.MarkItDotNet.Evals) | [![NuGet](https://img.shields.io/nuget/v/ElBruno.MarkItDotNet.Evals.svg?style=flat-square)](https://www.nuget.org/packages/ElBruno.MarkItDotNet.Evals) | [![Downloads](https://img.shields.io/nuget/dt/ElBruno.MarkItDotNet.Evals.svg?style=flat-square)](https://www.nuget.org/packages/ElBruno.MarkItDotNet.Evals) | Conversion quality evaluation and scoring |
 | [ElBruno.MarkItDotNet.Cli](https://www.nuget.org/packages/ElBruno.MarkItDotNet.Cli) | [![NuGet](https://img.shields.io/nuget/v/ElBruno.MarkItDotNet.Cli.svg?style=flat-square)](https://www.nuget.org/packages/ElBruno.MarkItDotNet.Cli) | [![Downloads](https://img.shields.io/nuget/dt/ElBruno.MarkItDotNet.Cli.svg?style=flat-square)](https://www.nuget.org/packages/ElBruno.MarkItDotNet.Cli) | Command-line tool (`markitdown` command) |
 
 ## Description
@@ -23,7 +25,7 @@ ElBruno.MarkItDotNet provides a unified interface to convert 15+ file formats in
 ## Supported Formats
 
 | Format | Extensions | Converter | Package | Dependencies |
-|--------|-----------|-----------|---------|---|
+| -------- | ----------- | ----------- | --------- | --- |
 | Plain Text | `.txt`, `.md`, `.log` | `PlainTextConverter` | Core | None |
 | JSON | `.json` | `JsonConverter` | Core | None |
 | HTML | `.html`, `.htm` | `HtmlConverter` | Core | `ReverseMarkdown` |
@@ -141,7 +143,23 @@ dotnet add package ElBruno.MarkItDotNet.Whisper
 
 Uses [ElBruno.Whisper](https://www.nuget.org/packages/ElBruno.Whisper) for offline speech-to-text. No cloud API needed — runs locally via ONNX Runtime. Supports `.wav`, `.mp3`, `.m4a`, `.ogg`, `.flac`.
 
-## Installation
+**ElBruno.MarkItDotNet.Security** — Security scanning helpers for Markdown output.
+
+```bash
+dotnet add package ElBruno.MarkItDotNet.Security
+```
+
+Provides a configurable scanner to detect JavaScript links, secret-like tokens, and control characters with scored scan results.
+
+**ElBruno.MarkItDotNet.Evals** — Conversion evaluation helpers for quality gates.
+
+```bash
+dotnet add package ElBruno.MarkItDotNet.Evals
+```
+
+Provides heuristic scoring, issue reporting, and retention-oriented metrics to support post-conversion validation.
+
+## Core Library Installation
 
 For the core library only:
 
@@ -171,6 +189,18 @@ For local audio transcription (offline, no API key needed):
 
 ```bash
 dotnet add package ElBruno.MarkItDotNet.Whisper
+```
+
+For security scanning helpers:
+
+```bash
+dotnet add package ElBruno.MarkItDotNet.Security
+```
+
+For conversion evaluation helpers:
+
+```bash
+dotnet add package ElBruno.MarkItDotNet.Evals
 ```
 
 ## Quick Start
@@ -226,7 +256,9 @@ For advanced scenarios (e.g., ASP.NET Core applications), use the DI extension m
 using Microsoft.Extensions.DependencyInjection;
 using ElBruno.MarkItDotNet;
 using ElBruno.MarkItDotNet.Excel;
+using ElBruno.MarkItDotNet.Evals;
 using ElBruno.MarkItDotNet.PowerPoint;
+using ElBruno.MarkItDotNet.Security;
 
 var services = new ServiceCollection();
 
@@ -236,6 +268,8 @@ services.AddMarkItDotNet();
 // Register satellite package converters (plugins)
 services.AddMarkItDotNetExcel();
 services.AddMarkItDotNetPowerPoint();
+services.AddMarkItDotNetSecurity();
+services.AddMarkItDotNetEvals();
 
 // Register AI converters (requires IChatClient)
 // services.AddMarkItDotNetAI();
@@ -552,12 +586,12 @@ The registry automatically discovers and loads all registered plugins.
 
 ## 📦 Samples
 
-See [Samples Guide](docs/samples.md) for detailed walkthroughs.
+See the `src/samples/` projects below for detailed walkthroughs.
 
 ### Simple Samples
 
 | Sample | Description | Run Command |
-|--------|-------------|-------------|
+| -------- | ------------- | ------------- |
 | [BasicConversion](src/samples/BasicConversion) | Text, JSON, and HTML conversion with DI | `dotnet run --project src/samples/BasicConversion/BasicConversion.csproj` |
 | [CsvConversion](src/samples/CsvConversion) | CSV and TSV → Markdown tables | `dotnet run --project src/samples/CsvConversion/CsvConversion.csproj` |
 | [XmlYamlConversion](src/samples/XmlYamlConversion) | XML and YAML → fenced code blocks | `dotnet run --project src/samples/XmlYamlConversion/XmlYamlConversion.csproj` |
@@ -577,19 +611,18 @@ See [Samples Guide](docs/samples.md) for detailed walkthroughs.
 ### End-to-End Samples
 
 | Sample | Description | Run Command |
-|--------|-------------|-------------|
+| -------- | ------------- | ------------- |
 | [BatchProcessor](src/samples/BatchProcessor) | Watches folder and batch-converts files to .md | `dotnet run --project src/samples/BatchProcessor/BatchProcessor.csproj` |
 | [RagPipeline](src/samples/RagPipeline) | RAG ingestion: files → Markdown → chunked JSON | `dotnet run --project src/samples/RagPipeline/RagPipeline.csproj` |
 | [MarkItDotNet.FoundryHostedAgent](src/samples/MarkItDotNet.FoundryHostedAgent) | Hosted agent service + Aspire AppHost reference for Foundry deployment | `dotnet run --project src/samples/MarkItDotNet.FoundryHostedAgent/MarkItDotNet.FoundryHostedAgent.csproj` |
 
 ## Documentation
 
-- [Samples Guide](docs/samples.md) — detailed walkthroughs for all sample projects
+- [Roadmap / Ingestion PRD](docs/ElBruno.MarkItDotNet-Ingestion-PRD.md) — current implementation plan and remaining feature gaps
 - [Architecture](docs/architecture.md) — design decisions, plugin system, converter pipeline, and internal structure
 - [Plugins Guide](docs/plugins.md) — how to create custom plugin packages
 - [Building & Testing](docs/building-and-testing.md) — how to build from source and run tests
-- [Image Generation Prompts](docs/image-generation-prompts.md) — AI prompts for branding assets
-- [Acknowledgements](docs/acknowledgements.md) — open-source libraries that power this project
+- [Archived Docs](docs/archived/README.md) — historical plans, audits, and non-active documentation
 
 ## 🤝 Contributing
 

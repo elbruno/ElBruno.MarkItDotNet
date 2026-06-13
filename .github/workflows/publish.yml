@@ -23,7 +23,9 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: 8.0.x
+          dotnet-version: |
+            8.0.x
+            10.0.x
 
       - name: Determine version
         id: version
@@ -37,39 +39,44 @@ jobs:
           else
             VERSION=$(grep -oP '<Version>\K[^<]+' src/ElBruno.MarkItDotNet/ElBruno.MarkItDotNet.csproj)
           fi
-          if ! [[ "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+ ]]; then
+          if ! [[ "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
             echo "❌ Invalid version: '$VERSION'"; exit 1
           fi
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
           echo "📦 Publishing version: $VERSION"
 
       - name: Restore
-        run: dotnet restore ElBruno.MarkItDotNet.slnx -p:TargetFrameworks=net8.0
+        run: dotnet restore ElBruno.MarkItDotNet.slnx
 
       - name: Build
-        run: dotnet build ElBruno.MarkItDotNet.slnx -c Release --no-restore -p:TargetFrameworks=net8.0 -p:Version=${{ steps.version.outputs.version }}
+        run: dotnet build ElBruno.MarkItDotNet.slnx -c Release --no-restore -p:Version=${{ steps.version.outputs.version }}
 
-      - name: Run all tests
+      - name: Run tests (net8.0)
         run: dotnet test ElBruno.MarkItDotNet.slnx -c Release --no-build --framework net8.0 --verbosity normal
+
+      - name: Run tests (net10.0)
+        run: dotnet test ElBruno.MarkItDotNet.slnx -c Release --no-build --framework net10.0 --verbosity normal
 
       - name: Pack all packages
         run: |
           # CoreModel must be packed first — other packages depend on it
-          dotnet pack src/ElBruno.MarkItDotNet.CoreModel/ElBruno.MarkItDotNet.CoreModel.csproj -c Release --no-build -p:TargetFrameworks=net8.0 -p:Version=${{ steps.version.outputs.version }} -o artifacts
-          dotnet pack src/ElBruno.MarkItDotNet/ElBruno.MarkItDotNet.csproj -c Release --no-build -p:TargetFrameworks=net8.0 -p:Version=${{ steps.version.outputs.version }} -o artifacts
-          dotnet pack src/ElBruno.MarkItDotNet.Excel/ElBruno.MarkItDotNet.Excel.csproj -c Release --no-build -p:TargetFrameworks=net8.0 -p:Version=${{ steps.version.outputs.version }} -o artifacts
-          dotnet pack src/ElBruno.MarkItDotNet.PowerPoint/ElBruno.MarkItDotNet.PowerPoint.csproj -c Release --no-build -p:TargetFrameworks=net8.0 -p:Version=${{ steps.version.outputs.version }} -o artifacts
-          dotnet pack src/ElBruno.MarkItDotNet.AI/ElBruno.MarkItDotNet.AI.csproj -c Release --no-build -p:TargetFrameworks=net8.0 -p:Version=${{ steps.version.outputs.version }} -o artifacts
-          dotnet pack src/ElBruno.MarkItDotNet.Whisper/ElBruno.MarkItDotNet.Whisper.csproj -c Release --no-build -p:TargetFrameworks=net8.0 -p:Version=${{ steps.version.outputs.version }} -o artifacts
-          dotnet pack src/ElBruno.MarkItDotNet.Chunking/ElBruno.MarkItDotNet.Chunking.csproj -c Release --no-build -p:TargetFrameworks=net8.0 -p:Version=${{ steps.version.outputs.version }} -o artifacts
-          dotnet pack src/ElBruno.MarkItDotNet.Citations/ElBruno.MarkItDotNet.Citations.csproj -c Release --no-build -p:TargetFrameworks=net8.0 -p:Version=${{ steps.version.outputs.version }} -o artifacts
-          dotnet pack src/ElBruno.MarkItDotNet.DocumentIntelligence/ElBruno.MarkItDotNet.DocumentIntelligence.csproj -c Release --no-build -p:TargetFrameworks=net8.0 -p:Version=${{ steps.version.outputs.version }} -o artifacts
-          dotnet pack src/ElBruno.MarkItDotNet.Metadata/ElBruno.MarkItDotNet.Metadata.csproj -c Release --no-build -p:TargetFrameworks=net8.0 -p:Version=${{ steps.version.outputs.version }} -o artifacts
-          dotnet pack src/ElBruno.MarkItDotNet.Quality/ElBruno.MarkItDotNet.Quality.csproj -c Release --no-build -p:TargetFrameworks=net8.0 -p:Version=${{ steps.version.outputs.version }} -o artifacts
-          dotnet pack src/ElBruno.MarkItDotNet.VectorData/ElBruno.MarkItDotNet.VectorData.csproj -c Release --no-build -p:TargetFrameworks=net8.0 -p:Version=${{ steps.version.outputs.version }} -o artifacts
-          dotnet pack src/ElBruno.MarkItDotNet.AzureSearch/ElBruno.MarkItDotNet.AzureSearch.csproj -c Release --no-build -p:TargetFrameworks=net8.0 -p:Version=${{ steps.version.outputs.version }} -o artifacts
-          dotnet pack src/ElBruno.MarkItDotNet.Sync/ElBruno.MarkItDotNet.Sync.csproj -c Release --no-build -p:TargetFrameworks=net8.0 -p:Version=${{ steps.version.outputs.version }} -o artifacts
-          dotnet pack src/ElBruno.MarkItDotNet.Cli/ElBruno.MarkItDotNet.Cli.csproj -c Release --no-build -p:TargetFrameworks=net8.0 -p:Version=${{ steps.version.outputs.version }} -o artifacts
+          dotnet pack src/ElBruno.MarkItDotNet.CoreModel/ElBruno.MarkItDotNet.CoreModel.csproj -c Release --no-build -p:Version=${{ steps.version.outputs.version }} -o artifacts
+          dotnet pack src/ElBruno.MarkItDotNet/ElBruno.MarkItDotNet.csproj -c Release --no-build -p:Version=${{ steps.version.outputs.version }} -o artifacts
+          dotnet pack src/ElBruno.MarkItDotNet.Excel/ElBruno.MarkItDotNet.Excel.csproj -c Release --no-build -p:Version=${{ steps.version.outputs.version }} -o artifacts
+          dotnet pack src/ElBruno.MarkItDotNet.PowerPoint/ElBruno.MarkItDotNet.PowerPoint.csproj -c Release --no-build -p:Version=${{ steps.version.outputs.version }} -o artifacts
+          dotnet pack src/ElBruno.MarkItDotNet.AI/ElBruno.MarkItDotNet.AI.csproj -c Release --no-build -p:Version=${{ steps.version.outputs.version }} -o artifacts
+          dotnet pack src/ElBruno.MarkItDotNet.Whisper/ElBruno.MarkItDotNet.Whisper.csproj -c Release --no-build -p:Version=${{ steps.version.outputs.version }} -o artifacts
+          dotnet pack src/ElBruno.MarkItDotNet.Chunking/ElBruno.MarkItDotNet.Chunking.csproj -c Release --no-build -p:Version=${{ steps.version.outputs.version }} -o artifacts
+          dotnet pack src/ElBruno.MarkItDotNet.Citations/ElBruno.MarkItDotNet.Citations.csproj -c Release --no-build -p:Version=${{ steps.version.outputs.version }} -o artifacts
+          dotnet pack src/ElBruno.MarkItDotNet.DocumentIntelligence/ElBruno.MarkItDotNet.DocumentIntelligence.csproj -c Release --no-build -p:Version=${{ steps.version.outputs.version }} -o artifacts
+          dotnet pack src/ElBruno.MarkItDotNet.Metadata/ElBruno.MarkItDotNet.Metadata.csproj -c Release --no-build -p:Version=${{ steps.version.outputs.version }} -o artifacts
+          dotnet pack src/ElBruno.MarkItDotNet.Quality/ElBruno.MarkItDotNet.Quality.csproj -c Release --no-build -p:Version=${{ steps.version.outputs.version }} -o artifacts
+          dotnet pack src/ElBruno.MarkItDotNet.Security/ElBruno.MarkItDotNet.Security.csproj -c Release --no-build -p:Version=${{ steps.version.outputs.version }} -o artifacts
+          dotnet pack src/ElBruno.MarkItDotNet.Evals/ElBruno.MarkItDotNet.Evals.csproj -c Release --no-build -p:Version=${{ steps.version.outputs.version }} -o artifacts
+          dotnet pack src/ElBruno.MarkItDotNet.VectorData/ElBruno.MarkItDotNet.VectorData.csproj -c Release --no-build -p:Version=${{ steps.version.outputs.version }} -o artifacts
+          dotnet pack src/ElBruno.MarkItDotNet.AzureSearch/ElBruno.MarkItDotNet.AzureSearch.csproj -c Release --no-build -p:Version=${{ steps.version.outputs.version }} -o artifacts
+          dotnet pack src/ElBruno.MarkItDotNet.Sync/ElBruno.MarkItDotNet.Sync.csproj -c Release --no-build -p:Version=${{ steps.version.outputs.version }} -o artifacts
+          dotnet pack src/ElBruno.MarkItDotNet.Cli/ElBruno.MarkItDotNet.Cli.csproj -c Release --no-build -p:Version=${{ steps.version.outputs.version }} -o artifacts
 
       - name: NuGet login (OIDC → temp API key)
         uses: NuGet/login@v1

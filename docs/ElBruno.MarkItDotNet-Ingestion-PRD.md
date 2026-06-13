@@ -1,6 +1,7 @@
 # PRD — ElBruno.MarkItDotNet Ingestion Expansion Roadmap
 
 ## Document Status
+
 - **Product**: ElBruno.MarkItDotNet ecosystem expansion
 - **Document Type**: Product Requirements Document
 - **Version**: 1.0
@@ -36,6 +37,40 @@ The roadmap focuses on these three phases:
    - `Evals`
 
 This document is designed so repo agents can use it as an implementation blueprint.
+
+### Current implementation snapshot
+
+- **Already in repo:** `CoreModel`, `DocumentIntelligence`, `Chunking`, `Citations`, `Metadata`, `Quality`, `VectorData`, `AzureSearch`, `Sync`, `Security`, and `Evals`
+- **Existing conversion surface:** core library, `AI`, `Excel`, `PowerPoint`, `Whisper`, and `Cli`
+- **Still missing:** connector packages, richer security policy hooks, fuller evaluation tooling, and more end-to-end sample coverage
+
+### Priority missing features
+
+1. **Connectors foundation**
+
+- file system source connector
+- Azure Blob source connector
+- normalized source abstraction for future SharePoint / GitHub / RSS connectors
+
+1. **Security hardening**
+
+- source/file allow-deny policies
+- PII detection and redaction pipeline stages
+- consistent file-size and page-count guardrails
+- downstream policy tags for chunks and vector records
+
+1. **Evaluation tooling**
+
+- corpus-based benchmark runner
+- multi-strategy comparison reports
+- exportable metrics for CI/docs
+- citation coverage and latency/memory measurements
+
+1. **End-to-end samples**
+
+- phase 3 connectors demo
+- security-and-evals demo
+- revised ingestion walkthroughs that show the new pipeline pieces together
 
 ---
 
@@ -83,6 +118,7 @@ The project should serve:
 ## 4. Product Goals
 
 ### Primary Goals
+
 - Turn `MarkItDotNet` into a reusable ingestion platform
 - Preserve more document structure beyond plain Markdown
 - Support trustworthy citations and chunk traceability
@@ -91,12 +127,14 @@ The project should serve:
 - Keep the architecture modular and package-based
 
 ### Secondary Goals
+
 - Provide great developer experience
 - Support local-first and Azure-first scenarios
 - Offer sensible defaults with extension points
 - Make packages demo-friendly and beginner-friendly
 
 ### Non-Goals
+
 - Building a full document management system
 - Replacing all specialized OCR or enterprise ETL products
 - Building every possible connector in the first release
@@ -107,15 +145,19 @@ The project should serve:
 ## 5. Users and Personas
 
 ### Persona A — AI App Developer
+
 Wants to ingest PDFs, Office files, and web content into a RAG pipeline quickly.
 
 ### Persona B — Enterprise Developer
+
 Needs traceability, quality gates, indexing targets, and security hooks.
 
 ### Persona C — OSS / Community Builder
+
 Wants easy demos, samples, and reusable pipelines for workshops and videos.
 
 ### Persona D — Beginner .NET Developer
+
 Needs a simple “one package + one sample + one result” approach.
 
 ---
@@ -136,15 +178,18 @@ Needs a simple “one package + one sample + one result” approach.
 ## 7. Proposed Package Architecture
 
 ### Existing Base
+
 - `ElBruno.MarkItDotNet`
 
 ### Phase 1
+
 - `ElBruno.MarkItDotNet.CoreModel`
 - `ElBruno.MarkItDotNet.DocumentIntelligence`
 - `ElBruno.MarkItDotNet.Chunking`
 - `ElBruno.MarkItDotNet.Citations`
 
 ### Phase 2
+
 - `ElBruno.MarkItDotNet.Metadata`
 - `ElBruno.MarkItDotNet.Quality`
 - `ElBruno.MarkItDotNet.VectorData`
@@ -152,6 +197,7 @@ Needs a simple “one package + one sample + one result” approach.
 - `ElBruno.MarkItDotNet.Sync`
 
 ### Phase 3
+
 - `ElBruno.MarkItDotNet.Connectors.*`
 - `ElBruno.MarkItDotNet.Security`
 - `ElBruno.MarkItDotNet.Evals`
@@ -161,9 +207,11 @@ Needs a simple “one package + one sample + one result” approach.
 ## 8. Phase 1 — Core Ingestion Foundations
 
 ## 8.1 Objectives
+
 Build the minimum architecture required to move from file conversion to trustworthy ingestion.
 
 ## 8.2 Scope
+
 - canonical internal document model
 - Azure Document Intelligence integration
 - chunking framework
@@ -174,12 +222,15 @@ Build the minimum architecture required to move from file conversion to trustwor
 ### 8.3.1 `ElBruno.MarkItDotNet.CoreModel`
 
 #### Purpose
+
 Define the internal document model used across all ingestion packages.
 
 #### Why
+
 Markdown alone is not enough for chunking, citations, figures, or structured loading.
 
 #### Required Capabilities
+
 - `Document`
 - `DocumentSection`
 - `DocumentBlock`
@@ -194,6 +245,7 @@ Markdown alone is not enough for chunking, citations, figures, or structured loa
 - document-level and block-level IDs
 
 #### Functional Requirements
+
 - Support a tree or graph structure for document layout
 - Preserve ordering of blocks
 - Preserve page references when available
@@ -201,6 +253,7 @@ Markdown alone is not enough for chunking, citations, figures, or structured loa
 - Support serialization to JSON
 
 #### Acceptance Criteria
+
 - A parsed document can be represented in `CoreModel`
 - Markdown renderers can map from `CoreModel`
 - Blocks can preserve source references and page numbers
@@ -211,12 +264,15 @@ Markdown alone is not enough for chunking, citations, figures, or structured loa
 ### 8.3.2 `ElBruno.MarkItDotNet.DocumentIntelligence`
 
 #### Purpose
+
 Provide first-class integration with Azure Document Intelligence.
 
 #### Why
+
 Some documents need layout-aware extraction, OCR, table preservation, and structured output.
 
 #### Required Capabilities
+
 - ingest file/stream/URL where supported
 - call Azure Document Intelligence layout model
 - map results into `CoreModel`
@@ -224,6 +280,7 @@ Some documents need layout-aware extraction, OCR, table preservation, and struct
 - preserve page, table, figure, caption, formula, and span metadata where possible
 
 #### Functional Requirements
+
 - authentication via Azure credentials / endpoint + key
 - async extraction API
 - DI-friendly registration
@@ -232,6 +289,7 @@ Some documents need layout-aware extraction, OCR, table preservation, and struct
 - fallback-friendly result model
 
 #### Acceptance Criteria
+
 - sample PDF can be converted through Azure DI into `CoreModel`
 - table-heavy and scanned documents preserve more structure than local-only fallback
 - page and source references are available on mapped blocks
@@ -242,12 +300,15 @@ Some documents need layout-aware extraction, OCR, table preservation, and struct
 ### 8.3.3 `ElBruno.MarkItDotNet.Chunking`
 
 #### Purpose
+
 Provide layout-aware and token-aware chunking for downstream AI/search use.
 
 #### Why
+
 Good ingestion depends heavily on chunk quality.
 
 #### Required Capabilities
+
 - heading-based chunking
 - paragraph-based chunking
 - token-aware chunking
@@ -257,6 +318,7 @@ Good ingestion depends heavily on chunk quality.
 - document-specific strategies for slides/sheets/pages
 
 #### Functional Requirements
+
 - chunk from `CoreModel`, not raw text only
 - allow chunk metadata enrichment
 - configurable max size and overlap
@@ -265,6 +327,7 @@ Good ingestion depends heavily on chunk quality.
 - include source references in output chunks
 
 #### Acceptance Criteria
+
 - same document can be chunked using multiple strategies
 - chunks preserve heading path and page/source metadata
 - tables are not arbitrarily split unless explicitly allowed
@@ -275,12 +338,15 @@ Good ingestion depends heavily on chunk quality.
 ### 8.3.4 `ElBruno.MarkItDotNet.Citations`
 
 #### Purpose
+
 Track source-to-chunk and source-to-answer traceability.
 
 #### Why
+
 Trustworthy AI/search scenarios require citations.
 
 #### Required Capabilities
+
 - page references
 - block references
 - source file references
@@ -289,12 +355,14 @@ Trustworthy AI/search scenarios require citations.
 - normalized citation payload for downstream apps
 
 #### Functional Requirements
+
 - attach citation metadata to `CoreModel` blocks and output chunks
 - generate human-readable citation strings
 - support exact-source and coarse-source modes
 - allow citation serialization and deserialization
 
 #### Acceptance Criteria
+
 - each chunk can return one or more citations
 - citations can reference page + section + source
 - citations can survive JSON persistence
@@ -303,6 +371,7 @@ Trustworthy AI/search scenarios require citations.
 ---
 
 ## 8.4 Phase 1 Deliverables
+
 - package implementations
 - unit tests
 - integration tests
@@ -312,6 +381,7 @@ Trustworthy AI/search scenarios require citations.
 - at least one end-to-end ingestion sample: PDF -> CoreModel -> chunks -> citations
 
 ## 8.5 Phase 1 Success Metrics
+
 - create a structured ingestion pipeline with less than 30 lines of sample code
 - preserve citations for at least PDF-based scenarios
 - produce chunk outputs that can be consumed by downstream vector/search code
@@ -321,9 +391,11 @@ Trustworthy AI/search scenarios require citations.
 ## 9. Phase 2 — Production Readiness
 
 ## 9.1 Objectives
+
 Make the ingestion stack more practical for real-world systems.
 
 ## 9.2 Scope
+
 - metadata extraction and enrichment
 - quality analysis and routing
 - loading into vector/search systems
@@ -334,9 +406,11 @@ Make the ingestion stack more practical for real-world systems.
 ### 9.3.1 `ElBruno.MarkItDotNet.Metadata`
 
 #### Purpose
+
 Extract and normalize metadata and optional enrichments.
 
 #### Required Capabilities
+
 - title extraction
 - author extraction when available
 - language detection
@@ -347,6 +421,7 @@ Extract and normalize metadata and optional enrichments.
 - entity/tag extensibility hooks
 
 #### Acceptance Criteria
+
 - sample documents produce normalized metadata objects
 - enrichments are optional and pluggable
 - metadata can be attached at document and chunk level
@@ -356,9 +431,11 @@ Extract and normalize metadata and optional enrichments.
 ### 9.3.2 `ElBruno.MarkItDotNet.Quality`
 
 #### Purpose
+
 Score extraction/chunking quality and enable fallback decisions.
 
 #### Required Capabilities
+
 - extraction confidence scoring
 - OCR suspicion flags
 - low-text-density detection
@@ -368,6 +445,7 @@ Score extraction/chunking quality and enable fallback decisions.
 - quality report output
 
 #### Acceptance Criteria
+
 - weak documents can be flagged automatically
 - quality report can guide fallback routing
 - diagnostics are exposed cleanly to developers
@@ -377,9 +455,11 @@ Score extraction/chunking quality and enable fallback decisions.
 ### 9.3.3 `ElBruno.MarkItDotNet.VectorData`
 
 #### Purpose
+
 Provide provider-neutral loading support for vector-oriented storage.
 
 #### Required Capabilities
+
 - chunk-to-record mapping
 - metadata payload mapping
 - embedding-ready payload support
@@ -387,6 +467,7 @@ Provide provider-neutral loading support for vector-oriented storage.
 - JSONL export fallback
 
 #### Acceptance Criteria
+
 - chunks can be transformed into vector records consistently
 - package supports provider-neutral abstractions first
 - docs include at least one local vector sink sample
@@ -396,15 +477,18 @@ Provide provider-neutral loading support for vector-oriented storage.
 ### 9.3.4 `ElBruno.MarkItDotNet.AzureSearch`
 
 #### Purpose
+
 Provide first-class Azure AI Search integration.
 
 #### Required Capabilities
+
 - index schema helpers
 - document upload helpers
 - field mapping for content, metadata, vectors, citations
 - hybrid-search-friendly record shape guidance
 
 #### Acceptance Criteria
+
 - chunks and citations can be loaded into Azure AI Search
 - sample app shows end-to-end indexing
 - docs explain recommended field mappings
@@ -414,9 +498,11 @@ Provide first-class Azure AI Search integration.
 ### 9.3.5 `ElBruno.MarkItDotNet.Sync`
 
 #### Purpose
+
 Support incremental re-ingestion and change-aware updates.
 
 #### Required Capabilities
+
 - source hash
 - chunk hash
 - changed-content detection
@@ -425,6 +511,7 @@ Support incremental re-ingestion and change-aware updates.
 - sync plan output
 
 #### Acceptance Criteria
+
 - re-running ingestion can skip unchanged content
 - changed sections can be reprocessed selectively when possible
 - sync summary is easy to inspect
@@ -432,6 +519,7 @@ Support incremental re-ingestion and change-aware updates.
 ---
 
 ## 9.4 Phase 2 Deliverables
+
 - metadata/enrichment system
 - quality scoring/reporting
 - vector/search loaders
@@ -439,6 +527,7 @@ Support incremental re-ingestion and change-aware updates.
 - end-to-end sample: ingest -> chunk -> enrich -> index -> re-sync
 
 ## 9.5 Phase 2 Success Metrics
+
 - support production-style demos with re-index scenarios
 - reduce duplicate ingestion work
 - expose enough metadata for realistic RAG/search apps
@@ -448,9 +537,11 @@ Support incremental re-ingestion and change-aware updates.
 ## 10. Phase 3 — Ecosystem Expansion
 
 ## 10.1 Objectives
+
 Expand the ecosystem toward enterprise and community scenarios.
 
 ## 10.2 Scope
+
 - source connectors
 - security/compliance helpers
 - evaluation/benchmark tooling
@@ -460,9 +551,11 @@ Expand the ecosystem toward enterprise and community scenarios.
 ### 10.3.1 `ElBruno.MarkItDotNet.Connectors.*`
 
 #### Purpose
+
 Make ingestion easier from common real-world sources.
 
 #### Initial Connector Candidates
+
 - local file system
 - GitHub docs/content
 - Azure Blob Storage
@@ -471,6 +564,7 @@ Make ingestion easier from common real-world sources.
 - RSS / feed ingestion
 
 #### Acceptance Criteria
+
 - at least two connectors shipped first
 - connectors produce normalized ingestion inputs
 - connectors fit cleanly into the pipeline
@@ -480,9 +574,11 @@ Make ingestion easier from common real-world sources.
 ### 10.3.2 `ElBruno.MarkItDotNet.Security`
 
 #### Purpose
+
 Support safe ingestion for enterprise use cases.
 
 #### Required Capabilities
+
 - PII detection hooks
 - redaction pipeline hooks
 - file type allow/deny
@@ -490,7 +586,16 @@ Support safe ingestion for enterprise use cases.
 - secret detection hooks
 - record tagging for access/governance
 
+#### Missing Features / Next Work
+
+- configurable allow/deny policies per source and file type
+- PII redaction stages that can run before indexing or export
+- page-count and file-size guardrails enforced consistently across sources
+- richer tagging for classification, retention, and access control
+- policy results that can flow into downstream chunks and vector records
+
 #### Acceptance Criteria
+
 - developers can inject security checks before indexing
 - redaction can be applied at document or chunk level
 - policies are configurable
@@ -500,9 +605,11 @@ Support safe ingestion for enterprise use cases.
 ### 10.3.3 `ElBruno.MarkItDotNet.Evals`
 
 #### Purpose
+
 Measure ingestion quality and downstream usefulness.
 
 #### Required Capabilities
+
 - extraction benchmark harness
 - chunk quality benchmark harness
 - citation coverage metrics
@@ -510,7 +617,16 @@ Measure ingestion quality and downstream usefulness.
 - retrieval-oriented evaluation hooks
 - comparison mode across chunking/extraction strategies
 
+#### Missing Features / Next Work
+
+- corpus-based benchmark runner with repeatable fixtures
+- comparison reports across at least two strategies on the same corpus
+- exportable metrics format for CI and docs publishing
+- citation coverage scoring across chunk, source, and answer paths
+- latency/memory capture for large-document scenarios
+
 #### Acceptance Criteria
+
 - package can compare at least two strategies on one corpus
 - metrics are exportable
 - docs include benchmark scenarios
@@ -518,21 +634,42 @@ Measure ingestion quality and downstream usefulness.
 ---
 
 ## 10.4 Phase 3 Deliverables
+
 - connectors foundation
 - security hooks and policies
 - benchmark/evaluation tooling
 - realistic enterprise and OSS scenario samples
 
 ## 10.5 Phase 3 Success Metrics
+
 - easier integration with real document sources
 - safer ingestion for enterprise teams
 - measurable evaluation story for community and product demos
+
+## 10.6 Remaining Phase 3 gaps
+
+These are the items still missing from the current repo and should be treated as the next implementation targets:
+
+- `ElBruno.MarkItDotNet.Connectors.*` foundation and the first two connectors
+  - file system source connector
+  - Azure Blob Storage connector
+- security policy expansion beyond the current scanner foundation
+  - PII detection and redaction
+  - source/file allow-deny policies
+  - page/file limits and governance tags
+- evals expansion beyond the current scoring foundation
+  - benchmark harness
+  - comparison mode
+  - citation coverage and exportable metrics
+- connector and policy demos in `src/samples/`
+- roadmap docs for any future phase-4 expansion items
 
 ---
 
 ## 11. Cross-Cutting Requirements
 
 ### 11.1 Developer Experience
+
 - idiomatic .NET APIs
 - DI-first where useful
 - async-first
@@ -541,29 +678,35 @@ Measure ingestion quality and downstream usefulness.
 - strong XML docs and README examples
 
 ### 11.2 Extensibility
+
 - interfaces for parsers, enrichers, chunkers, sinks, evaluators
 - pipeline composition support
 - custom metadata bags
 - provider-neutral abstractions first when feasible
 
 ### 11.3 Packaging
+
 - keep packages modular
 - avoid giant transitive dependency footprint
 - clearly separate Azure-specific packages from neutral packages
 
 ### 11.4 Performance
+
 - support streaming where possible
 - avoid unnecessary document duplication in memory
 - support large-document scenarios with incremental processing patterns
 
 ### 11.5 Testing
+
 - unit tests per package
 - integration tests for Azure packages
 - golden-file tests for document structure and chunk results
 - benchmark tests where relevant
 
 ### 11.6 Samples and Documentation
+
 Each package should ship with:
+
 - README
 - quickstart
 - minimal code sample
@@ -632,10 +775,12 @@ docs/
 > **Feasibility-informed sequencing.** Milestones are ordered to minimize risk and maximize early value. CoreModel is the foundation — nothing else starts until it exists. Bridge mappers (Milestone 2) prove CoreModel works with real documents before building Chunking/Citations on top.
 
 ### Milestone 0 — Prerequisite: DI Consistency Fix
+
 - Fix `AddMarkItDotNetAI()` to auto-register the AI plugin into `ConverterRegistry` (matching the Excel/PowerPoint pattern)
 - This establishes the correct satellite package registration pattern for all new packages
 
 ### Milestone 1 — CoreModel
+
 - `CoreModel` contracts (Document, Section, Block hierarchy)
 - `IStructuredConverter` interface (parallel to existing `IMarkdownConverter`)
 - JSON serialization round-trip
@@ -643,43 +788,51 @@ docs/
 - Unit tests
 
 ### Milestone 2 — Bridge Mappers
+
 - `PdfCoreModelMapper` — adapts existing PdfConverter's page/word extraction to CoreModel blocks
 - `DocxCoreModelMapper` — adapts existing DocxConverter's heading/table/image parsing to CoreModel blocks
 - Golden-file tests for structured output
 - **Gate:** CoreModel must represent real PDF and DOCX documents correctly before proceeding
 
 ### Milestone 3 — Chunking + Citations (parallel)
+
 - `Chunking`: heading-based, paragraph-based, token-aware strategies
 - `Citations`: page refs, block refs, source file refs, heading path
 - Both depend only on CoreModel — can be developed in parallel
 - Unit tests for each
 
 ### Milestone 4 — DocumentIntelligence + End-to-End Sample
+
 - `DocumentIntelligence`: Azure DI layout model → CoreModel mapper
 - End-to-end sample: PDF → CoreModel → chunks → citations → JSON
 - Integration tests (conditional on Azure DI endpoint availability)
 
 ### Milestone 5 — Metadata + Quality (parallel)
+
 - `Metadata`: title, author, language, dates, document type extraction
 - `Quality`: text density, OCR suspicion, duplicate lines, table warnings
 - Both are independent — can be developed in parallel
 
 ### Milestone 6 — VectorData + AzureSearch (parallel)
+
 - `VectorData`: chunk-to-record mapping, provider-neutral abstractions
 - `AzureSearch`: index schema helpers, document upload, field mapping
 - VectorData is provider-neutral; AzureSearch is Azure-specific — keep isolated
 
 ### Milestone 7 — Sync
+
 - Source/chunk hashing, change detection, soft-delete, version markers
 - Sync plan output
 - End-to-end sample: ingest → chunk → enrich → index → re-sync
 
 ### Milestone 8 — Connectors
+
 - Connector abstraction (`IDocumentSource` interface)
 - `Connectors.FileSystem` — local file system crawling
 - `Connectors.AzureBlob` — Azure Blob Storage integration
 
 ### Milestone 9 — Security + Evals (parallel)
+
 - `Security`: PII detection hooks, redaction pipeline hooks, file type/size policies
 - `Evals`: extraction benchmark harness, chunk quality metrics, comparison mode
 
@@ -692,6 +845,7 @@ docs/
 ## 14.1 Phase 1 Agent Tasks
 
 ### CoreModel Package (Milestone 1)
+
 - [ ] Design `Document`, `DocumentSection`, `DocumentBlock` hierarchy as immutable records
 - [ ] Implement block types: `ParagraphBlock`, `HeadingBlock`, `TableBlock`, `FigureBlock`, `PageBlock`
 - [ ] Implement `SpanReference` and `SourceReference` for positional tracking
@@ -705,6 +859,7 @@ docs/
 - [ ] **Decision required:** tree structure (sections contain blocks) vs. flat list with depth markers
 
 ### Bridge Mappers (Milestone 2)
+
 - [ ] Implement `PdfCoreModelMapper` — leverages existing `PdfConverter` page/word/line extraction
 - [ ] Implement `DocxCoreModelMapper` — leverages existing `DocxConverter` heading/table/image parsing
 - [ ] Register structured converters in DI alongside existing string converters
@@ -712,6 +867,7 @@ docs/
 - [ ] **Note:** Existing converters stay unchanged — mappers are additive adapters
 
 ### Chunking Package (Milestone 3)
+
 - [ ] Define `IChunkingStrategy` interface and `ChunkResult` model
 - [ ] Implement `HeadingBasedChunker` — splits at heading boundaries, preserves heading path
 - [ ] Implement `ParagraphBasedChunker` — splits at paragraph boundaries
@@ -726,6 +882,7 @@ docs/
 - [ ] **Note:** Replaces ad-hoc chunking in existing `RagPipeline` sample
 
 ### Citations Package (Milestone 3)
+
 - [ ] Define `CitationReference` and `CitationSet` models
 - [ ] Implement citation attachment to CoreModel blocks
 - [ ] Implement citation propagation through chunking (chunk inherits block citations)
@@ -735,6 +892,7 @@ docs/
 - [ ] Unit tests for citation persistence, formatting, propagation
 
 ### DocumentIntelligence Package (Milestone 4)
+
 - [ ] Create project with `Azure.AI.DocumentIntelligence` SDK dependency
 - [ ] Implement `DocumentIntelligenceConverter` (file/stream/URL input)
 - [ ] Implement Azure DI layout result → CoreModel mapper (pages, tables, figures, captions, formulas)
@@ -748,6 +906,7 @@ docs/
 - [ ] **Note:** Follows existing AI package pattern but with proper DI registration
 
 ### DI Prerequisite (Milestone 0)
+
 - [ ] Fix `AddMarkItDotNetAI()` to auto-register the AI plugin into `ConverterRegistry`
 - [ ] Verify Excel and PowerPoint DI patterns as the reference implementation
 - [ ] **Note:** This is a bug fix, not a new feature — must be done before Phase 1
@@ -755,6 +914,7 @@ docs/
 ## 14.2 Phase 2 Agent Tasks
 
 ### Metadata Package (Milestone 5)
+
 - [ ] Define metadata extraction interfaces (`IMetadataExtractor`, `MetadataResult`)
 - [ ] Implement title extraction from CoreModel (first heading, document property, filename fallback)
 - [ ] Implement author extraction from document properties when available
@@ -768,6 +928,7 @@ docs/
 - [ ] **Decision required:** language detection — local library vs. Azure AI dependency
 
 ### Quality Package (Milestone 5)
+
 - [ ] Define `IQualityAnalyzer` interface and `QualityReport` model
 - [ ] Implement extraction confidence scoring
 - [ ] Implement OCR suspicion flag heuristics
@@ -780,6 +941,7 @@ docs/
 - [ ] Unit tests with weak/strong document examples
 
 ### VectorData Package (Milestone 6)
+
 - [ ] Define chunk-to-record mapping abstractions
 - [ ] Implement metadata payload mapping
 - [ ] Implement embedding-ready payload support
@@ -790,6 +952,7 @@ docs/
 - [ ] **Risk:** `Microsoft.Extensions.VectorData` maturity — verify API stability at implementation time
 
 ### AzureSearch Package (Milestone 6)
+
 - [ ] Create project with `Azure.Search.Documents` SDK dependency
 - [ ] Implement index schema helpers
 - [ ] Implement document upload helpers
@@ -800,6 +963,7 @@ docs/
 - [ ] Integration tests (conditional on Azure Search endpoint)
 
 ### Sync Package (Milestone 7)
+
 - [ ] Define `ISyncStateStore` abstraction for sync state persistence
 - [ ] Implement source hash computation
 - [ ] Implement chunk hash computation
@@ -813,6 +977,7 @@ docs/
 ## 14.3 Phase 3 Agent Tasks
 
 ### Connector Abstractions (Milestone 8)
+
 - [ ] Define `IDocumentSource` interface (yields file streams + metadata)
 - [ ] Define `SourceDocument` model (stream, path, metadata, source type)
 - [ ] Implement `FileSystemConnector` — directory scanning, glob patterns, recursive traversal
@@ -822,6 +987,7 @@ docs/
 - [ ] **Decision required:** confirm FileSystem + AzureBlob as first two connectors
 
 ### Security Package (Milestone 9)
+
 - [ ] Define `ISecurityPolicy` interface and pipeline hook points
 - [ ] Implement file type allow/deny policy
 - [ ] Implement file size and page count limits
@@ -833,6 +999,7 @@ docs/
 - [ ] Unit tests with policy scenarios
 
 ### Evals Package (Milestone 9)
+
 - [ ] Define evaluation harness framework
 - [ ] Implement extraction benchmark harness (compare extraction strategies)
 - [ ] Implement chunk quality benchmark harness
@@ -848,36 +1015,47 @@ docs/
 ## 15. Risks and Mitigations
 
 ### Risk: Overbuilding too early
+
 **Mitigation**: keep packages separate and phase-gated.
 
 ### Risk: Too much Azure-specific coupling
+
 **Mitigation**: keep `DocumentIntelligence` and `AzureSearch` isolated from neutral core packages.
 
 ### Risk: Chunking becomes too simplistic
+
 **Mitigation**: design around `CoreModel`, not only plain text.
 
 ### Risk: Hard-to-test document behavior
+
 **Mitigation**: use golden files and representative corpora. The existing `GoldenTests` project provides a proven pattern.
 
 ### Risk: Package sprawl hurts discoverability
+
 **Mitigation**: publish clear package map and starter bundles.
 
 ### Risk: CoreModel introduction breaks existing API
+
 **Mitigation**: CoreModel is an additive layer. The existing `IMarkdownConverter` → `string` API stays untouched. `IStructuredConverter` is a new parallel interface. Existing converters are adapted via mapper classes, not rewritten. No breaking changes to the public surface.
 
 ### Risk: Converter refactor scope creep
+
 **Mitigation**: only PDF and DOCX get CoreModel bridge mappers in Phase 1. These are the most structured converters with the best internal data (page-level extraction, heading/table parsing). Other converters can be adapted later as needed.
 
 ### Risk: DI registration inconsistency across satellite packages
+
 **Mitigation**: fix the AI package's `AddMarkItDotNetAI()` registration gap (Milestone 0) before adding new packages. This establishes the correct pattern that all Phase 1+ packages will follow.
 
 ### Risk: Microsoft.Extensions.VectorData API instability
+
 **Mitigation**: VectorData package is Phase 2 (Milestone 6). By that point, the API should be more stable. Include a JSONL export fallback that works regardless of VectorData maturity.
 
 ### Risk: Sync state persistence design
+
 **Mitigation**: define `ISyncStateStore` as a pluggable abstraction from day one. Ship with a simple file-based implementation; allow database or cloud-based stores as extensions.
 
 ### Risk: Evaluation corpus licensing
+
 **Mitigation**: use small golden files from existing test data in-repo. For larger corpora, consider a separate companion repo or use publicly available test documents.
 
 ---
@@ -902,6 +1080,7 @@ docs/
 ## 17. Definition of Done
 
 A phase is considered done when:
+
 - all scoped packages for the phase are implemented at MVP level
 - tests are in place
 - docs and samples are published
@@ -979,6 +1158,7 @@ The existing library is **string-first**. The PRD's `CoreModel` must be introduc
 The next evolution of `ElBruno.MarkItDotNet` should not be “more converters only.”
 
 It should become a modular ingestion ecosystem for .NET with:
+
 - structured extraction
 - smart chunking
 - citations
@@ -991,4 +1171,3 @@ It should become a modular ingestion ecosystem for .NET with:
 - evals
 
 This roadmap gives a practical, phase-based path to get there.
-
