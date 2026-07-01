@@ -653,10 +653,14 @@ This project is licensed under the MIT License — see the [LICENSE](LICENSE) fi
 
 ## 👋 About the Author
 
-**Made with ❤️ by [Bruno Capuano (ElBruno)](https://github.com/elbruno)**
+Hi! I'm **ElBruno** 🧡, a passionate developer and content creator exploring AI, .NET, and modern development practices.
 
-- 📝 **Blog**: [elbruno.com](https://elbruno.com)
-- 📺 **YouTube**: [youtube.com/elbruno](https://youtube.com/elbruno)
-- 🔗 **LinkedIn**: [linkedin.com/in/elbruno](https://linkedin.com/in/elbruno)
-- 𝕏 **Twitter**: [twitter.com/elbruno](https://twitter.com/elbruno)
-- 🎙️ **Podcast**: [notienenombre.com](https://notienenombre.com)
+**Made with ❤️ by [ElBruno](https://github.com/elbruno)**
+
+If you like this project, consider following my work across platforms:
+
+- 📻 **Podcast**: [No Tienen Nombre](https://notienenombre.com) — Spanish-language episodes on AI, development, and tech culture
+- 💻 **Blog**: [ElBruno.com](https://elbruno.com) — Deep dives on embeddings, RAG, .NET, and local AI
+- 📺 **YouTube**: [youtube.com/elbruno](https://www.youtube.com/elbruno) — Demos, tutorials, and live coding
+- 🔗 **LinkedIn**: [@elbruno](https://www.linkedin.com/in/elbruno/) — Professional updates and insights
+- 𝕏 **Twitter**: [@elbruno](https://www.x.com/elbruno/) — Quick tips, releases, and tech news
