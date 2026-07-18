@@ -127,12 +127,10 @@ public class DocxConverter : IMarkdownConverter
         ref int footnoteCounter)
     {
         var sb = new StringBuilder();
-
-        // Handle HYPERLINK field codes (used by some Word versions instead of Hyperlink elements)
-        if (TryProcessFieldCodeHyperlink(paragraph, out var fieldLinkMarkdown))
-        {
-            return fieldLinkMarkdown!;
-        }
+        var isInFieldHyperlink = false;
+        var isCapturingFieldDisplay = false;
+        string? fieldHyperlinkUrl = null;
+        var fieldHyperlinkDisplay = new StringBuilder();
 
         foreach (var child in paragraph.ChildElements)
         {
@@ -143,6 +141,17 @@ public class DocxConverter : IMarkdownConverter
                     break;
 
                 case Run run:
+                    if (TryProcessFieldCodeHyperlinkRun(
+                            run,
+                            ref isInFieldHyperlink,
+                            ref isCapturingFieldDisplay,
+                            ref fieldHyperlinkUrl,
+                            fieldHyperlinkDisplay,
+                            sb))
+                    {
+                        break;
+                    }
+
                     ProcessRun(run, footnotes, footnoteIndex, ref footnoteCounter, sb);
                     break;
             }
@@ -178,55 +187,78 @@ public class DocxConverter : IMarkdownConverter
         sb.Append(displayText);
     }
 
-    private static bool TryProcessFieldCodeHyperlink(Paragraph paragraph, out string? markdown)
+    private static bool TryProcessFieldCodeHyperlinkRun(
+        Run run,
+        ref bool isInFieldHyperlink,
+        ref bool isCapturingFieldDisplay,
+        ref string? fieldHyperlinkUrl,
+        StringBuilder fieldHyperlinkDisplay,
+        StringBuilder sb)
     {
-        markdown = null;
+        var fieldChar = run.Elements<FieldChar>().FirstOrDefault();
 
-        var fieldCode = paragraph.Descendants<FieldCode>().FirstOrDefault();
-        if (fieldCode is null)
-            return false;
-
-        var codeText = fieldCode.Text.Trim();
-        if (!codeText.StartsWith("HYPERLINK", StringComparison.OrdinalIgnoreCase))
-            return false;
-
-        // Extract URL from HYPERLINK field code: HYPERLINK "url" or HYPERLINK url
-        var rest = codeText["HYPERLINK".Length..].Trim();
-        var url = rest.StartsWith("\"")
-            ? rest.Split('"').ElementAtOrDefault(1)
-            : rest.Split(' ', 2)[0];
-        if (string.IsNullOrEmpty(url))
-            return false;
-
-        // Extract display text from runs between "separate" and "end" field chars
-        var displayText = new StringBuilder();
-        var capture = false;
-        foreach (var child in paragraph.ChildElements)
+        if (fieldChar?.FieldCharType?.Value == FieldCharValues.Begin)
         {
-            if (child is not Run run) continue;
-
-            var fieldChar = run.Elements<FieldChar>().FirstOrDefault();
-            if (fieldChar?.FieldCharType?.Value == FieldCharValues.Separate)
-            {
-                capture = true;
-                continue;
-            }
-            if (fieldChar?.FieldCharType?.Value == FieldCharValues.End)
-            {
-                capture = false;
-                break;
-            }
-            if (capture)
-            {
-                foreach (var txt in run.Elements<Text>())
-                    displayText.Append(txt.Text);
-            }
+            isInFieldHyperlink = true;
+            isCapturingFieldDisplay = false;
+            fieldHyperlinkUrl = null;
+            fieldHyperlinkDisplay.Clear();
+            return true;
         }
 
-        if (displayText.Length == 0)
+        if (!isInFieldHyperlink)
             return false;
 
-        markdown = $"[{displayText}]({EscapeUrlParentheses(url)})";
+        var fieldCode = run.Elements<FieldCode>().FirstOrDefault();
+        if (fieldCode is not null)
+        {
+            var codeText = fieldCode.Text.Trim();
+            if (!codeText.StartsWith("HYPERLINK", StringComparison.OrdinalIgnoreCase))
+            {
+                isInFieldHyperlink = false;
+                isCapturingFieldDisplay = false;
+                fieldHyperlinkUrl = null;
+                fieldHyperlinkDisplay.Clear();
+                return true;
+            }
+
+            var rest = codeText["HYPERLINK".Length..].Trim();
+            fieldHyperlinkUrl = rest.StartsWith("\"")
+                ? rest.Split('"').ElementAtOrDefault(1)
+                : rest.Split(' ', 2)[0];
+            return true;
+        }
+
+        if (fieldChar?.FieldCharType?.Value == FieldCharValues.Separate)
+        {
+            isCapturingFieldDisplay = true;
+            return true;
+        }
+
+        if (fieldChar?.FieldCharType?.Value == FieldCharValues.End)
+        {
+            if (!string.IsNullOrEmpty(fieldHyperlinkUrl) && fieldHyperlinkDisplay.Length > 0)
+            {
+                sb.Append($"[{fieldHyperlinkDisplay}]({EscapeUrlParentheses(fieldHyperlinkUrl)})");
+            }
+
+            isInFieldHyperlink = false;
+            isCapturingFieldDisplay = false;
+            fieldHyperlinkUrl = null;
+            fieldHyperlinkDisplay.Clear();
+            return true;
+        }
+
+        if (isCapturingFieldDisplay)
+        {
+            foreach (var text in run.Elements<Text>())
+            {
+                fieldHyperlinkDisplay.Append(text.Text);
+            }
+
+            return true;
+        }
+
         return true;
     }
 
