@@ -21,6 +21,7 @@ public class FormatsCommandTests
     [InlineData(".html")]
     [InlineData(".docx")]
     [InlineData(".csv")]
+    [InlineData(".tsv")]
     [InlineData(".xlsx")]
     [InlineData(".pptx")]
     public async Task Formats_IncludesExpectedExtension(string extension)

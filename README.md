@@ -32,7 +32,7 @@ ElBruno.MarkItDotNet provides a unified interface to convert 15+ file formats in
 | URL (Web Pages) | `.url` | `UrlConverter` | Core | `ReverseMarkdown` |
 | Word (DOCX) | `.docx` | `DocxConverter` | Core | `DocumentFormat.OpenXml` |
 | PDF | `.pdf` | `PdfConverter` | Core | `PdfPig` |
-| CSV | `.csv` | `CsvConverter` | Core | None |
+| CSV / TSV | `.csv`, `.tsv` | `CsvConverter` | Core | None |
 | XML | `.xml` | `XmlConverter` | Core | None |
 | YAML | `.yaml`, `.yml` | `YamlConverter` | Core | None |
 | RTF | `.rtf` | `RtfConverter` | Core | `RtfPipe` |

@@ -31,7 +31,7 @@ internal static class FormatsCommand
             ".docx",
             ".pdf",
             ".png", ".jpg", ".jpeg", ".gif", ".bmp", ".tiff", ".webp",
-            ".csv",
+            ".csv", ".tsv",
             ".xml",
             ".yaml", ".yml",
             ".rtf",
