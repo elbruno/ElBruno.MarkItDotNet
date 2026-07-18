@@ -127,6 +127,10 @@ public class DocxConverter : IMarkdownConverter
         ref int footnoteCounter)
     {
         var sb = new StringBuilder();
+        var isInFieldHyperlink = false;
+        var isCapturingFieldDisplay = false;
+        string? fieldHyperlinkUrl = null;
+        var fieldHyperlinkDisplay = new StringBuilder();
 
         foreach (var child in paragraph.ChildElements)
         {
@@ -137,6 +141,17 @@ public class DocxConverter : IMarkdownConverter
                     break;
 
                 case Run run:
+                    if (TryProcessFieldCodeHyperlinkRun(
+                            run,
+                            ref isInFieldHyperlink,
+                            ref isCapturingFieldDisplay,
+                            ref fieldHyperlinkUrl,
+                            fieldHyperlinkDisplay,
+                            sb))
+                    {
+                        break;
+                    }
+
                     ProcessRun(run, footnotes, footnoteIndex, ref footnoteCounter, sb);
                     break;
             }
@@ -164,12 +179,92 @@ public class DocxConverter : IMarkdownConverter
                 .FirstOrDefault(r => r.Id == relationshipId);
             if (rel is not null)
             {
-                sb.Append($"[{displayText}]({rel.Uri})");
+                sb.Append($"[{displayText}]({EscapeUrlParentheses(rel.Uri.ToString())})");
                 return;
             }
         }
 
         sb.Append(displayText);
+    }
+
+    private static bool TryProcessFieldCodeHyperlinkRun(
+        Run run,
+        ref bool isInFieldHyperlink,
+        ref bool isCapturingFieldDisplay,
+        ref string? fieldHyperlinkUrl,
+        StringBuilder fieldHyperlinkDisplay,
+        StringBuilder sb)
+    {
+        var fieldChar = run.Elements<FieldChar>().FirstOrDefault();
+
+        if (fieldChar?.FieldCharType?.Value == FieldCharValues.Begin)
+        {
+            isInFieldHyperlink = true;
+            isCapturingFieldDisplay = false;
+            fieldHyperlinkUrl = null;
+            fieldHyperlinkDisplay.Clear();
+            return true;
+        }
+
+        if (!isInFieldHyperlink)
+            return false;
+
+        var fieldCode = run.Elements<FieldCode>().FirstOrDefault();
+        if (fieldCode is not null)
+        {
+            var codeText = fieldCode.Text.Trim();
+            if (!codeText.StartsWith("HYPERLINK", StringComparison.OrdinalIgnoreCase))
+            {
+                isInFieldHyperlink = false;
+                isCapturingFieldDisplay = false;
+                fieldHyperlinkUrl = null;
+                fieldHyperlinkDisplay.Clear();
+                return true;
+            }
+
+            var rest = codeText["HYPERLINK".Length..].Trim();
+            fieldHyperlinkUrl = rest.StartsWith("\"")
+                ? rest.Split('"').ElementAtOrDefault(1)
+                : rest.Split(' ', 2)[0];
+            return true;
+        }
+
+        if (fieldChar?.FieldCharType?.Value == FieldCharValues.Separate)
+        {
+            isCapturingFieldDisplay = true;
+            return true;
+        }
+
+        if (fieldChar?.FieldCharType?.Value == FieldCharValues.End)
+        {
+            if (!string.IsNullOrEmpty(fieldHyperlinkUrl) && fieldHyperlinkDisplay.Length > 0)
+            {
+                sb.Append($"[{fieldHyperlinkDisplay}]({EscapeUrlParentheses(fieldHyperlinkUrl)})");
+            }
+
+            isInFieldHyperlink = false;
+            isCapturingFieldDisplay = false;
+            fieldHyperlinkUrl = null;
+            fieldHyperlinkDisplay.Clear();
+            return true;
+        }
+
+        if (isCapturingFieldDisplay)
+        {
+            foreach (var text in run.Elements<Text>())
+            {
+                fieldHyperlinkDisplay.Append(text.Text);
+            }
+
+            return true;
+        }
+
+        return true;
+    }
+
+    private static string EscapeUrlParentheses(string url)
+    {
+        return url.Replace("(", "%28").Replace(")", "%29");
     }
 
     private static void ProcessRun(

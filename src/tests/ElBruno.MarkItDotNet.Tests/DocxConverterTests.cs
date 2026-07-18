@@ -168,6 +168,62 @@ public class DocxConverterTests
         result.Should().Contain("---");
     }
 
+    [Fact]
+    public async Task ConvertAsync_FieldCodeHyperlink_ConvertsToMarkdownLink()
+    {
+        using var docxStream = CreateDocx(body =>
+        {
+            body.Append(new Paragraph(
+                new Run(new FieldChar { FieldCharType = FieldCharValues.Begin }),
+                new Run(new FieldCode(" HYPERLINK \"https://en.wiktionary.org/\" ")),
+                new Run(new FieldChar { FieldCharType = FieldCharValues.Separate }),
+                new Run(new Text("wiktionary")),
+                new Run(new FieldChar { FieldCharType = FieldCharValues.End })));
+        });
+
+        var result = await _converter.ConvertAsync(docxStream, ".docx");
+
+        result.Should().Contain("[wiktionary](https://en.wiktionary.org/)");
+    }
+
+    [Fact]
+    public async Task ConvertAsync_HyperlinkUrlWithParentheses_EscapesParenthesesInMarkdown()
+    {
+        using var docxStream = CreateDocx((body, mainPart) =>
+        {
+            var hyperlinkRelationship = mainPart.AddHyperlinkRelationship(new Uri("https://en.wiktionary.org/wiki/()"), true);
+            body.Append(new Paragraph(
+                new Hyperlink(new Run(new Text("\"(\" on wiktionary")))
+                {
+                    Id = hyperlinkRelationship.Id
+                }));
+        });
+
+        var result = await _converter.ConvertAsync(docxStream, ".docx");
+
+        result.Should().Contain("[\"(\" on wiktionary](https://en.wiktionary.org/wiki/%28%29)");
+    }
+
+    [Fact]
+    public async Task ConvertAsync_FieldCodeHyperlinkWithSurroundingText_PreservesMixedParagraphContent()
+    {
+        using var docxStream = CreateDocx(body =>
+        {
+            body.Append(new Paragraph(
+                new Run(new Text("See ")),
+                new Run(new FieldChar { FieldCharType = FieldCharValues.Begin }),
+                new Run(new FieldCode(" HYPERLINK \"https://en.wiktionary.org/\" ")),
+                new Run(new FieldChar { FieldCharType = FieldCharValues.Separate }),
+                new Run(new Text("wiktionary")),
+                new Run(new FieldChar { FieldCharType = FieldCharValues.End }),
+                new Run(new Text(" for details"))));
+        });
+
+        var result = await _converter.ConvertAsync(docxStream, ".docx");
+
+        result.Should().Contain("See [wiktionary](https://en.wiktionary.org/) for details");
+    }
+
     /// <summary>
     /// Helper to create an in-memory .docx file from a body-building action.
     /// </summary>
@@ -180,6 +236,22 @@ public class DocxConverterTests
             mainPart.Document = new Document();
             var body = new Body();
             buildBody(body);
+            mainPart.Document.Append(body);
+            mainPart.Document.Save();
+        }
+        ms.Position = 0;
+        return ms;
+    }
+
+    private static MemoryStream CreateDocx(Action<Body, MainDocumentPart> buildBody)
+    {
+        var ms = new MemoryStream();
+        using (var doc = WordprocessingDocument.Create(ms, WordprocessingDocumentType.Document))
+        {
+            var mainPart = doc.AddMainDocumentPart();
+            mainPart.Document = new Document();
+            var body = new Body();
+            buildBody(body, mainPart);
             mainPart.Document.Append(body);
             mainPart.Document.Save();
         }
