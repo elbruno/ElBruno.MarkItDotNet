@@ -128,6 +128,12 @@ public class DocxConverter : IMarkdownConverter
     {
         var sb = new StringBuilder();
 
+        // Handle HYPERLINK field codes (used by some Word versions instead of Hyperlink elements)
+        if (TryProcessFieldCodeHyperlink(paragraph, out var fieldLinkMarkdown))
+        {
+            return fieldLinkMarkdown!;
+        }
+
         foreach (var child in paragraph.ChildElements)
         {
             switch (child)
@@ -164,12 +170,69 @@ public class DocxConverter : IMarkdownConverter
                 .FirstOrDefault(r => r.Id == relationshipId);
             if (rel is not null)
             {
-                sb.Append($"[{displayText}]({rel.Uri})");
+                sb.Append($"[{displayText}]({EscapeUrlParentheses(rel.Uri.ToString())})");
                 return;
             }
         }
 
         sb.Append(displayText);
+    }
+
+    private static bool TryProcessFieldCodeHyperlink(Paragraph paragraph, out string? markdown)
+    {
+        markdown = null;
+
+        var fieldCode = paragraph.Descendants<FieldCode>().FirstOrDefault();
+        if (fieldCode is null)
+            return false;
+
+        var codeText = fieldCode.Text.Trim();
+        if (!codeText.StartsWith("HYPERLINK", StringComparison.OrdinalIgnoreCase))
+            return false;
+
+        // Extract URL from HYPERLINK field code: HYPERLINK "url" or HYPERLINK url
+        var rest = codeText["HYPERLINK".Length..].Trim();
+        var url = rest.StartsWith("\"")
+            ? rest.Split('"').ElementAtOrDefault(1)
+            : rest.Split(' ', 2)[0];
+        if (string.IsNullOrEmpty(url))
+            return false;
+
+        // Extract display text from runs between "separate" and "end" field chars
+        var displayText = new StringBuilder();
+        var capture = false;
+        foreach (var child in paragraph.ChildElements)
+        {
+            if (child is not Run run) continue;
+
+            var fieldChar = run.Elements<FieldChar>().FirstOrDefault();
+            if (fieldChar?.FieldCharType?.Value == FieldCharValues.Separate)
+            {
+                capture = true;
+                continue;
+            }
+            if (fieldChar?.FieldCharType?.Value == FieldCharValues.End)
+            {
+                capture = false;
+                break;
+            }
+            if (capture)
+            {
+                foreach (var txt in run.Elements<Text>())
+                    displayText.Append(txt.Text);
+            }
+        }
+
+        if (displayText.Length == 0)
+            return false;
+
+        markdown = $"[{displayText}]({EscapeUrlParentheses(url)})";
+        return true;
+    }
+
+    private static string EscapeUrlParentheses(string url)
+    {
+        return url.Replace("(", "%28").Replace(")", "%29");
     }
 
     private static void ProcessRun(

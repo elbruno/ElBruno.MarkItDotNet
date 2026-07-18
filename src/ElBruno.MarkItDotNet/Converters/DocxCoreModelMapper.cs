@@ -1,3 +1,4 @@
+using System.Text;
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Wordprocessing;
@@ -335,18 +336,29 @@ public class DocxCoreModelMapper : IStructuredConverter
 
     private static string GetPlainText(Paragraph paragraph)
     {
-        return string.Concat(
-            paragraph.Elements<Run>()
-                .SelectMany(r => r.Elements<Text>())
-                .Select(t => t.Text));
+        var sb = new StringBuilder();
+        foreach (var child in paragraph.ChildElements)
+        {
+            switch (child)
+            {
+                case Hyperlink hyperlink:
+                    foreach (var run in hyperlink.Elements<Run>())
+                    foreach (var text in run.Elements<Text>())
+                        sb.Append(text.Text);
+                    break;
+                case Run run:
+                    foreach (var text in run.Elements<Text>())
+                        sb.Append(text.Text);
+                    break;
+            }
+        }
+        return sb.ToString();
     }
 
     private static string GetCellText(TableCell cell)
     {
         return string.Join(" ", cell.Elements<Paragraph>()
-            .Select(p => string.Concat(p.Elements<Run>()
-                .SelectMany(r => r.Elements<Text>())
-                .Select(t => t.Text))))
+            .Select(GetPlainText))
             .Trim();
     }
 
