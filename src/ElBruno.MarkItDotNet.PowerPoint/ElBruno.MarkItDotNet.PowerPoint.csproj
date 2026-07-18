@@ -8,7 +8,7 @@
     <PackageIcon>nuget_logo.png</PackageIcon>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageTags>markdown;converter;powerpoint;pptx;slides;markitdown</PackageTags>
-    <Version>0.7.1</Version>
+    <Version>0.7.2</Version>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>
@@ -21,3 +21,4 @@
     <None Include="..\..\images\nuget_logo.png" Pack="true" PackagePath="" />
   </ItemGroup>
 </Project>
+
