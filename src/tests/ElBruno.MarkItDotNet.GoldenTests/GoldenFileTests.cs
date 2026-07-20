@@ -73,4 +73,22 @@ public class GoldenFileTests : IClassFixture<MarkdownServiceFixture>
         result.Markdown.Should().NotBeNullOrWhiteSpace($"conversion of '{filename}' should produce output");
         result.SourceFormat.Should().Be(ext);
     }
+
+    [Fact]
+    public async Task Convert_PdfWithMultipleHeadingSizes_ShouldPreserveHeadingHierarchy()
+    {
+        const string filename = "sample_headings.pdf";
+        var documentPath = TestPaths.GetDocument(filename);
+        var expectedPath = TestPaths.GetExpectedMarkItDotNet(filename);
+
+        File.Exists(documentPath).Should().BeTrue($"source document '{filename}' should exist");
+        File.Exists(expectedPath).Should().BeTrue($"golden file for '{filename}' should exist");
+
+        using var stream = File.OpenRead(documentPath);
+        var result = await _service.ConvertAsync(stream, ".pdf");
+        var expected = await File.ReadAllTextAsync(expectedPath);
+
+        result.Success.Should().BeTrue();
+        result.Markdown.ReplaceLineEndings("\n").TrimEnd().Should().Be(expected.ReplaceLineEndings("\n").TrimEnd());
+    }
 }
