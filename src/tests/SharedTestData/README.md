@@ -13,6 +13,7 @@ SharedTestData/
 │   ├── sample.html
 │   ├── sample.json
 │   ├── sample.pdf
+│   ├── sample_headings.pdf
 │   ├── sample.pptx
 │   ├── sample.rtf
 │   ├── sample.txt
