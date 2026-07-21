@@ -44,7 +44,9 @@ public class GoldenFileTests : IClassFixture<MarkdownServiceFixture>
         result.Success.Should().BeTrue($"conversion of '{filename}' should succeed");
 
         var expected = await File.ReadAllTextAsync(expectedPath);
-        result.Markdown.Should().Be(expected, $"output for '{filename}' should match golden file");
+        NormalizeLineEndings(result.Markdown)
+            .Should()
+            .Be(NormalizeLineEndings(expected), $"output for '{filename}' should match golden file");
     }
 
     [Theory]
@@ -90,5 +92,10 @@ public class GoldenFileTests : IClassFixture<MarkdownServiceFixture>
 
         result.Success.Should().BeTrue();
         result.Markdown.ReplaceLineEndings("\n").TrimEnd().Should().Be(expected.ReplaceLineEndings("\n").TrimEnd());
+    }
+
+    private static string NormalizeLineEndings(string content)
+    {
+        return content.Replace("\r\n", "\n");
     }
 }

@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\ElBruno.MarkItDotNet\ElBruno.MarkItDotNet.csproj" />
+    <ProjectReference Include="..\..\ElBruno.MarkItDotNet.Connectors\ElBruno.MarkItDotNet.Connectors.csproj" />
+    <ProjectReference Include="..\..\ElBruno.MarkItDotNet.Connectors.AzureBlob\ElBruno.MarkItDotNet.Connectors.AzureBlob.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="appsettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+</Project>

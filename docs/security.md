@@ -136,6 +136,23 @@ var converter = new MarkdownConverter(options);
 
 ## Configuration Recommendations
 
+### SecurityPoliciesDemo Sample
+
+Run the security sample that converts content, applies policy rules, and emits an audit report:
+
+```bash
+dotnet run --project src/samples/SecurityPoliciesDemo/SecurityPoliciesDemo.csproj
+```
+
+Dry-run mode:
+
+```bash
+dotnet run --project src/samples/SecurityPoliciesDemo/SecurityPoliciesDemo.csproj -- --dry-run
+```
+
+The demo reports scanner and policy violations (deny keywords, content guardrails, PII detection/redaction), and writes JSONL audit output unless dry-run is enabled.
+For full configuration details, see [docs/security-policies-guide.md](security-policies-guide.md).
+
 ### For URL Conversion
 
 The `UrlConverter` requires an `HttpClient`. Always inject a properly configured client:
