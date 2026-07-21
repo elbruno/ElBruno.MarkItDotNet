@@ -21,9 +21,9 @@ public sealed class ConnectorsIntegrationTests : IDisposable
     [Fact]
     public async Task FileSystemConnector_FromServiceProvider_EnumeratesAndReadsDocuments()
     {
-        WriteFile("input\\one.md", "# one");
-        WriteFile("input\\two.txt", "skip");
-        WriteFile("input\\nested\\three.md", "# three");
+        WriteFile(Path.Combine("input", "one.md"), "# one");
+        WriteFile(Path.Combine("input", "two.txt"), "skip");
+        WriteFile(Path.Combine("input", "nested", "three.md"), "# three");
 
         var services = new ServiceCollection();
         services.AddFileSystemConnector(options =>
