@@ -3,14 +3,14 @@
     <OutputType>Exe</OutputType>
     <TargetFrameworks>net8.0;net10.0</TargetFrameworks>
     <PackAsTool>true</PackAsTool>
-    <ToolCommandName>markitdown</ToolCommandName>
+    <ToolCommandName>markitdown-dotnet</ToolCommandName>
     <PackageId>ElBruno.MarkItDotNet.Cli</PackageId>
     <Description>Command-line tool for converting files to Markdown. Powered by ElBruno.MarkItDotNet.</Description>
     <PackageProjectUrl>https://github.com/elbruno/ElBruno.MarkItDotNet</PackageProjectUrl>
     <PackageIcon>nuget_logo.png</PackageIcon>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageTags>markdown;converter;cli;dotnet-tool;markitdown;pdf;docx;html;excel;powerpoint</PackageTags>
-    <Version>0.8.0</Version>
+    <Version>0.9.1</Version>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>

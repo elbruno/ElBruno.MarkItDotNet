@@ -1,3 +1,5 @@
+> **⚠️ Migration from v0.8.x:** The CLI command was renamed from `markitdown` to `markitdown-dotnet` in v0.9.0 to avoid collision with the [Microsoft Python markitdown CLI](https://github.com/microsoft/markitdown). Run `dotnet tool update -g ElBruno.MarkItDotNet.Cli` and replace all invocations of `markitdown` with `markitdown-dotnet`.
+
 # MarkItDotNet CLI Tool
 
 **Command-line interface for converting 15+ file formats to Markdown** — built on the ElBruno.MarkItDotNet library.
@@ -15,21 +17,21 @@ dotnet tool install -g ElBruno.MarkItDotNet.Cli
 ### Your First Conversion
 
 ```bash
-markitdown report.pdf
+markitdown-dotnet report.pdf
 ```
 
 Output is printed to the terminal. Pipe it, save it, or process it further:
 
 ```bash
-markitdown report.pdf | head -20
-markitdown report.pdf > report.md
+markitdown-dotnet report.pdf | head -20
+markitdown-dotnet report.pdf > report.md
 ```
 
 ## Installation
 
 ### Global Tool Installation
 
-Make `markitdown` available system-wide:
+Make `markitdown-dotnet` available system-wide:
 
 ```bash
 dotnet tool install -g ElBruno.MarkItDotNet.Cli
@@ -38,7 +40,7 @@ dotnet tool install -g ElBruno.MarkItDotNet.Cli
 Verify installation:
 
 ```bash
-markitdown --version
+markitdown-dotnet --version
 ```
 
 ### Local Tool Installation
@@ -52,18 +54,18 @@ dotnet tool install ElBruno.MarkItDotNet.Cli
 Then invoke it via the project context:
 
 ```bash
-dotnet markitdown <file>
+dotnet markitdown-dotnet <file>
 ```
 
 ## Commands Reference
 
-### `markitdown <file>`
+### `markitdown-dotnet <file>`
 
 Convert a single file to Markdown and output to stdout (or to file with `-o`).
 
 **Usage:**
 ```bash
-markitdown <file> [options]
+markitdown-dotnet <file> [options]
 ```
 
 **Arguments:**
@@ -80,30 +82,30 @@ markitdown <file> [options]
 
 ```bash
 # Convert and print to terminal
-markitdown report.pdf
+markitdown-dotnet report.pdf
 
 # Convert and save to file
-markitdown report.pdf -o report.md
+markitdown-dotnet report.pdf -o report.md
 
 # Convert with streaming (good for large PDFs)
-markitdown large.pdf --streaming -o large.md
+markitdown-dotnet large.pdf --streaming -o large.md
 
 # Get JSON output with metadata
-markitdown data.csv --format json | jq .metadata
+markitdown-dotnet data.csv --format json | jq .metadata
 
 # Quiet mode (no status messages)
-markitdown document.docx -q
+markitdown-dotnet document.docx -q
 ```
 
 ---
 
-### `markitdown batch <directory>`
+### `markitdown-dotnet batch <directory>`
 
 Convert multiple files in a directory or recursively in subdirectories.
 
 **Usage:**
 ```bash
-markitdown batch <directory> [options]
+markitdown-dotnet batch <directory> [options]
 ```
 
 **Arguments:**
@@ -122,33 +124,33 @@ markitdown batch <directory> [options]
 
 ```bash
 # Convert all files in a directory
-markitdown batch ./documents -o ./output
+markitdown-dotnet batch ./documents -o ./output
 
 # Recursive: include subdirectories
-markitdown batch ./docs -o ./md -r
+markitdown-dotnet batch ./docs -o ./md -r
 
 # Convert only PDF files
-markitdown batch ./reports -o ./reports-md -r --pattern "*.pdf"
+markitdown-dotnet batch ./reports -o ./reports-md -r --pattern "*.pdf"
 
 # Convert Word and PDF only
-markitdown batch ./mixed -o ./converted -r --pattern "*.{docx,pdf}"
+markitdown-dotnet batch ./mixed -o ./converted -r --pattern "*.{docx,pdf}"
 
 # Limit parallelism (slower but lower memory)
-markitdown batch ./large -o ./large-md -r --parallel 2
+markitdown-dotnet batch ./large -o ./large-md -r --parallel 2
 
 # Verbose output for troubleshooting
-markitdown batch ./docs -o ./md -r -v
+markitdown-dotnet batch ./docs -o ./md -r -v
 ```
 
 ---
 
-### `markitdown url <url>`
+### `markitdown-dotnet url <url>`
 
 Convert a web page to Markdown. Fetches the page, strips navigation/scripts/styles, and extracts content.
 
 **Usage:**
 ```bash
-markitdown url <url> [options]
+markitdown-dotnet url <url> [options]
 ```
 
 **Arguments:**
@@ -164,37 +166,37 @@ markitdown url <url> [options]
 
 ```bash
 # Print web page as Markdown to terminal
-markitdown url https://example.com
+markitdown-dotnet url https://example.com
 
 # Save web page to Markdown file
-markitdown url https://example.com -o page.md
+markitdown-dotnet url https://example.com -o page.md
 
 # Get JSON output with metadata (word count, title, etc.)
-markitdown url https://example.com --format json | jq .metadata
+markitdown-dotnet url https://example.com --format json | jq .metadata
 
 # Batch convert URLs from a file
-cat urls.txt | while read url; do markitdown url "$url" -o "$(echo "$url" | md5sum | cut -d' ' -f1).md"; done
+cat urls.txt | while read url; do markitdown-dotnet url "$url" -o "$(echo "$url" | md5sum | cut -d' ' -f1).md"; done
 ```
 
 ---
 
-### `markitdown formats`
+### `markitdown-dotnet formats`
 
 List all supported file formats with their extensions and converter details.
 
 **Usage:**
 ```bash
-markitdown formats
+markitdown-dotnet formats
 ```
 
 **Examples:**
 
 ```bash
 # Show all supported formats
-markitdown formats
+markitdown-dotnet formats
 
 # Filter by extension
-markitdown formats | grep pdf
+markitdown-dotnet formats | grep pdf
 ```
 
 **Output:**
@@ -215,7 +217,7 @@ Shows a table with columns: **Format**, **Extensions**, **Converter**, **Package
 **Example:**
 
 ```bash
-markitdown missing.pdf
+markitdown-dotnet missing.pdf
 # Output: File not found: missing.pdf
 # Exit code: 2
 ```
@@ -229,7 +231,7 @@ markitdown missing.pdf
 Convert a document to Markdown:
 
 ```bash
-markitdown report.pdf
+markitdown-dotnet report.pdf
 ```
 
 ### Save to File
@@ -237,7 +239,7 @@ markitdown report.pdf
 Convert and explicitly save output:
 
 ```bash
-markitdown report.pdf -o report.md
+markitdown-dotnet report.pdf -o report.md
 cat report.md
 ```
 
@@ -246,7 +248,7 @@ cat report.md
 Convert all PDFs in a folder tree:
 
 ```bash
-markitdown batch ./documents -o ./output -r --pattern "*.pdf"
+markitdown-dotnet batch ./documents -o ./output -r --pattern "*.pdf"
 ```
 
 ### Pipeline for Processing
@@ -254,13 +256,13 @@ markitdown batch ./documents -o ./output -r --pattern "*.pdf"
 Extract first 20 lines of a converted document:
 
 ```bash
-markitdown report.pdf | head -20
+markitdown-dotnet report.pdf | head -20
 ```
 
 Count words in converted markdown:
 
 ```bash
-markitdown data.csv | wc -w
+markitdown-dotnet data.csv | wc -w
 ```
 
 ### JSON Output for Scripting
@@ -268,7 +270,7 @@ markitdown data.csv | wc -w
 Extract metadata (word count, title, etc.) for further processing:
 
 ```bash
-markitdown data.csv --format json | jq .metadata.wordCount
+markitdown-dotnet data.csv --format json | jq .metadata.wordCount
 ```
 
 ### URL to Markdown
@@ -276,7 +278,7 @@ markitdown data.csv --format json | jq .metadata.wordCount
 Save a web page as Markdown:
 
 ```bash
-markitdown url https://example.com/article -o article.md
+markitdown-dotnet url https://example.com/article -o article.md
 ```
 
 ### Recursive Batch with Multiple Formats
@@ -284,7 +286,7 @@ markitdown url https://example.com/article -o article.md
 Convert all Office documents (Word, PowerPoint, Excel) recursively:
 
 ```bash
-markitdown batch ./office-docs -o ./converted -r --pattern "*.{docx,pptx,xlsx}"
+markitdown-dotnet batch ./office-docs -o ./converted -r --pattern "*.{docx,pptx,xlsx}"
 ```
 
 ### Parallel Batch Processing
@@ -292,7 +294,7 @@ markitdown batch ./office-docs -o ./converted -r --pattern "*.{docx,pptx,xlsx}"
 Speed up large-scale conversions on multi-core machines:
 
 ```bash
-markitdown batch ./huge-corpus -o ./output -r --parallel 8
+markitdown-dotnet batch ./huge-corpus -o ./output -r --parallel 8
 ```
 
 ### Troubleshooting with Verbose Mode
@@ -300,7 +302,7 @@ markitdown batch ./huge-corpus -o ./output -r --parallel 8
 Debug why a file isn't converting:
 
 ```bash
-markitdown document.pdf -v
+markitdown-dotnet document.pdf -v
 ```
 
 ---
@@ -337,7 +339,7 @@ markitdown document.pdf -v
 For large PDFs (100+ MB), use `--streaming` to process page-by-page:
 
 ```bash
-markitdown large-document.pdf --streaming -o large.md
+markitdown-dotnet large-document.pdf --streaming -o large.md
 ```
 
 ### Parallel Batch Processing
@@ -345,7 +347,7 @@ markitdown large-document.pdf --streaming -o large.md
 On a multi-core machine, increase `--parallel` for faster conversions:
 
 ```bash
-markitdown batch ./corpus -o ./md -r --parallel $(nproc)
+markitdown-dotnet batch ./corpus -o ./md -r --parallel $(nproc)
 ```
 
 ### Capture Metadata in Scripts
@@ -353,7 +355,7 @@ markitdown batch ./corpus -o ./md -r --parallel $(nproc)
 Extract conversion metadata (success, word count, etc.) programmatically:
 
 ```bash
-result=$(markitdown document.pdf --format json)
+result=$(markitdown-dotnet document.pdf --format json)
 word_count=$(echo "$result" | jq .metadata.wordCount)
 echo "Converted document has $word_count words"
 ```
@@ -364,10 +366,10 @@ Use glob patterns for flexible file selection:
 
 ```bash
 # All Office documents
-markitdown batch ./mixed -o ./out -r --pattern "*.{docx,xlsx,pptx}"
+markitdown-dotnet batch ./mixed -o ./out -r --pattern "*.{docx,xlsx,pptx}"
 
 # All documents except images
-markitdown batch ./docs -o ./out -r --pattern "*.{pdf,docx,txt}"
+markitdown-dotnet batch ./docs -o ./out -r --pattern "*.{pdf,docx,txt}"
 ```
 
 ### Chaining with Other Unix Tools
@@ -376,13 +378,13 @@ Convert and then process:
 
 ```bash
 # Extract links from converted HTML
-markitdown page.html | grep -E '^\[' | sort | uniq
+markitdown-dotnet page.html | grep -E '^\[' | sort | uniq
 
 # Count paragraphs in converted document
-markitdown article.docx | grep -c '^$'
+markitdown-dotnet article.docx | grep -c '^$'
 
 # Find longest headings
-markitdown report.pdf | grep '^##' | sort -k2 -nr | head -5
+markitdown-dotnet report.pdf | grep '^##' | sort -k2 -nr | head -5
 ```
 
 ---
@@ -395,20 +397,20 @@ The CLI outputs clean Markdown optimized for AI consumption:
 
 ```bash
 # Convert all company docs to Markdown for vector DB ingestion
-markitdown batch ./company-docs -o ./md -r --format markdown
+markitdown-dotnet batch ./company-docs -o ./md -r --format markdown
 
 # Or with JSON metadata for more control:
-markitdown batch ./company-docs -o ./json -r --format json
+markitdown-dotnet batch ./company-docs -o ./json -r --format json
 ```
 
 ### Documentation Generation
 
 ```bash
 # Convert design files to Markdown spec
-markitdown design.pdf -o design-spec.md
+markitdown-dotnet design.pdf -o design-spec.md
 
 # Convert spreadsheet data to tables
-markitdown data.xlsx -o data-tables.md
+markitdown-dotnet data.xlsx -o data-tables.md
 ```
 
 ### Batch Processing Pipelines
@@ -420,7 +422,7 @@ markitdown data.xlsx -o data-tables.md
 for file in results/*.{pdf,docx,xlsx}; do
     echo "Converting $file..."
     output="${file%.*}.md"
-    markitdown "$file" -o "$output"
+    markitdown-dotnet "$file" -o "$output"
     # Upload to S3, GCS, etc.
     gsutil cp "$output" gs://bucket/docs/
 done
@@ -433,7 +435,7 @@ done
 ### File Not Found
 
 ```bash
-$ markitdown missing.pdf
+$ markitdown-dotnet missing.pdf
 Error: File not found: missing.pdf
 Exit code: 2
 ```
@@ -447,7 +449,7 @@ ls -la missing.pdf
 ### Unsupported Format
 
 ```bash
-$ markitdown archive.rar
+$ markitdown-dotnet archive.rar
 Error: Unsupported format: .rar
 Exit code: 3
 ```
@@ -455,13 +457,13 @@ Exit code: 3
 Check supported formats:
 
 ```bash
-markitdown formats | grep rar
+markitdown-dotnet formats | grep rar
 ```
 
 ### Conversion Failed
 
 ```bash
-$ markitdown corrupted.pdf
+$ markitdown-dotnet corrupted.pdf
 Error: Conversion failed for corrupted.pdf: PDF is corrupted
 Exit code: 1
 ```
@@ -469,7 +471,7 @@ Exit code: 1
 Enable verbose mode for details:
 
 ```bash
-markitdown corrupted.pdf -v
+markitdown-dotnet corrupted.pdf -v
 ```
 
 ### Memory Issues on Large Batches
@@ -477,14 +479,14 @@ markitdown corrupted.pdf -v
 Reduce parallelism:
 
 ```bash
-markitdown batch ./huge-folder -o ./out -r --parallel 2
+markitdown-dotnet batch ./huge-folder -o ./out -r --parallel 2
 ```
 
 Or process in smaller chunks:
 
 ```bash
 # First 100 files
-markitdown batch ./huge --pattern "*.pdf" --parallel 1
+markitdown-dotnet batch ./huge --pattern "*.pdf" --parallel 1
 ```
 
 ---
@@ -493,12 +495,12 @@ markitdown batch ./huge --pattern "*.pdf" --parallel 1
 
 ```bash
 # Show version
-markitdown --version
+markitdown-dotnet --version
 
 # Show help
-markitdown --help
+markitdown-dotnet --help
 
 # Show command-specific help
-markitdown batch --help
-markitdown url --help
+markitdown-dotnet batch --help
+markitdown-dotnet url --help
 ```

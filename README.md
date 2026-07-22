@@ -16,7 +16,7 @@
 | [ElBruno.MarkItDotNet.Whisper](https://www.nuget.org/packages/ElBruno.MarkItDotNet.Whisper) | [![NuGet](https://img.shields.io/nuget/v/ElBruno.MarkItDotNet.Whisper.svg?style=flat-square)](https://www.nuget.org/packages/ElBruno.MarkItDotNet.Whisper) | [![Downloads](https://img.shields.io/nuget/dt/ElBruno.MarkItDotNet.Whisper.svg?style=flat-square)](https://www.nuget.org/packages/ElBruno.MarkItDotNet.Whisper) | Local audio transcription via Whisper ONNX |
 | [ElBruno.MarkItDotNet.Security](https://www.nuget.org/packages/ElBruno.MarkItDotNet.Security) | [![NuGet](https://img.shields.io/nuget/v/ElBruno.MarkItDotNet.Security.svg?style=flat-square)](https://www.nuget.org/packages/ElBruno.MarkItDotNet.Security) | [![Downloads](https://img.shields.io/nuget/dt/ElBruno.MarkItDotNet.Security.svg?style=flat-square)](https://www.nuget.org/packages/ElBruno.MarkItDotNet.Security) | Markdown security scanning and issue reporting |
 | [ElBruno.MarkItDotNet.Evals](https://www.nuget.org/packages/ElBruno.MarkItDotNet.Evals) | [![NuGet](https://img.shields.io/nuget/v/ElBruno.MarkItDotNet.Evals.svg?style=flat-square)](https://www.nuget.org/packages/ElBruno.MarkItDotNet.Evals) | [![Downloads](https://img.shields.io/nuget/dt/ElBruno.MarkItDotNet.Evals.svg?style=flat-square)](https://www.nuget.org/packages/ElBruno.MarkItDotNet.Evals) | Conversion quality evaluation and scoring |
-| [ElBruno.MarkItDotNet.Cli](https://www.nuget.org/packages/ElBruno.MarkItDotNet.Cli) | [![NuGet](https://img.shields.io/nuget/v/ElBruno.MarkItDotNet.Cli.svg?style=flat-square)](https://www.nuget.org/packages/ElBruno.MarkItDotNet.Cli) | [![Downloads](https://img.shields.io/nuget/dt/ElBruno.MarkItDotNet.Cli.svg?style=flat-square)](https://www.nuget.org/packages/ElBruno.MarkItDotNet.Cli) | Command-line tool (`markitdown` command) |
+| [ElBruno.MarkItDotNet.Cli](https://www.nuget.org/packages/ElBruno.MarkItDotNet.Cli) | [![NuGet](https://img.shields.io/nuget/v/ElBruno.MarkItDotNet.Cli.svg?style=flat-square)](https://www.nuget.org/packages/ElBruno.MarkItDotNet.Cli) | [![Downloads](https://img.shields.io/nuget/dt/ElBruno.MarkItDotNet.Cli.svg?style=flat-square)](https://www.nuget.org/packages/ElBruno.MarkItDotNet.Cli) | Command-line tool (`markitdown-dotnet` command) |
 
 ## Description
 
@@ -66,27 +66,30 @@ dotnet tool install -g ElBruno.MarkItDotNet.Cli
 
 Convert a single file:
 
+> **⚠️ v0.9.0 Breaking Change — CLI command renamed**
+> The command has been renamed from `markitdown` to `markitdown-dotnet` to avoid collision with the [Microsoft Python markitdown CLI](https://github.com/microsoft/markitdown). To upgrade: `dotnet tool update -g ElBruno.MarkItDotNet.Cli` — then use `markitdown-dotnet` instead of `markitdown`.
+
 ```bash
-markitdown report.pdf
-markitdown report.pdf -o report.md
+markitdown-dotnet report.pdf
+markitdown-dotnet report.pdf -o report.md
 ```
 
 Batch convert a directory:
 
 ```bash
-markitdown batch ./documents -o ./output -r --pattern "*.pdf"
+markitdown-dotnet batch ./documents -o ./output -r --pattern "*.pdf"
 ```
 
 Convert a web page:
 
 ```bash
-markitdown url https://example.com -o page.md
+markitdown-dotnet url https://example.com -o page.md
 ```
 
 Extract metadata as JSON:
 
 ```bash
-markitdown data.csv --format json | jq .metadata.wordCount
+markitdown-dotnet data.csv --format json | jq .metadata.wordCount
 ```
 
 **→ [Full CLI Documentation](docs/cli.md)**
