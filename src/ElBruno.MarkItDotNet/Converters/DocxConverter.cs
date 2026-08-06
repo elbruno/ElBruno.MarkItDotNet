@@ -179,7 +179,7 @@ public class DocxConverter : IMarkdownConverter
                 .FirstOrDefault(r => r.Id == relationshipId);
             if (rel is not null)
             {
-                sb.Append($"[{displayText}]({EscapeUrlParentheses(rel.Uri.ToString())})");
+                sb.Append($"[{EscapeMarkdownText(displayText)}]({EscapeUrlParentheses(rel.Uri.ToString())})");
                 return;
             }
         }
@@ -239,7 +239,7 @@ public class DocxConverter : IMarkdownConverter
         {
             if (!string.IsNullOrEmpty(fieldHyperlinkUrl) && fieldHyperlinkDisplay.Length > 0)
             {
-                sb.Append($"[{fieldHyperlinkDisplay}]({EscapeUrlParentheses(fieldHyperlinkUrl)})");
+                sb.Append($"[{EscapeMarkdownText(fieldHyperlinkDisplay.ToString())}]({EscapeUrlParentheses(fieldHyperlinkUrl)})");
             }
 
             isInFieldHyperlink = false;
@@ -265,6 +265,11 @@ public class DocxConverter : IMarkdownConverter
     private static string EscapeUrlParentheses(string url)
     {
         return url.Replace("(", "%28").Replace(")", "%29");
+    }
+
+    private static string EscapeMarkdownText(string text)
+    {
+        return text.Replace("\\", "\\\\").Replace("[", "\\[").Replace("]", "\\]");
     }
 
     private static void ProcessRun(
