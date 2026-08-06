@@ -204,6 +204,48 @@ public class DocxConverterTests
         result.Should().Contain("[\"(\" on wiktionary](https://en.wiktionary.org/wiki/%28%29)");
     }
 
+    [Theory]
+    [InlineData("[brackets]", "\\[brackets\\]")]
+    [InlineData("back\\slash", "back\\\\slash")]
+    [InlineData("[back\\slash]", "\\[back\\\\slash\\]")]
+    public async Task ConvertAsync_HyperlinkEscapesMarkdownText(string displayText, string escapedDisplayText)
+    {
+        using var docxStream = CreateDocx((body, mainPart) =>
+        {
+            var hyperlinkRelationship = mainPart.AddHyperlinkRelationship(new Uri("https://example.com"), true);
+            body.Append(new Paragraph(
+                new Hyperlink(new Run(new Text(displayText)))
+                {
+                    Id = hyperlinkRelationship.Id
+                }));
+        });
+
+        var result = await _converter.ConvertAsync(docxStream, ".docx");
+
+        result.Should().Contain($"[{escapedDisplayText}](https://example.com)");
+    }
+
+    [Theory]
+    [InlineData("[brackets]", "\\[brackets\\]")]
+    [InlineData("back\\slash", "back\\\\slash")]
+    [InlineData("[back\\slash]", "\\[back\\\\slash\\]")]
+    public async Task ConvertAsync_FieldCodeHyperlinkEscapesMarkdownText(string displayText, string escapedDisplayText)
+    {
+        using var docxStream = CreateDocx(body =>
+        {
+            body.Append(new Paragraph(
+                new Run(new FieldChar { FieldCharType = FieldCharValues.Begin }),
+                new Run(new FieldCode(" HYPERLINK \"https://example.com\" ")),
+                new Run(new FieldChar { FieldCharType = FieldCharValues.Separate }),
+                new Run(new Text(displayText)),
+                new Run(new FieldChar { FieldCharType = FieldCharValues.End })));
+        });
+
+        var result = await _converter.ConvertAsync(docxStream, ".docx");
+
+        result.Should().Contain($"[{escapedDisplayText}](https://example.com)");
+    }
+
     [Fact]
     public async Task ConvertAsync_FieldCodeHyperlinkWithSurroundingText_PreservesMixedParagraphContent()
     {
