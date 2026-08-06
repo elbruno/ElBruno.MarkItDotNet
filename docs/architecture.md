@@ -91,7 +91,7 @@ A result type with `Success`, `Markdown`, `SourceFormat`, and `ErrorMessage`. Al
 | PdfConverter | .pdf | Extract text per page via PdfPig | Core | `PdfPig` |
 | RtfConverter | .rtf | RTF → Markdown via RtfPipe | Core | `RtfPipe` |
 | EpubConverter | .epub | Extract content via VersOne.Epub | Core | `VersOne.Epub` |
-| CsvConverter | .csv | CSV → Markdown table | Core | None |
+| CsvConverter | .csv, .tsv | Delimited text (CSV/TSV) → Markdown table | Core | None |
 | XmlConverter | .xml | XML → pretty Markdown code block | Core | None |
 | YamlConverter | .yaml, .yml | YAML → pretty Markdown code block | Core | None |
 | ImageConverter | .png, .jpg, .gif, .bmp, .webp, .svg | Metadata placeholder (no OCR) | Core | None |

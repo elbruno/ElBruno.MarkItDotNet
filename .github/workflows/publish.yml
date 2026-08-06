@@ -66,6 +66,8 @@ jobs:
           dotnet pack src/ElBruno.MarkItDotNet.PowerPoint/ElBruno.MarkItDotNet.PowerPoint.csproj -c Release --no-build -p:Version=${{ steps.version.outputs.version }} -o artifacts
           dotnet pack src/ElBruno.MarkItDotNet.AI/ElBruno.MarkItDotNet.AI.csproj -c Release --no-build -p:Version=${{ steps.version.outputs.version }} -o artifacts
           dotnet pack src/ElBruno.MarkItDotNet.Whisper/ElBruno.MarkItDotNet.Whisper.csproj -c Release --no-build -p:Version=${{ steps.version.outputs.version }} -o artifacts
+          dotnet pack src/ElBruno.MarkItDotNet.Connectors/ElBruno.MarkItDotNet.Connectors.csproj -c Release --no-build -p:Version=${{ steps.version.outputs.version }} -o artifacts
+          dotnet pack src/ElBruno.MarkItDotNet.Connectors.AzureBlob/ElBruno.MarkItDotNet.Connectors.AzureBlob.csproj -c Release --no-build -p:Version=${{ steps.version.outputs.version }} -o artifacts
           dotnet pack src/ElBruno.MarkItDotNet.Chunking/ElBruno.MarkItDotNet.Chunking.csproj -c Release --no-build -p:Version=${{ steps.version.outputs.version }} -o artifacts
           dotnet pack src/ElBruno.MarkItDotNet.Citations/ElBruno.MarkItDotNet.Citations.csproj -c Release --no-build -p:Version=${{ steps.version.outputs.version }} -o artifacts
           dotnet pack src/ElBruno.MarkItDotNet.DocumentIntelligence/ElBruno.MarkItDotNet.DocumentIntelligence.csproj -c Release --no-build -p:Version=${{ steps.version.outputs.version }} -o artifacts

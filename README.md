@@ -16,7 +16,7 @@
 | [ElBruno.MarkItDotNet.Whisper](https://www.nuget.org/packages/ElBruno.MarkItDotNet.Whisper) | [![NuGet](https://img.shields.io/nuget/v/ElBruno.MarkItDotNet.Whisper.svg?style=flat-square)](https://www.nuget.org/packages/ElBruno.MarkItDotNet.Whisper) | [![Downloads](https://img.shields.io/nuget/dt/ElBruno.MarkItDotNet.Whisper.svg?style=flat-square)](https://www.nuget.org/packages/ElBruno.MarkItDotNet.Whisper) | Local audio transcription via Whisper ONNX |
 | [ElBruno.MarkItDotNet.Security](https://www.nuget.org/packages/ElBruno.MarkItDotNet.Security) | [![NuGet](https://img.shields.io/nuget/v/ElBruno.MarkItDotNet.Security.svg?style=flat-square)](https://www.nuget.org/packages/ElBruno.MarkItDotNet.Security) | [![Downloads](https://img.shields.io/nuget/dt/ElBruno.MarkItDotNet.Security.svg?style=flat-square)](https://www.nuget.org/packages/ElBruno.MarkItDotNet.Security) | Markdown security scanning and issue reporting |
 | [ElBruno.MarkItDotNet.Evals](https://www.nuget.org/packages/ElBruno.MarkItDotNet.Evals) | [![NuGet](https://img.shields.io/nuget/v/ElBruno.MarkItDotNet.Evals.svg?style=flat-square)](https://www.nuget.org/packages/ElBruno.MarkItDotNet.Evals) | [![Downloads](https://img.shields.io/nuget/dt/ElBruno.MarkItDotNet.Evals.svg?style=flat-square)](https://www.nuget.org/packages/ElBruno.MarkItDotNet.Evals) | Conversion quality evaluation and scoring |
-| [ElBruno.MarkItDotNet.Cli](https://www.nuget.org/packages/ElBruno.MarkItDotNet.Cli) | [![NuGet](https://img.shields.io/nuget/v/ElBruno.MarkItDotNet.Cli.svg?style=flat-square)](https://www.nuget.org/packages/ElBruno.MarkItDotNet.Cli) | [![Downloads](https://img.shields.io/nuget/dt/ElBruno.MarkItDotNet.Cli.svg?style=flat-square)](https://www.nuget.org/packages/ElBruno.MarkItDotNet.Cli) | Command-line tool (`markitdown` command) |
+| [ElBruno.MarkItDotNet.Cli](https://www.nuget.org/packages/ElBruno.MarkItDotNet.Cli) | [![NuGet](https://img.shields.io/nuget/v/ElBruno.MarkItDotNet.Cli.svg?style=flat-square)](https://www.nuget.org/packages/ElBruno.MarkItDotNet.Cli) | [![Downloads](https://img.shields.io/nuget/dt/ElBruno.MarkItDotNet.Cli.svg?style=flat-square)](https://www.nuget.org/packages/ElBruno.MarkItDotNet.Cli) | Command-line tool (`markitdown-dotnet` command) |
 
 ## Description
 
@@ -32,7 +32,7 @@ ElBruno.MarkItDotNet provides a unified interface to convert 15+ file formats in
 | URL (Web Pages) | `.url` | `UrlConverter` | Core | `ReverseMarkdown` |
 | Word (DOCX) | `.docx` | `DocxConverter` | Core | `DocumentFormat.OpenXml` |
 | PDF | `.pdf` | `PdfConverter` | Core | `PdfPig` |
-| CSV | `.csv` | `CsvConverter` | Core | None |
+| CSV / TSV | `.csv`, `.tsv` | `CsvConverter` | Core | None |
 | XML | `.xml` | `XmlConverter` | Core | None |
 | YAML | `.yaml`, `.yml` | `YamlConverter` | Core | None |
 | RTF | `.rtf` | `RtfConverter` | Core | `RtfPipe` |
@@ -66,27 +66,30 @@ dotnet tool install -g ElBruno.MarkItDotNet.Cli
 
 Convert a single file:
 
+> **⚠️ v0.9.0 Breaking Change — CLI command renamed**
+> The command has been renamed from `markitdown` to `markitdown-dotnet` to avoid collision with the [Microsoft Python markitdown CLI](https://github.com/microsoft/markitdown). To upgrade: `dotnet tool update -g ElBruno.MarkItDotNet.Cli` — then use `markitdown-dotnet` instead of `markitdown`.
+
 ```bash
-markitdown report.pdf
-markitdown report.pdf -o report.md
+markitdown-dotnet report.pdf
+markitdown-dotnet report.pdf -o report.md
 ```
 
 Batch convert a directory:
 
 ```bash
-markitdown batch ./documents -o ./output -r --pattern "*.pdf"
+markitdown-dotnet batch ./documents -o ./output -r --pattern "*.pdf"
 ```
 
 Convert a web page:
 
 ```bash
-markitdown url https://example.com -o page.md
+markitdown-dotnet url https://example.com -o page.md
 ```
 
 Extract metadata as JSON:
 
 ```bash
-markitdown data.csv --format json | jq .metadata.wordCount
+markitdown-dotnet data.csv --format json | jq .metadata.wordCount
 ```
 
 **→ [Full CLI Documentation](docs/cli.md)**
@@ -159,6 +162,22 @@ dotnet add package ElBruno.MarkItDotNet.Evals
 
 Provides heuristic scoring, issue reporting, and retention-oriented metrics to support post-conversion validation.
 
+**ElBruno.MarkItDotNet.Connectors** — Connector abstractions and file system source ingestion.
+
+```bash
+dotnet add package ElBruno.MarkItDotNet.Connectors
+```
+
+Provides the `IDocumentSource` contract, `SourceDocument`, and `FileSystemConnector`.
+
+**ElBruno.MarkItDotNet.Connectors.AzureBlob** — Azure Blob source ingestion connector.
+
+```bash
+dotnet add package ElBruno.MarkItDotNet.Connectors.AzureBlob
+```
+
+Provides `AzureBlobConnector` with prefix filtering, paging options, and `DefaultAzureCredential` support.
+
 ## Core Library Installation
 
 For the core library only:
@@ -201,6 +220,18 @@ For conversion evaluation helpers:
 
 ```bash
 dotnet add package ElBruno.MarkItDotNet.Evals
+```
+
+For connector abstractions and filesystem ingestion:
+
+```bash
+dotnet add package ElBruno.MarkItDotNet.Connectors
+```
+
+For Azure Blob ingestion:
+
+```bash
+dotnet add package ElBruno.MarkItDotNet.Connectors.AzureBlob
 ```
 
 ## Quick Start
@@ -613,6 +644,10 @@ See the `src/samples/` projects below for detailed walkthroughs.
 | Sample | Description | Run Command |
 | -------- | ------------- | ------------- |
 | [BatchProcessor](src/samples/BatchProcessor) | Watches folder and batch-converts files to .md | `dotnet run --project src/samples/BatchProcessor/BatchProcessor.csproj` |
+| [ConnectorsDemo](src/samples/ConnectorsDemo) | FileSystem + optional Azure Blob ingestion with source-separated outputs (`--dry-run` supported) | `dotnet run --project src/samples/ConnectorsDemo/ConnectorsDemo.csproj -- --dry-run` |
+| [EvaluationDemo](src/samples/EvaluationDemo) | Benchmark-style strategy comparison with latency/memory metrics and JSON/CSV export (`--dry-run` supported) | `dotnet run --project src/samples/EvaluationDemo/EvaluationDemo.csproj -- --dry-run` |
+| [IngestionWorkflow](src/samples/IngestionWorkflow) | End-to-end pipeline with connectors + security + evaluation + chunking + citations + optional Azure Search upload (`--dry-run` supported) | `dotnet run --project src/samples/IngestionWorkflow/IngestionWorkflow.csproj -- --dry-run` |
+| [SecurityPoliciesDemo](src/samples/SecurityPoliciesDemo) | Configurable security policy chain with PII redaction and JSONL audit output (`--dry-run` supported) | `dotnet run --project src/samples/SecurityPoliciesDemo/SecurityPoliciesDemo.csproj -- --dry-run` |
 | [RagPipeline](src/samples/RagPipeline) | RAG ingestion: files → Markdown → chunked JSON | `dotnet run --project src/samples/RagPipeline/RagPipeline.csproj` |
 | [MarkItDotNet.FoundryHostedAgent](src/samples/MarkItDotNet.FoundryHostedAgent) | Hosted agent service + Aspire AppHost reference for Foundry deployment | `dotnet run --project src/samples/MarkItDotNet.FoundryHostedAgent/MarkItDotNet.FoundryHostedAgent.csproj` |
 
@@ -620,6 +655,11 @@ See the `src/samples/` projects below for detailed walkthroughs.
 
 - [Roadmap / Ingestion PRD](docs/ElBruno.MarkItDotNet-Ingestion-PRD.md) — current implementation plan and remaining feature gaps
 - [Architecture](docs/architecture.md) — design decisions, plugin system, converter pipeline, and internal structure
+- [Connectors Guide](docs/connectors-guide.md) — `IDocumentSource`, FileSystem connector, Azure Blob connector, and DI wiring
+- [Evaluation Guide](docs/evaluation-guide.md) — using `IEvaluationEngine` and interpreting evaluation reports
+- [Ingestion Workflows](docs/ingestion-workflows.md) — end-to-end workflow composition across connectors, conversion, security, and evaluation
+- [Security Guide](docs/security.md) — threat model, controls, and secure usage recommendations
+- [Security Policies Guide](docs/security-policies-guide.md) — policy chains, redaction behavior, and audit output patterns
 - [Plugins Guide](docs/plugins.md) — how to create custom plugin packages
 - [Building & Testing](docs/building-and-testing.md) — how to build from source and run tests
 - [Archived Docs](docs/archived/README.md) — historical plans, audits, and non-active documentation

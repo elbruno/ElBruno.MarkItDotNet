@@ -63,6 +63,79 @@ public class CsvConverterTests
     }
 
     [Fact]
+    public async Task ConvertAsync_TsvFile_KeepsCommaInsideField()
+    {
+        var tsv = "Name\tNotes\nAlice\tcat,dog";
+        using var stream = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(tsv));
+
+        var result = await _converter.ConvertAsync(stream, ".tsv");
+
+        result.Should().Contain("| Alice | cat,dog |");
+    }
+
+    [Fact]
+    public async Task ConvertAsync_TsvFile_EscapesPipes()
+    {
+        var tsv = "Name\tNotes\nAlice\tDev|Ops";
+        using var stream = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(tsv));
+
+        var result = await _converter.ConvertAsync(stream, ".tsv");
+
+        result.Should().Contain("| Alice | Dev\\|Ops |");
+    }
+
+    [Fact]
+    public async Task ConvertAsync_TsvFile_IgnoresBlankLines_AndPreservesEmptyCells()
+    {
+        var tsv = "Name\tAge\tCity\r\nAlice\t30\tSeattle\r\n\r\nBob\t\tPortland\r\n";
+        using var stream = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(tsv));
+
+        var result = await _converter.ConvertAsync(stream, ".tsv");
+
+        result.Should().Contain("| Alice | 30 | Seattle |");
+        result.Should().Contain("| Bob |  | Portland |");
+    }
+
+    [Fact]
+    public async Task ConvertAsync_TsvFile_HeaderOnly_ProducesHeaderAndSeparator()
+    {
+        var tsv = "Name\tAge\tCity";
+        using var stream = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(tsv));
+
+        var result = await _converter.ConvertAsync(stream, ".tsv");
+
+        var lines = result.Split(Environment.NewLine, StringSplitOptions.None);
+        lines.Should().HaveCount(2);
+        lines[0].Should().Be("| Name | Age | City |");
+        lines[1].Should().Be("| --- | --- | --- |");
+    }
+
+    [Fact]
+    public async Task ConvertAsync_TsvFile_RaggedRows_UseHeaderColumnCount()
+    {
+        var tsv = "Name\tAge\nAlice\nBob\t25\tExtra";
+        using var stream = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(tsv));
+
+        var result = await _converter.ConvertAsync(stream, ".tsv");
+
+        result.Should().Contain("| Alice |  |");
+        result.Should().Contain("| Bob | 25 |");
+        result.Should().NotContain("Extra");
+    }
+
+    [Fact]
+    public async Task ConvertAsync_TsvFile_HandlesCrlfAndLfLineEndings()
+    {
+        var tsv = "Name\tAge\r\nAlice\t30\nBob\t25\r\n";
+        using var stream = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(tsv));
+
+        var result = await _converter.ConvertAsync(stream, ".tsv");
+
+        result.Should().Contain("| Alice | 30 |");
+        result.Should().Contain("| Bob | 25 |");
+    }
+
+    [Fact]
     public async Task ConvertAsync_QuotedFieldsWithCommas_ParsedCorrectly()
     {
         var csv = "Name,Description\nAlice,\"Has a cat, dog\"";

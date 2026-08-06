@@ -8,7 +8,7 @@
     <PackageIcon>nuget_logo.png</PackageIcon>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageTags>markdown;security;scanning;ingestion;pii;secrets</PackageTags>
-    <Version>0.7.1</Version>
+    <Version>0.9.0</Version>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>
@@ -16,7 +16,12 @@
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ElBruno.MarkItDotNet\ElBruno.MarkItDotNet.csproj" />
+    <ProjectReference Include="..\ElBruno.MarkItDotNet.Connectors\ElBruno.MarkItDotNet.Connectors.csproj" />
+  </ItemGroup>
+  <ItemGroup>
     <None Include="..\..\README.md" Pack="true" PackagePath="\" />
     <None Include="..\..\images\nuget_logo.png" Pack="true" PackagePath="" />
   </ItemGroup>
 </Project>
+

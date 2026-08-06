@@ -12,7 +12,9 @@ public class PdfCoreModelMapper : IStructuredConverter
 {
     private const double LineYTolerance = 3.0;
     private const double ParagraphSpacingFactor = 1.5;
-    private const double HeadingFontSizeRatio = 1.2;
+    private const double HeadingMinimumSizeRatio = 1.15;
+    private const double HeadingMinimumBoldSizeRatio = 1.05;
+    private const int MaxHeadingLevel = 3;
 
     /// <inheritdoc />
     public bool CanHandle(string filePath)
@@ -43,7 +45,6 @@ public class PdfCoreModelMapper : IStructuredConverter
         var sections = new List<DocumentSection>();
         DocumentSection? currentSection = null;
         var currentBlocks = new List<DocumentBlock>();
-        string? currentHeadingText = null;
         HeadingBlock? currentHeading = null;
 
         for (var pageNum = 1; pageNum <= pageCount; pageNum++)
@@ -60,7 +61,8 @@ public class PdfCoreModelMapper : IStructuredConverter
                 continue;
 
             var bodyFontSize = DetectBodyFontSize(lines);
-            var paragraphs = GroupLinesIntoParagraphs(lines, bodyFontSize);
+            var paragraphs = GroupLinesIntoParagraphs(lines);
+            var headingLevelMap = BuildHeadingLevelMap(paragraphs, bodyFontSize);
 
             foreach (var para in paragraphs)
             {
@@ -75,7 +77,8 @@ public class PdfCoreModelMapper : IStructuredConverter
                     PageNumber = pageNum
                 };
 
-                if (para.IsHeading && bodyFontSize > 0)
+                var roundedFontSize = Math.Round(para.FontSize, 1);
+                if (headingLevelMap.TryGetValue(roundedFontSize, out var level))
                 {
                     // Flush current section
                     if (currentHeading is not null || currentBlocks.Count > 0)
@@ -90,9 +93,6 @@ public class PdfCoreModelMapper : IStructuredConverter
                         currentBlocks = [];
                     }
 
-                    var ratio = para.FontSize / bodyFontSize;
-                    var level = ratio >= 1.8 ? 1 : ratio >= 1.4 ? 2 : 3;
-
                     currentHeading = new HeadingBlock
                     {
                         Id = Guid.NewGuid().ToString("N"),
@@ -100,7 +100,6 @@ public class PdfCoreModelMapper : IStructuredConverter
                         Level = level,
                         Source = source
                     };
-                    currentHeadingText = para.Text;
                 }
                 else
                 {
@@ -184,15 +183,18 @@ public class PdfCoreModelMapper : IStructuredConverter
     {
         var sorted = words.OrderBy(w => w.BoundingBox.Left).ToList();
         var text = string.Join(" ", sorted.Select(w => w.Text));
-        var avgFontSize = sorted
-            .SelectMany(w => w.Letters)
+        var letters = sorted.SelectMany(w => w.Letters).ToList();
+        var avgFontSize = letters
             .Select(l => l.PointSize)
             .DefaultIfEmpty(0)
             .Average();
+        var boldRatio = letters.Count == 0
+            ? 0
+            : letters.Count(l => IsBoldFontName(l.FontName)) / (double)letters.Count;
         var y = sorted.Average(w => w.BoundingBox.Bottom);
         var height = sorted.Max(w => w.BoundingBox.Height);
 
-        return new TextLine(text, y, height, avgFontSize);
+        return new TextLine(text, y, height, avgFontSize, boldRatio);
     }
 
     private static double DetectBodyFontSize(List<TextLine> lines)
@@ -206,7 +208,7 @@ public class PdfCoreModelMapper : IStructuredConverter
         return fontSizes.Count > 0 ? fontSizes[0].Key : 0;
     }
 
-    private static List<ParagraphInfo> GroupLinesIntoParagraphs(List<TextLine> lines, double bodyFontSize)
+    private static List<ParagraphInfo> GroupLinesIntoParagraphs(List<TextLine> lines)
     {
         var paragraphs = new List<ParagraphInfo>();
         if (lines.Count == 0)
@@ -226,7 +228,7 @@ public class PdfCoreModelMapper : IStructuredConverter
 
             if (isNewParagraph || fontSizeChanged)
             {
-                paragraphs.Add(CreateParagraph(currentLines, bodyFontSize));
+                paragraphs.Add(CreateParagraph(currentLines));
                 currentLines = [currentLine];
             }
             else
@@ -236,20 +238,66 @@ public class PdfCoreModelMapper : IStructuredConverter
         }
 
         if (currentLines.Count > 0)
-            paragraphs.Add(CreateParagraph(currentLines, bodyFontSize));
+            paragraphs.Add(CreateParagraph(currentLines));
 
         return paragraphs;
     }
 
-    private static ParagraphInfo CreateParagraph(List<TextLine> lines, double bodyFontSize)
+    private static ParagraphInfo CreateParagraph(List<TextLine> lines)
     {
         var text = string.Join(" ", lines.Select(l => l.Text));
         var avgFontSize = lines.Average(l => l.FontSize);
-        var isHeading = bodyFontSize > 0 &&
-                        avgFontSize > bodyFontSize * HeadingFontSizeRatio &&
-                        lines.Count <= 3;
+        var avgBoldRatio = lines.Average(l => l.BoldRatio);
 
-        return new ParagraphInfo(text, avgFontSize, isHeading);
+        return new ParagraphInfo(text, avgFontSize, avgBoldRatio, lines.Count);
+    }
+
+    private static Dictionary<double, int> BuildHeadingLevelMap(List<ParagraphInfo> paragraphs, double bodyFontSize)
+    {
+        if (bodyFontSize <= 0 || paragraphs.Count == 0)
+            return [];
+
+        var roundedBodyFontSize = Math.Round(bodyFontSize, 1);
+        var headingSizes = paragraphs
+            .Where(p => IsHeadingCandidate(p, bodyFontSize))
+            .Select(p => Math.Round(p.FontSize, 1))
+            .Where(size => size > roundedBodyFontSize)
+            .Distinct()
+            .OrderByDescending(size => size)
+            .Take(MaxHeadingLevel)
+            .ToList();
+
+        if (headingSizes.Count == 0)
+            return [];
+
+        return headingSizes
+            .Select((size, index) => new { Size = size, Level = index + 1 })
+            .ToDictionary(x => x.Size, x => x.Level);
+    }
+
+    private static bool IsHeadingCandidate(ParagraphInfo paragraph, double bodyFontSize)
+    {
+        if (paragraph.LineCount > 3 || bodyFontSize <= 0 || paragraph.FontSize <= 0)
+            return false;
+
+        var isLargeBySize = paragraph.FontSize >= bodyFontSize * HeadingMinimumSizeRatio;
+        var isBoldAndLarger = paragraph.BoldRatio >= 0.6 &&
+                              paragraph.FontSize >= bodyFontSize * HeadingMinimumBoldSizeRatio;
+
+        return isLargeBySize || isBoldAndLarger;
+    }
+
+    private static bool IsBoldFontName(string? fontName)
+    {
+        if (string.IsNullOrWhiteSpace(fontName))
+            return false;
+
+        var normalized = fontName.ToLowerInvariant();
+        return normalized.Contains("bold", StringComparison.Ordinal) ||
+               normalized.Contains("black", StringComparison.Ordinal) ||
+               normalized.Contains("heavy", StringComparison.Ordinal) ||
+               normalized.Contains("semibold", StringComparison.Ordinal) ||
+               normalized.Contains("demi", StringComparison.Ordinal);
     }
 
     private static int CountWords(string text)
@@ -272,6 +320,6 @@ public class PdfCoreModelMapper : IStructuredConverter
         return count;
     }
 
-    private sealed record TextLine(string Text, double Y, double Height, double FontSize);
-    private sealed record ParagraphInfo(string Text, double FontSize, bool IsHeading);
+    private sealed record TextLine(string Text, double Y, double Height, double FontSize, double BoldRatio);
+    private sealed record ParagraphInfo(string Text, double FontSize, double BoldRatio, int LineCount);
 }

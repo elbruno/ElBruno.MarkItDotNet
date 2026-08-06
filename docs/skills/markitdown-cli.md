@@ -234,7 +234,7 @@ await Parallel.ForEachAsync(files, new ParallelOptions { MaxDegreeOfParallelism 
 | URL | `.url` | Fetches web page and converts |
 | Word (DOCX) | `.docx` | Headings, tables, lists, images |
 | PDF | `.pdf` | Text extraction + optional streaming |
-| CSV | `.csv` | Converts to Markdown tables |
+| CSV / TSV | `.csv`, `.tsv` | Converts to Markdown tables |
 | XML | `.xml` | Fenced code block |
 | YAML | `.yaml`, `.yml` | Fenced code block |
 | RTF | `.rtf` | Text with basic formatting |

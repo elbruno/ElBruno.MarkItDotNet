@@ -978,12 +978,12 @@ docs/
 
 ### Connector Abstractions (Milestone 8)
 
-- [ ] Define `IDocumentSource` interface (yields file streams + metadata)
-- [ ] Define `SourceDocument` model (stream, path, metadata, source type)
-- [ ] Implement `FileSystemConnector` — directory scanning, glob patterns, recursive traversal
-- [ ] Implement `AzureBlobConnector` — container listing, blob download, prefix filtering
-- [ ] DI registration for each connector
-- [ ] Unit tests for FileSystem; integration tests for AzureBlob (conditional)
+- [x] Define `IDocumentSource` interface (yields file streams + metadata)
+- [x] Define `SourceDocument` model (stream, path, metadata, source type)
+- [x] Implement `FileSystemConnector` — directory scanning, glob patterns, recursive traversal
+- [x] Implement `AzureBlobConnector` — container listing, blob download, prefix filtering
+- [x] DI registration for each connector
+- [x] Unit tests for FileSystem; integration tests for AzureBlob (conditional)
 - [ ] **Decision required:** confirm FileSystem + AzureBlob as first two connectors
 
 ### Security Package (Milestone 9)

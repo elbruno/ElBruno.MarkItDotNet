@@ -59,6 +59,38 @@ public class PdfConverterTests
         await act.Should().NotThrowAsync();
     }
 
+    [Fact]
+    public async Task ConvertAsync_MultiHeadingPdf_PreservesHeadingLevels()
+    {
+        using var pdfStream = CreateMultiHeadingPdf();
+
+        var result = await _converter.ConvertAsync(pdfStream, ".pdf");
+
+        result.Should().Contain("# Document Title");
+        result.Should().Contain("## Section One");
+        result.Should().Contain("### Subsection A");
+        result.Should().Contain("This is the first body paragraph.");
+        result.Should().Contain("It should stay as a paragraph.");
+    }
+
+    [Fact]
+    public async Task ConvertStreamingAsync_MultiHeadingPdf_PreservesHeadingLevels()
+    {
+        using var pdfStream = CreateMultiHeadingPdf();
+        var chunks = new List<string>();
+
+        await foreach (var chunk in _converter.ConvertStreamingAsync(pdfStream, ".pdf"))
+        {
+            chunks.Add(chunk);
+        }
+
+        var markdown = string.Concat(chunks);
+        markdown.Should().Contain("# Document Title");
+        markdown.Should().Contain("## Section One");
+        markdown.Should().Contain("### Subsection A");
+        markdown.Should().Contain("Another body paragraph follows.");
+    }
+
     /// <summary>
     /// Creates a minimal valid PDF document containing the given text.
     /// This uses raw PDF syntax to avoid requiring a third-party PDF generation library.
@@ -108,5 +140,68 @@ public class PdfConverterTests
 
         var bytes = System.Text.Encoding.ASCII.GetBytes(pdf.ToString());
         return new MemoryStream(bytes);
+    }
+
+    private static MemoryStream CreateMultiHeadingPdf()
+    {
+        const string streamContent = """
+                                     BT
+                                     /F1 24 Tf
+                                     72 750 Td
+                                     (Document Title) Tj
+                                     0 -40 Td
+                                     /F1 18 Tf
+                                     (Section One) Tj
+                                     0 -24 Td
+                                     /F2 11 Tf
+                                     (This is the first body paragraph.) Tj
+                                     0 -16 Td
+                                     (It should stay as a paragraph.) Tj
+                                     0 -30 Td
+                                     /F1 16 Tf
+                                     (Subsection A) Tj
+                                     0 -22 Td
+                                     /F2 11 Tf
+                                     (Another body paragraph follows.) Tj
+                                     ET
+                                     """;
+
+        var objects = new[]
+        {
+            "<< /Type /Catalog /Pages 2 0 R >>",
+            "<< /Type /Pages /Kids [3 0 R] /Count 1 >>",
+            "<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 5 0 R /F2 6 0 R >> >> /Contents 4 0 R >>",
+            $"<< /Length {System.Text.Encoding.ASCII.GetByteCount(streamContent)} >>\nstream\n{streamContent}\nendstream",
+            "<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>",
+            "<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>"
+        };
+
+        using var stream = new MemoryStream();
+        using var writer = new StreamWriter(stream, System.Text.Encoding.ASCII, leaveOpen: true);
+
+        writer.Write("%PDF-1.4\n");
+        writer.Flush();
+
+        var offsets = new List<long> { 0 };
+        for (var i = 0; i < objects.Length; i++)
+        {
+            offsets.Add(stream.Position);
+            writer.Write($"{i + 1} 0 obj\n{objects[i]}\nendobj\n");
+            writer.Flush();
+        }
+
+        var xrefStart = stream.Position;
+        writer.Write($"xref\n0 {objects.Length + 1}\n");
+        writer.Write("0000000000 65535 f \n");
+        foreach (var offset in offsets.Skip(1))
+        {
+            writer.Write($"{offset:D10} 00000 n \n");
+        }
+
+        writer.Write($"trailer\n<< /Size {objects.Length + 1} /Root 1 0 R >>\nstartxref\n{xrefStart}\n%%EOF\n");
+        writer.Flush();
+
+        stream.Position = 0;
+        return new MemoryStream(stream.ToArray());
     }
 }

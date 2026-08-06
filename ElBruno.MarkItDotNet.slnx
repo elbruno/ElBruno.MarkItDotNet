@@ -16,16 +16,20 @@
     <Project Path="src/ElBruno.MarkItDotNet.AzureSearch/ElBruno.MarkItDotNet.AzureSearch.csproj" />
     <Project Path="src/ElBruno.MarkItDotNet.Security/ElBruno.MarkItDotNet.Security.csproj" />
     <Project Path="src/ElBruno.MarkItDotNet.Sync/ElBruno.MarkItDotNet.Sync.csproj" />
+    <Project Path="src/ElBruno.MarkItDotNet.Connectors/ElBruno.MarkItDotNet.Connectors.csproj" />
+    <Project Path="src/ElBruno.MarkItDotNet.Connectors.AzureBlob/ElBruno.MarkItDotNet.Connectors.AzureBlob.csproj" />
   </Folder>
   <Folder Name="/src/samples/MarkItDotNet.FoundryHostedAgent/" />
   <Folder Name="/src/tests/">
     <Project Path="src/tests/ElBruno.MarkItDotNet.Tests/ElBruno.MarkItDotNet.Tests.csproj" />
     <Project Path="src/tests/ElBruno.MarkItDotNet.Evals.Tests/ElBruno.MarkItDotNet.Evals.Tests.csproj" />
+    <Project Path="src/tests/ElBruno.MarkItDotNet.EvaluationDemo.Tests/ElBruno.MarkItDotNet.EvaluationDemo.Tests.csproj" />
     <Project Path="src/tests/ElBruno.MarkItDotNet.Excel.Tests/ElBruno.MarkItDotNet.Excel.Tests.csproj" />
     <Project Path="src/tests/ElBruno.MarkItDotNet.PowerPoint.Tests/ElBruno.MarkItDotNet.PowerPoint.Tests.csproj" />
     <Project Path="src/tests/ElBruno.MarkItDotNet.AI.Tests/ElBruno.MarkItDotNet.AI.Tests.csproj" />
     <Project Path="src/tests/ElBruno.MarkItDotNet.Whisper.Tests/ElBruno.MarkItDotNet.Whisper.Tests.csproj" />
     <Project Path="src/tests/ElBruno.MarkItDotNet.GoldenTests/ElBruno.MarkItDotNet.GoldenTests.csproj" />
+    <Project Path="src/tests/ElBruno.MarkItDotNet.ConnectorsDemo.Tests/ElBruno.MarkItDotNet.ConnectorsDemo.Tests.csproj" />
     <Project Path="src/tests/ElBruno.MarkItDotNet.CoreModel.Tests/ElBruno.MarkItDotNet.CoreModel.Tests.csproj" />
     <Project Path="src/tests/ElBruno.MarkItDotNet.Chunking.Tests/ElBruno.MarkItDotNet.Chunking.Tests.csproj" />
     <Project Path="src/tests/ElBruno.MarkItDotNet.DocumentIntelligence.Tests/ElBruno.MarkItDotNet.DocumentIntelligence.Tests.csproj" />
@@ -35,7 +39,10 @@
     <Project Path="src/tests/ElBruno.MarkItDotNet.VectorData.Tests/ElBruno.MarkItDotNet.VectorData.Tests.csproj" />
     <Project Path="src/tests/ElBruno.MarkItDotNet.AzureSearch.Tests/ElBruno.MarkItDotNet.AzureSearch.Tests.csproj" />
     <Project Path="src/tests/ElBruno.MarkItDotNet.Security.Tests/ElBruno.MarkItDotNet.Security.Tests.csproj" />
+    <Project Path="src/tests/ElBruno.MarkItDotNet.SecurityPoliciesDemo.Tests/ElBruno.MarkItDotNet.SecurityPoliciesDemo.Tests.csproj" />
     <Project Path="src/tests/ElBruno.MarkItDotNet.Sync.Tests/ElBruno.MarkItDotNet.Sync.Tests.csproj" />
+    <Project Path="src/tests/ElBruno.MarkItDotNet.Connectors.Tests/ElBruno.MarkItDotNet.Connectors.Tests.csproj" />
+    <Project Path="src/tests/ElBruno.MarkItDotNet.IngestionWorkflow.Tests/ElBruno.MarkItDotNet.IngestionWorkflow.Tests.csproj" />
     <Project Path="src/tests/ElBruno.MarkItDotNet.Integration.Tests/ElBruno.MarkItDotNet.Integration.Tests.csproj" />
     <Project Path="src/tests/ElBruno.MarkItDotNet.Cli.Tests/ElBruno.MarkItDotNet.Cli.Tests.csproj" />
   </Folder>
@@ -44,14 +51,17 @@
   </Folder>
   <Folder Name="/src/samples/">
     <Project Path="src/samples/BasicConversion/BasicConversion.csproj" />
+    <Project Path="src/samples/ConnectorsDemo/ConnectorsDemo.csproj" />
     <Project Path="src/samples/CsvConversion/CsvConversion.csproj" />
     <Project Path="src/samples/XmlYamlConversion/XmlYamlConversion.csproj" />
     <Project Path="src/samples/PdfConversion/PdfConversion.csproj" />
     <Project Path="src/samples/DocxConversion/DocxConversion.csproj" />
     <Project Path="src/samples/RtfEpubConversion/RtfEpubConversion.csproj" />
+    <Project Path="src/samples/EvaluationDemo/EvaluationDemo.csproj" />
     <Project Path="src/samples/ExcelConversion/ExcelConversion.csproj" />
     <Project Path="src/samples/PowerPointConversion/PowerPointConversion.csproj" />
     <Project Path="src/samples/AiImageDescription/AiImageDescription.csproj" />
+    <Project Path="src/samples/SecurityPoliciesDemo/SecurityPoliciesDemo.csproj" />
     <Project Path="src/samples/StreamingConversion/StreamingConversion.csproj" />
     <Project Path="src/samples/CustomConverter/CustomConverter.csproj" />
     <Project Path="src/samples/PluginPackage/PluginPackage.csproj" />
@@ -63,6 +73,7 @@
     <Project Path="src/samples/Phase1.PdfToChunks/Phase1.PdfToChunks.csproj" />
     <Project Path="src/samples/Phase2.FullPipeline/Phase2.FullPipeline.csproj" />
     <Project Path="src/samples/MarkItDotNet.FoundryHostedAgent/MarkItDotNet.ServiceDefaults/MarkItDotNet.ServiceDefaults.csproj" />
+    <Project Path="src/samples/IngestionWorkflow/IngestionWorkflow.csproj" />
     <Project Path="src/samples/MarkItDotNet.FoundryHostedAgent/Agent/MarkItDotNet.FoundryHostedAgent.csproj" />
     <Project Path="src/samples/MarkItDotNet.FoundryHostedAgent/WebUi/MarkItDotNet.FoundryHostedAgent.WebUi.csproj" />
   </Folder>

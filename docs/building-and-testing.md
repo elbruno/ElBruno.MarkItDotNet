@@ -36,7 +36,9 @@ Or targeting a specific framework:
 dotnet test -p:TargetFrameworks=net8.0
 ```
 
-The test suite uses [xUnit](https://xunit.net/) with [FluentAssertions](https://fluentassertions.com/) and currently includes 141 tests covering all converters.
+The test suite uses [xUnit](https://xunit.net/) with [FluentAssertions](https://fluentassertions.com/) and covers converters, connectors, ingestion workflows, and package-level integrations.
+
+Golden-file comparisons normalize line endings (`CRLF`/`LF`) so results are stable across Windows and Linux runners.
 
 ## Run the Sample App
 
