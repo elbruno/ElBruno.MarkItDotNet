@@ -222,7 +222,7 @@ public class DocxConverterTests
 
         var result = await _converter.ConvertAsync(docxStream, ".docx");
 
-        result.Should().Contain($"[{escapedDisplayText}](https://example.com)");
+        result.Should().Contain($"[{escapedDisplayText}](https://example.com/)");
     }
 
     [Theory]
