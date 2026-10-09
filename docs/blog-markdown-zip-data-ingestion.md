@@ -1,24 +1,24 @@
-# De un ZIP a un documento listo para tu pipeline de IA, con C# y MarkItDotNet
+# From a ZIP Archive to an AI Ingestion Document with C# and MarkItDotNet
 
-![ElBruno.MarkItDotNet conecta Markdown y ZIP con documentos estructurados e interoperabilidad .NET](../images/blog-ingestion-hero.png)
+![ElBruno.MarkItDotNet connects Markdown and ZIP archives to structured documents and .NET interoperability](../images/blog-ingestion-hero.png)
 
-> Borrador para publicar y promocionar posteriormente. El adaptador DataIngestion se distribuye como `0.9.3-preview.1`. Los ejemplos de Markdown y ZIP usan el código actual del repositorio y no requieren asumir que esas funcionalidades ya estén en un release estable.
+> Draft for future publication and promotion. The DataIngestion adapter is available as `0.9.3-preview.1`. The Markdown and ZIP examples use the current repository source, without assuming those features are already available in a stable release.
 
-Hola!
+Hi!
 
-Convertir un PDF a Markdown está muy bien. Pero cuando estás preparando documentos para un pipeline de IA, aparece la siguiente pregunta: **¿qué hago con ese Markdown después?**
+Converting a PDF to Markdown is great. But when you are preparing documents for an AI pipeline, the next question is: **what do I do with that Markdown afterward?**
 
-Un documento no es solamente una cadena de texto. Tiene títulos, secciones, tablas, listas, ejemplos de código y referencias al origen. Si aplanamos todo demasiado pronto, perdemos información que puede ser útil al decidir cómo dividirlo, enriquecerlo o mostrar una cita.
+A document is more than a string. It has titles, sections, tables, lists, code examples, and references to its source. Flatten everything too early, and you lose information that could help you decide how to split it, enrich it, or display a citation.
 
-En [ElBruno.MarkItDotNet](https://github.com/elbruno/ElBruno.MarkItDotNet) agregué tres piezas para trabajar con ese siguiente paso: importación estructurada de Markdown con Markdig, un conector ZIP que no extrae archivos a disco y un adaptador opcional para `Microsoft.Extensions.DataIngestion`.
+I added three pieces to [ElBruno.MarkItDotNet](https://github.com/elbruno/ElBruno.MarkItDotNet) to support that next step: structured Markdown import with Markdig, a ZIP connector that does not extract files to disk, and an optional adapter for `Microsoft.Extensions.DataIngestion`.
 
-La idea no es implementar todo el pipeline de IA en una biblioteca. Es conectar bien sus etapas.
+The goal is not to implement an entire AI pipeline in one library. It is to connect its stages well.
 
-## Primero: qué está disponible y cómo probarlo
+## First: What Is Available and How to Try It
 
-El adaptador `ElBruno.MarkItDotNet.DataIngestion` apunta a .NET 8 y .NET 10. Su dependencia de Microsoft está en preview y queda aislada del CoreModel.
+The `ElBruno.MarkItDotNet.DataIngestion` adapter targets .NET 8 and .NET 10. Its Microsoft dependency is in preview and stays isolated from CoreModel.
 
-Para probar **el adaptador publicado** en una aplicación nueva:
+To try **the published adapter** in a new application:
 
 ```powershell
 dotnet new console -n AdapterDemo -f net10.0
@@ -26,9 +26,9 @@ Set-Location AdapterDemo
 dotnet add package ElBruno.MarkItDotNet.DataIngestion --version 0.9.3-preview.1
 ```
 
-Este comando usa el SDK de .NET 10. El adaptador también incluye un target para .NET 8. CoreModel llega como dependencia del adaptador. No es necesario instalar el paquete completo de pipelines de Microsoft para ejecutar `ToIngestionDocument()`.
+This command uses the .NET 10 SDK. The adapter also includes a .NET 8 target. CoreModel comes in as a dependency of the adapter. You do not need to install Microsoft's full pipeline package to call `ToIngestionDocument()`.
 
-Para probar **las tres piezas juntas**, el repositorio incluye una demo ejecutable que usa referencias a proyectos:
+To try **all three pieces together**, the repository includes a runnable demo that uses project references:
 
 ```powershell
 git clone https://github.com/elbruno/ElBruno.MarkItDotNet.git
@@ -36,13 +36,13 @@ Set-Location ElBruno.MarkItDotNet
 dotnet run --project src\samples\MarkdownIngestionDemo\MarkdownIngestionDemo.csproj --framework net8.0
 ```
 
-La demo genera su propio ZIP de prueba con Markdown, JSON y texto, procesa sus entradas y elimina ese archivo temporal al terminar. No necesita servicios de IA, claves API ni documentos privados.
+The demo creates its own test ZIP containing Markdown, JSON, and text, processes the entries, and deletes the temporary archive when it finishes. It does not need AI services, API keys, or private documents.
 
-## 1. El adaptador, en un ejemplo que funciona solo con NuGet
+## 1. A Minimal Adapter Example Using Only NuGet
 
-Voy a empezar por lo más pequeño: construir un documento y adaptarlo.
+Let's start small: build a document and adapt it.
 
-Este programa completo puede reemplazar el `Program.cs` de `AdapterDemo`:
+This complete program can replace `Program.cs` in `AdapterDemo`:
 
 ```csharp
 using ElBruno.MarkItDotNet.CoreModel;
@@ -88,13 +88,13 @@ foreach (var element in ingestion.EnumerateContent())
 }
 ```
 
-El resultado mantiene el identificador del documento. El título pasa a un encabezado de nivel 1; el encabezado de la sección y el párrafo se convierten en elementos nativos de Microsoft.
+The result keeps the document identifier. The title becomes a level 1 header, while the section heading and paragraph become native Microsoft ingestion elements.
 
-No hay una llamada a un LLM escondida aquí. No hay embeddings ni indexación automática. Es un cambio de representación para que otros componentes puedan consumir el documento.
+There is no hidden LLM call here. No embeddings or automatic indexing. This is a change of representation so that other components can consume the document.
 
-## 2. Markdown deja de ser solamente un string
+## 2. Markdown Becomes More Than a String
 
-En la demo del repositorio, este Markdown es nuestra entrada:
+In the repository demo, this Markdown is our input:
 
 ````markdown
 # Deployment guide
@@ -119,7 +119,7 @@ Console.WriteLine("Ready!");
 > Review before deploying.
 ````
 
-La nueva API de importación es intencionalmente pequeña:
+The new import API is intentionally small:
 
 ```csharp
 using ElBruno.MarkItDotNet.Markdown;
@@ -131,15 +131,15 @@ Console.WriteLine($"Format: {model.Metadata.SourceFormat}");
 Console.WriteLine($"Document ID: {model.Id}");
 ```
 
-Markdig interpreta CommonMark y sus extensiones avanzadas. El parser transforma el resultado en `Document`, `DocumentSection` y bloques del CoreModel.
+Markdig parses CommonMark and its advanced extensions. The parser maps the result to `Document`, `DocumentSection`, and CoreModel blocks.
 
-El primer H1 inicial se usa como título. Los demás encabezados forman la jerarquía de secciones. Los párrafos, tablas, listas, código y citas tienen representaciones propias; el contenido de bloques no modelados se conserva como Markdown crudo.
+An initial H1 becomes the document title. Other headings form the section hierarchy. Paragraphs, tables, lists, code, and block quotes have their own representations; unsupported block content is retained as raw Markdown.
 
-Eso también significa que el conversor Markdown existente mantiene su comportamiento: **la importación estructurada es opcional**, no un reemplazo obligatorio del pass-through.
+The existing Markdown converter keeps its behavior: **structured import is optional**, not a mandatory replacement for Markdown pass-through.
 
-### Recorrer las secciones sin perder su jerarquía
+### Walk Sections Without Losing Their Hierarchy
 
-No alcanza con leer `model.Sections`: las secciones pueden tener subsecciones. Este helper recorre ambas:
+Reading only `model.Sections` is not enough: sections can contain subsections. This helper walks both:
 
 ```csharp
 using ElBruno.MarkItDotNet.CoreModel;
@@ -162,15 +162,15 @@ static void PrintSections(
     }
 }
 
-// Dentro de tu programa:
+// Inside your program:
 // PrintSections(model.Sections);
 ```
 
-En la entrada de ejemplo aparecen `ParagraphBlock`, `TableBlock`, `ListBlock`, `CodeBlock` y `QuoteBlock`.
+The example input produces `ParagraphBlock`, `TableBlock`, `ListBlock`, `CodeBlock`, and `QuoteBlock` instances.
 
-### Inspeccionar un checklist
+### Inspect a Checklist
 
-Para nuestro documento de ejemplo, `Checklist` es una sección de primer nivel:
+In our example document, `Checklist` is a top-level section:
 
 ```csharp
 var checklist = model.Sections.Single(
@@ -183,11 +183,11 @@ foreach (var item in tasks.Items)
 }
 ```
 
-`IsChecked` es nullable: `true` y `false` corresponden a tareas; `null` identifica un ítem de lista convencional.
+`IsChecked` is nullable: `true` and `false` represent task items; `null` identifies an ordinary list item.
 
-## 3. Guardar estructura y volver a generar Markdown
+## 3. Save the Structure and Render Markdown Again
 
-Para inspeccionar el modelo completo, serializarlo a JSON es una buena opción:
+Serializing the model to JSON is a useful way to inspect its full structure:
 
 ```csharp
 using System.Text.Json;
@@ -199,9 +199,9 @@ var json = JsonSerializer.Serialize(
 Console.WriteLine(json);
 ```
 
-Los bloques usan discriminadores polimórficos como `$type`. El JSON permite ver qué parte del contenido es un párrafo, una tabla o un bloque de código, además de sus IDs y referencias de origen.
+Blocks use polymorphic discriminators such as `$type`. The JSON shows which content is a paragraph, a table, or a code block, along with its IDs and source references.
 
-Y podemos volver a Markdown:
+We can also render Markdown again:
 
 ```csharp
 using ElBruno.MarkItDotNet.CoreModel;
@@ -210,11 +210,11 @@ var rendered = MarkdownRenderer.Render(model);
 Console.WriteLine(rendered);
 ```
 
-Hay una distinción importante: `OriginalMarkdown` conserva la sintaxis del **bloque**, por ejemplo negritas, enlaces o cercas de código. El renderer prioriza ese valor cuando existe.
+There is an important distinction: `OriginalMarkdown` retains the syntax of the **block**, including bold text, links, or code fences. The renderer prioritizes that value when it is present.
 
-Esto no promete una reproducción byte por byte del archivo completo: se pueden normalizar separaciones entre bloques, saltos de línea y el título. Tampoco promete que editar `Text` invalide automáticamente `OriginalMarkdown`.
+This is not a promise of byte-for-byte reproduction of the entire file: spacing between blocks, line endings, and the title may be normalized. Editing `Text` also does not automatically invalidate `OriginalMarkdown`.
 
-Si quiero reemplazar un párrafo parseado, hago explícita esa decisión:
+If I want to replace a parsed paragraph, I make that decision explicit:
 
 ```csharp
 var paragraph = model.Sections
@@ -231,13 +231,13 @@ var edited = paragraph with
 Console.WriteLine(edited.Text);
 ```
 
-`with` crea un bloque nuevo; para renderizar el documento modificado hay que incorporarlo a una nueva sección o documento. El bloque original no cambia.
+`with` creates a new block. To render the updated document, you must include that block in a new section or document. The original block does not change.
 
-## 4. ZIP como fuente de documentos, no como carpeta temporal
+## 4. ZIP as a Document Source, Not a Temporary Folder
 
-![Diagrama del pipeline: descubrir entradas ZIP, convertir a Markdown, parsear CoreModel y adaptar a IngestionDocument](../images/blog-ingestion-pipeline.png)
+![Pipeline diagram: discover ZIP entries, convert to Markdown, parse CoreModel, and adapt to IngestionDocument](../images/blog-ingestion-pipeline.png)
 
-Un ZIP suele llegar como un paquete de documentación: guías, notas, archivos JSON o reportes. El conector expone sus archivos como `SourceDocument` a través de `IDocumentSource`.
+A ZIP often arrives as a documentation bundle: guides, notes, JSON files, or reports. The connector exposes its files as `SourceDocument` instances through `IDocumentSource`.
 
 ```csharp
 using ElBruno.MarkItDotNet.Connectors;
@@ -263,15 +263,15 @@ await foreach (var document in source.GetDocumentsAsync(timeout.Token))
     Console.WriteLine(document.Metadata[SourceMetadataKeys.ArchiveEntryPath]);
 
     await using var content = await document.OpenReadAsync(timeout.Token);
-    // Consumir el stream aqui, antes de salir de esta iteracion.
+    // Consume the stream here, before leaving this iteration.
 }
 ```
 
-La enumeración descubre los archivos. `OpenReadAsync()` abre su contenido cuando lo necesito. El stream mantiene vivo el archivo ZIP hasta que se dispone.
+Enumeration discovers the files. `OpenReadAsync()` opens their content on demand. The returned stream keeps the ZIP archive open until the stream is disposed.
 
-Las entradas de directorio no se devuelven como documentos. Los nombres de entrada se usan como referencias y **no se convierten en rutas de extracción**.
+Directory entries are not returned as documents. Entry names serve as references and **are not turned into extraction paths**.
 
-Para aplicaciones que usan dependency injection:
+For applications that use dependency injection:
 
 ```csharp
 using ElBruno.MarkItDotNet.Connectors;
@@ -289,26 +289,26 @@ using var provider = services.BuildServiceProvider();
 var source = provider.GetRequiredService<IDocumentSource>();
 ```
 
-Ese ejemplo de DI requiere además `Microsoft.Extensions.DependencyInjection`, el contenedor concreto. El paquete de conectores proporciona las extensiones y abstracciones, no ese contenedor.
+This DI example also requires `Microsoft.Extensions.DependencyInjection`, the concrete container. The connectors package provides registration extensions and abstractions, not that container.
 
-### Los límites importan
+### Limits Matter
 
-| Opción | Valor por defecto | Qué controla |
+| Option | Default | What It Controls |
 | --- | --- | --- |
-| `MaxArchiveSizeBytes` | 100 MiB | Tamaño comprimido del archivo en descubrimiento |
-| `MaxEntrySizeBytes` | 25 MiB | Tamaño declarado por entrada y tope durante las lecturas |
-| `MaxTotalUncompressedBytes` | 250 MiB | Suma de tamaños declarados de entradas elegibles |
-| `MaxEntries` | 10.000 | Cantidad de entradas, incluidos directorios |
+| `MaxArchiveSizeBytes` | 100 MiB | Compressed archive size during discovery |
+| `MaxEntrySizeBytes` | 25 MiB | Declared entry size and the cap applied during reads |
+| `MaxTotalUncompressedBytes` | 250 MiB | Sum of declared sizes of eligible entries |
+| `MaxEntries` | 10,000 | Entry count, including directories |
 
-Las entradas que superan el límite individual se omiten con un warning. Si se supera el tamaño del archivo, la cantidad de entradas o el total elegible, el conector rechaza la operación.
+Entries exceeding the per-entry limit are skipped with a warning. If the archive size, entry count, or eligible total exceeds its limit, the connector rejects the operation.
 
-La lectura tiene un tope individual adicional. El límite total no es un contador compartido de todas las lecturas concurrentes o repetidas; es un control de descubrimiento basado en los tamaños declarados.
+Reads have an additional per-entry cap. The total limit is not a shared counter across concurrent or repeated reads; it is a discovery-time check based on declared sizes.
 
-No conviene anunciar esto como una protección universal contra ZIP maliciosos. No hay extracción recursiva de ZIP anidados, ni un presupuesto de CPU de descompresión, ni un límite configurable de ratio de compresión. En producción seguiría usando límites de concurrencia, aislamiento y políticas propias para archivos no confiables.
+This should not be presented as universal protection against malicious ZIP archives. There is no recursive extraction of nested ZIPs, decompression CPU budget, or configurable compression-ratio limit. In production, I would still use concurrency limits, isolation, and application-specific policies for untrusted files.
 
-## 5. ZIP, conversión, parser y adaptador: el flujo completo
+## 5. ZIP, Conversion, Parsing, and Adaptation: The Complete Flow
 
-Las cuatro etapas se pueden conectar sin escribir archivos intermedios:
+The four stages can be connected without writing intermediate files:
 
 ```csharp
 using ElBruno.MarkItDotNet;
@@ -344,17 +344,17 @@ await foreach (var document in source.GetDocumentsAsync(timeout.Token))
 }
 ```
 
-Este fragmento reutiliza `source` y `timeout` del ejemplo anterior. El programa completo está en la demo.
+This snippet reuses `source` and `timeout` from the earlier example. The complete program is in the demo.
 
-La allowlist es una decisión de la aplicación. Podemos ampliarla a formatos de los conversores registrados, pero un ZIP no hace que todos sus contenidos sean compatibles por arte de magia.
+The allowlist is an application decision. We can extend it to formats supported by registered converters, but a ZIP does not magically make every file inside it compatible.
 
-También hay un detalle de trazabilidad: el `sourcePath` incluye el archivo ZIP y la entrada, pero los offsets que produce el parser apuntan al **Markdown convertido**, no a posiciones equivalentes del PDF o DOCX original.
+There is also a traceability detail: `sourcePath` includes the ZIP archive and entry, but the parser's offsets refer to the **converted Markdown**, not equivalent positions in the original PDF or DOCX.
 
-Y otra precisión: sin archivos intermedios no significa memoria constante. El conversor produce un string y el parser construye un árbol; el ZIP solo evita extraer todas las entradas a disco.
+One more distinction: no intermediate files does not mean constant memory usage. The converter produces a string and the parser builds a tree; the ZIP connector avoids extracting every entry to disk.
 
-## 6. Tablas nativas, no solamente texto con barras
+## 6. Native Tables, Not Just Text with Pipes
 
-Para el adaptador, una tabla se convierte en `IngestionDocumentTable` con una matriz de celdas:
+The adapter maps a table to `IngestionDocumentTable` with a cell matrix:
 
 ```csharp
 using Microsoft.Extensions.DataIngestion;
@@ -370,13 +370,13 @@ Console.WriteLine($"Header: {table.Cells[0, 0]?.Text}");
 Console.WriteLine($"Value: {table.Cells[1, 1]?.Text}");
 ```
 
-Para nuestra entrada, la primera fila contiene `Setting` y `Value`; la segunda contiene `Mode` y `Preview`.
+For our input, the first row contains `Setting` and `Value`; the second contains `Mode` and `Preview`.
 
-Esto deja la estructura disponible para componentes posteriores que necesiten tratar las tablas de manera diferente a un párrafo.
+This makes the structure available to downstream components that need to handle tables differently from paragraphs.
 
-## 7. IDs y origen también viajan
+## 7. IDs and Source References Travel Too
 
-Los metadatos del adaptador usan el prefijo `markitdotnet.`:
+The adapter's metadata uses the `markitdotnet.` prefix:
 
 ```csharp
 var root = ingestion.Sections.Single();
@@ -403,48 +403,48 @@ foreach (var element in ingestion.EnumerateContent())
 }
 ```
 
-La metadata del documento se guarda en la sección raíz. Las referencias del bloque se guardan en su elemento correspondiente; `PageNumber` también se copia cuando existe.
+Document metadata is stored on the root section. Block references are stored on the corresponding element; `PageNumber` is also copied when present.
 
-El ID generado por el parser es determinista para el mismo contenido y source path. Eso no implica que permanezca igual después de editar el archivo, moverlo o cambiar el Markdown convertido.
+The parser generates a deterministic ID for the same content and source path. That does not mean the ID stays the same after editing the file, moving it, or changing the converted Markdown.
 
-Las listas, citas y bloques de código no tienen todos un equivalente nativo específico en este adaptador: se representan como párrafos con Markdown y metadata del tipo de bloque. La jerarquía interna de cada lista o cita no se vuelve una jerarquía de elementos de Microsoft.
+Lists, block quotes, and code blocks do not all have dedicated native equivalents in this adapter: they are represented as paragraphs with Markdown and block-type metadata. The internal hierarchy of a list or quote is not mapped to a hierarchy of Microsoft ingestion elements.
 
-## ¿Por qué un paquete opcional?
+## Why an Optional Package?
 
-Porque no todos los consumidores necesitan la misma cosa.
+Because not every consumer needs the same thing.
 
-Si quiero convertir un archivo a Markdown, sigo usando el paquete principal. Si quiero inspeccionar la estructura de Markdown, uso el parser opcional. Si quiero integrar CoreModel con componentes de Microsoft, agrego DataIngestion.
+If I want to convert a file to Markdown, I keep using the main package. If I want to inspect Markdown structure, I use the optional parser. If I want to integrate CoreModel with Microsoft components, I add DataIngestion.
 
-El adaptador referencia `Microsoft.Extensions.DataIngestion.Abstractions`. No vuelve a parsear Markdown con el lector de Microsoft ni obliga a la biblioteca base a depender de un API preview.
+The adapter references `Microsoft.Extensions.DataIngestion.Abstractions`. It does not parse Markdown again with Microsoft's reader or force the base library to depend on a preview API.
 
-El resultado es un límite de responsabilidad bastante claro: **MarkItDotNet prepara y representa documentos; tu aplicación decide cómo usarlos**.
+That gives us a clear boundary of responsibility: **MarkItDotNet prepares and represents documents; your application decides how to use them**.
 
-## Para probarlo y seguir el proyecto
+## Try It and Follow the Project
 
-El ejemplo completo de este artículo está en [MarkdownIngestionDemo](../src/samples/MarkdownIngestionDemo/Program.cs). Se puede ejecutar en .NET 8 o .NET 10 cambiando `--framework`.
+The complete example for this article is in [MarkdownIngestionDemo](../src/samples/MarkdownIngestionDemo/Program.cs). You can run it on .NET 8 or .NET 10 by changing `--framework`.
 
-La [guía de importación Markdown](markdown-import.md), la [guía del conector ZIP](zip-connector.md) y la [guía del adaptador](data-ingestion.md) explican cada API por separado.
+The [Markdown import guide](markdown-import.md), [ZIP connector guide](zip-connector.md), and [adapter guide](data-ingestion.md) cover each API separately.
 
-El código y los paquetes están aquí:
+Find the source and packages here:
 
-- [Repositorio de ElBruno.MarkItDotNet](https://github.com/elbruno/ElBruno.MarkItDotNet).
-- [Adaptador DataIngestion 0.9.3-preview.1 en NuGet](https://www.nuget.org/packages/ElBruno.MarkItDotNet.DataIngestion/0.9.3-preview.1).
+- [ElBruno.MarkItDotNet repository](https://github.com/elbruno/ElBruno.MarkItDotNet).
+- [DataIngestion adapter 0.9.3-preview.1 on NuGet](https://www.nuget.org/packages/ElBruno.MarkItDotNet.DataIngestion/0.9.3-preview.1).
 - [Microsoft.Extensions.DataIngestion](https://learn.microsoft.com/dotnet/dataingestion/microsoft-extensions-dataingestion).
 
-Si estás preparando documentos para IA con C#, prueba la demo. A veces el siguiente paso útil no es agregar otra llamada al modelo: es conservar mejor la estructura que ya tienen tus documentos.
+If you are preparing documents for AI with C#, give the demo a try. Sometimes the most useful next step is not another model call: it is preserving more of the structure your documents already have.
 
-Saludos!
+Cheers!
 
 Bruno
 
-## Material para la promoción posterior
+## Materials for Future Promotion
 
-**Título corto:** Markdown + ZIP + DataIngestion: documentos estructurados con C#.
+**Short title:** Markdown + ZIP + DataIngestion: Structured Documents with C#.
 
-**Extracto:** ElBruno.MarkItDotNet incorpora importación estructurada de Markdown, lectura de ZIP sin extracción y un adaptador opcional para Microsoft.Extensions.DataIngestion. Una demo ejecutable conecta las tres etapas con C#.
+**Excerpt:** ElBruno.MarkItDotNet adds structured Markdown import, ZIP reading without extraction, and an optional adapter for Microsoft.Extensions.DataIngestion. A runnable C# demo connects all three pieces.
 
-**Texto para redes:** Un documento no es solo un string. Con ElBruno.MarkItDotNet puedes conservar secciones, tablas y referencias de origen, leer entradas ZIP sin extraerlas a disco y adaptar CoreModel a IngestionDocument. El adaptador está en preview; el repo incluye una demo completa. Código: https://github.com/elbruno/ElBruno.MarkItDotNet
+**Social post:** A document is more than a string. With ElBruno.MarkItDotNet, you can preserve sections, tables, and source references, read ZIP entries without extracting them to disk, and adapt CoreModel to IngestionDocument. The adapter is in preview, and the repo includes a complete demo. Code: https://github.com/elbruno/ElBruno.MarkItDotNet
 
-**Imágenes:** portada y diagrama originales en PNG, con fuentes SVG editables en `images/`. Al publicar fuera de GitHub, subir las dos imágenes y reemplazar las rutas relativas de este borrador por las URLs del blog.
+**Images:** Original hero and pipeline diagram in PNG, with editable SVG sources in `images/`. When publishing outside GitHub, upload both images and replace this draft's relative paths with the blog's image URLs.
 
-**Nota editorial:** artículo preparado con ayuda de IA; ejemplos contrastados con las APIs del repositorio. Revisar las versiones publicadas de Markdown y Connectors antes de convertir las instrucciones desde source en instrucciones de instalación por NuGet.
+**Editorial note:** This article was prepared with AI assistance; examples were checked against the repository APIs. Verify the published Markdown and Connectors versions before replacing the source-based setup with NuGet installation instructions.
