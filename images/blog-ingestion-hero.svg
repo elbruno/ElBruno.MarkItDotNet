@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+  <title id="title">ElBruno.MarkItDotNet: documentos con estructura</title>
+  <desc id="desc">Markdown, archivos ZIP y documentos estructurados conectados con Microsoft.Extensions.DataIngestion.</desc>
+  <defs>
+    <linearGradient id="bg" x2="1" y2="1"><stop stop-color="#faf8ff"/><stop offset="1" stop-color="#e8f8f5"/></linearGradient>
+    <linearGradient id="accent" x2="1" y2="1"><stop stop-color="#6439bd"/><stop offset="1" stop-color="#3859be"/></linearGradient>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="9" refY="6" orient="auto"><path d="M0 0L10 6L0 12" fill="none" stroke="#3c8e85" stroke-width="2"/></marker>
+  </defs>
+  <rect width="1600" height="900" fill="url(#bg)"/>
+  <circle cx="1450" cy="110" r="245" fill="#dcd4f7" opacity=".4"/>
+  <circle cx="70" cy="830" r="190" fill="#bfe9dd" opacity=".35"/>
+  <g font-family="Segoe UI, Arial, sans-serif">
+    <rect x="90" y="76" width="208" height="40" rx="20" fill="#e6ddfa"/>
+    <text x="116" y="103" fill="#58318f" font-size="19" font-weight="700">.NET 8 + .NET 10</text>
+    <text x="90" y="197" fill="#252039" font-size="62" font-weight="700">Tus documentos tienen estructura.</text>
+    <text x="90" y="262" fill="#595365" font-size="30">Consérvala antes de llevarlos a tu pipeline de IA.</text>
+    <g transform="translate(90 340)">
+      <rect width="300" height="305" rx="26" fill="white" stroke="#d8d0e5" stroke-width="2"/>
+      <rect x="32" y="30" width="66" height="66" rx="14" fill="#efe8fa"/>
+      <text x="48" y="75" font-size="36" font-weight="700" fill="#6439bd">#</text>
+      <text x="32" y="143" font-size="28" font-weight="700" fill="#252039">Markdown + ZIP</text>
+      <text x="32" y="185" font-size="22" fill="#595365">Texto, tablas, código</text>
+      <text x="32" y="220" font-size="22" fill="#595365">y archivos agrupados</text>
+      <rect x="32" y="250" width="190" height="8" rx="4" fill="#e6ddfa"/>
+    </g>
+    <path d="M414 488H553" stroke="#3c8e85" stroke-width="4" marker-end="url(#arrow)"/>
+    <g transform="translate(578 340)">
+      <rect width="350" height="305" rx="26" fill="url(#accent)"/>
+      <text x="32" y="60" font-size="30" font-weight="700" fill="white">CoreModel</text>
+      <text x="32" y="103" font-size="22" fill="#e9e0fc">Document</text>
+      <path d="M48 123V234M48 152H81M48 192H81M48 231H81" stroke="#cab8f1" stroke-width="3"/>
+      <text x="94" y="160" font-size="22" fill="white">Sections</text>
+      <text x="94" y="200" font-size="22" fill="white">Blocks + Metadata</text>
+      <text x="94" y="240" font-size="22" fill="white">Source references</text>
+    </g>
+    <path d="M952 488H1089" stroke="#3c8e85" stroke-width="4" marker-end="url(#arrow)"/>
+    <g transform="translate(1115 340)">
+      <rect width="395" height="305" rx="26" fill="white" stroke="#b8ddd4" stroke-width="2"/>
+      <rect x="32" y="30" width="72" height="66" rx="14" fill="#dff2ec"/>
+      <path d="M47 54H86M47 73H86" stroke="#298573" stroke-width="5"/>
+      <text x="32" y="143" font-size="27" font-weight="700" fill="#252039">IngestionDocument</text>
+      <text x="32" y="185" font-size="22" fill="#595365">Interoperabilidad .NET</text>
+      <text x="32" y="220" font-size="22" fill="#595365">Adapter preview</text>
+      <rect x="32" y="250" width="220" height="8" rx="4" fill="#dff2ec"/>
+    </g>
+    <text x="90" y="753" fill="#252039" font-size="36" font-weight="700">ElBruno.MarkItDotNet</text>
+    <text x="90" y="802" fill="#595365" font-size="24">Markdown estructurado. ZIP sin extracción. DataIngestion opcional.</text>
+    <text x="1510" y="838" text-anchor="end" fill="#58318f" font-size="21">github.com/elbruno/ElBruno.MarkItDotNet</text>
+  </g>
+</svg>

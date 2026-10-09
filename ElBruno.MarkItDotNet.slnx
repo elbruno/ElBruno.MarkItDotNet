@@ -54,6 +54,7 @@
     <Project Path="src/ElBruno.MarkItDotNet.Cli/ElBruno.MarkItDotNet.Cli.csproj" />
   </Folder>
   <Folder Name="/src/samples/">
+    <Project Path="src/samples/MarkdownIngestionDemo/MarkdownIngestionDemo.csproj" />
     <Project Path="src/samples/BasicConversion/BasicConversion.csproj" />
     <Project Path="src/samples/ConnectorsDemo/ConnectorsDemo.csproj" />
     <Project Path="src/samples/CsvConversion/CsvConversion.csproj" />

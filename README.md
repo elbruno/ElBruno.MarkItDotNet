@@ -186,7 +186,7 @@ Provides the `IDocumentSource` contract, `SourceDocument`, `FileSystemConnector`
 dotnet add package ElBruno.MarkItDotNet.DataIngestion --prerelease
 ```
 
-Converts structured CoreModel documents into `IngestionDocument` instances for use with Microsoft ingestion chunkers and processors. The prerelease dependency is isolated in this package; Markdown parsing remains provided by `ElBruno.MarkItDotNet.Markdown`.
+Converts structured CoreModel documents into `IngestionDocument` instances for use with Microsoft ingestion chunkers and processors. The prerelease dependency is isolated in this package; Markdown parsing remains provided by `ElBruno.MarkItDotNet.Markdown`. See the [adapter guide](docs/data-ingestion.md) and the [runnable Markdown and ZIP demo](src/samples/MarkdownIngestionDemo/Program.cs).
 
 **ElBruno.MarkItDotNet.Connectors.AzureBlob** — Azure Blob source ingestion connector.
 
@@ -671,6 +671,7 @@ See the `src/samples/` projects below for detailed walkthroughs.
 
 ## Documentation
 
+- [Markdown, ZIP and DataIngestion walkthrough](docs/blog-markdown-zip-data-ingestion.md): illustrated blog draft with C# examples and a runnable demo
 - [Roadmap / Ingestion PRD](docs/ElBruno.MarkItDotNet-Ingestion-PRD.md) — current implementation plan and remaining feature gaps
 - [Architecture](docs/architecture.md) — design decisions, plugin system, converter pipeline, and internal structure
 - [Connectors Guide](docs/connectors-guide.md) — `IDocumentSource`, FileSystem connector, Azure Blob connector, and DI wiring

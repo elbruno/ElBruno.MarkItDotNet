@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFrameworks>net8.0;net10.0</TargetFrameworks>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\ElBruno.MarkItDotNet\ElBruno.MarkItDotNet.csproj" />
+    <ProjectReference Include="..\..\ElBruno.MarkItDotNet.Markdown\ElBruno.MarkItDotNet.Markdown.csproj" />
+    <ProjectReference Include="..\..\ElBruno.MarkItDotNet.Connectors\ElBruno.MarkItDotNet.Connectors.csproj" />
+    <ProjectReference Include="..\..\ElBruno.MarkItDotNet.DataIngestion\ElBruno.MarkItDotNet.DataIngestion.csproj" />
+  </ItemGroup>
+</Project>
