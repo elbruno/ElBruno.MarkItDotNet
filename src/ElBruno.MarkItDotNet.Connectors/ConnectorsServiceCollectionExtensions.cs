@@ -47,4 +47,27 @@ public static class ConnectorsServiceCollectionExtensions
         services.AddSingleton<IDocumentSource>(sp => sp.GetRequiredService<FileSystemConnector>());
         return services;
     }
+
+    /// <summary>
+    /// Adds a ZIP archive connector implementation of <see cref="IDocumentSource"/>.
+    /// </summary>
+    /// <param name="services">The service collection to add services to.</param>
+    /// <param name="configure">Optional action to configure connector options.</param>
+    /// <returns>The same service collection for chaining.</returns>
+    public static IServiceCollection AddZipArchiveConnector(
+        this IServiceCollection services,
+        Action<ZipArchiveConnectorOptions>? configure = null)
+    {
+        ArgumentNullException.ThrowIfNull(services);
+
+        services.AddMarkItDotNetConnectors();
+
+        var options = new ZipArchiveConnectorOptions();
+        configure?.Invoke(options);
+
+        services.AddSingleton(options);
+        services.AddSingleton<ZipArchiveConnector>();
+        services.AddSingleton<IDocumentSource>(sp => sp.GetRequiredService<ZipArchiveConnector>());
+        return services;
+    }
 }

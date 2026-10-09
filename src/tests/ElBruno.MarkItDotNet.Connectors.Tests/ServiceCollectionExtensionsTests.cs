@@ -76,6 +76,23 @@ public class ServiceCollectionExtensionsTests
     }
 
     [Fact]
+    public void AddZipArchiveConnector_RegistersIDocumentSourceAndAppliesOptions()
+    {
+        var archivePath = Path.Combine(Path.GetTempPath(), "documents.zip");
+        var services = new ServiceCollection();
+        services.AddZipArchiveConnector(options =>
+        {
+            options.ArchivePath = archivePath;
+            options.MaxEntries = 25;
+        });
+
+        using var provider = services.BuildServiceProvider();
+
+        provider.GetRequiredService<IDocumentSource>().Should().BeOfType<ZipArchiveConnector>();
+        provider.GetRequiredService<ZipArchiveConnectorOptions>().MaxEntries.Should().Be(25);
+    }
+
+    [Fact]
     public void AddAzureBlobConnector_RegistersIDocumentSource()
     {
         var services = new ServiceCollection();

@@ -31,4 +31,10 @@ public static class SourceMetadataKeys
 
     /// <summary>Directory traversal depth relative to the connector root.</summary>
     public const string Depth = "source.depth";
+
+    /// <summary>Absolute path to the ZIP archive containing the document.</summary>
+    public const string ArchivePath = "source.archivePath";
+
+    /// <summary>Entry path of the document inside its ZIP archive.</summary>
+    public const string ArchiveEntryPath = "source.archiveEntryPath";
 }

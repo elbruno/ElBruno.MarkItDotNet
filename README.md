@@ -177,7 +177,7 @@ Provides heuristic scoring, issue reporting, and retention-oriented metrics to s
 dotnet add package ElBruno.MarkItDotNet.Connectors
 ```
 
-Provides the `IDocumentSource` contract, `SourceDocument`, and `FileSystemConnector`.
+Provides the `IDocumentSource` contract, `SourceDocument`, `FileSystemConnector`, and `ZipArchiveConnector`. ZIP entries are streamed on demand without being extracted to disk, with configurable archive, entry-count, and uncompressed-content limits. See the [ZIP connector guide](docs/zip-connector.md).
 
 **ElBruno.MarkItDotNet.Connectors.AzureBlob** — Azure Blob source ingestion connector.
 
