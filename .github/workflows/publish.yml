@@ -61,6 +61,7 @@ jobs:
         run: |
           # CoreModel must be packed first — other packages depend on it
           dotnet pack src/ElBruno.MarkItDotNet.CoreModel/ElBruno.MarkItDotNet.CoreModel.csproj -c Release --no-build -p:Version=${{ steps.version.outputs.version }} -o artifacts
+          dotnet pack src/ElBruno.MarkItDotNet.Markdown/ElBruno.MarkItDotNet.Markdown.csproj -c Release --no-build -p:Version=${{ steps.version.outputs.version }} -o artifacts
           dotnet pack src/ElBruno.MarkItDotNet/ElBruno.MarkItDotNet.csproj -c Release --no-build -p:Version=${{ steps.version.outputs.version }} -o artifacts
           dotnet pack src/ElBruno.MarkItDotNet.Excel/ElBruno.MarkItDotNet.Excel.csproj -c Release --no-build -p:Version=${{ steps.version.outputs.version }} -o artifacts
           dotnet pack src/ElBruno.MarkItDotNet.PowerPoint/ElBruno.MarkItDotNet.PowerPoint.csproj -c Release --no-build -p:Version=${{ steps.version.outputs.version }} -o artifacts

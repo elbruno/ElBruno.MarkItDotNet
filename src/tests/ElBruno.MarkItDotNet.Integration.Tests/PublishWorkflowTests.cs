@@ -13,6 +13,7 @@ public class PublishWorkflowTests
 {
     private static readonly string RepoRoot = FindRepoRoot();
     private static readonly string PublishWorkflowPath = Path.Combine(RepoRoot, ".github", "workflows", "publish.yml");
+    private static readonly string PreviewWorkflowPath = Path.Combine(RepoRoot, ".github", "workflows", "publish-data-ingestion.yml");
     private static readonly string SolutionPath = Path.Combine(RepoRoot, "ElBruno.MarkItDotNet.slnx");
 
     [Fact]
@@ -26,7 +27,7 @@ public class PublishWorkflowTests
         foreach (var project in packableProjects)
         {
             packedProjects.Should().Contain(project,
-                $"packable project '{project}' must be included in publish.yml pack step " +
+                $"packable project '{project}' must be included in a publishing workflow pack step " +
                 "to avoid missing NuGet dependency errors (issue #7)");
         }
     }
@@ -56,7 +57,26 @@ public class PublishWorkflowTests
     [Fact]
     public void PublishWorkflow_AllProjectReferenceDependenciesArePacked()
     {
-        var packedProjects = GetPackedProjectsFromWorkflow();
+        foreach (var workflowPath in new[] { PublishWorkflowPath, PreviewWorkflowPath })
+        {
+            AssertProjectReferenceDependenciesArePacked(workflowPath);
+        }
+    }
+
+    [Fact]
+    public void PreviewWorkflow_KeepsAdapterSeparateAndPacksCoreModelFirst()
+    {
+        var stableProjects = GetPackedProjectsFromWorkflow(PublishWorkflowPath);
+        var previewProjects = GetPackedProjectsFromWorkflow(PreviewWorkflowPath);
+
+        stableProjects.Should().Contain("ElBruno.MarkItDotNet.Markdown");
+        stableProjects.Should().NotContain("ElBruno.MarkItDotNet.DataIngestion");
+        previewProjects.Should().Equal("ElBruno.MarkItDotNet.CoreModel", "ElBruno.MarkItDotNet.DataIngestion");
+    }
+
+    private static void AssertProjectReferenceDependenciesArePacked(string workflowPath)
+    {
+        var packedProjects = GetPackedProjectsFromWorkflow(workflowPath);
         var srcDir = Path.Combine(RepoRoot, "src");
 
         foreach (var projectName in packedProjects)
@@ -85,7 +105,7 @@ public class PublishWorkflowTests
                 {
                     packedProjects.Should().Contain(dep,
                         $"'{projectName}' has a ProjectReference to '{dep}' which is packable. " +
-                        $"'{dep}' must also be in publish.yml or NuGet consumers will get missing package errors.");
+                        $"'{dep}' must also be in {Path.GetFileName(workflowPath)} or NuGet consumers will get missing package errors.");
                 }
             }
         }
@@ -151,7 +171,15 @@ public class PublishWorkflowTests
 
     private static List<string> GetPackedProjectsFromWorkflow()
     {
-        var content = File.ReadAllText(PublishWorkflowPath);
+        return GetPackedProjectsFromWorkflow(PublishWorkflowPath)
+            .Concat(GetPackedProjectsFromWorkflow(PreviewWorkflowPath))
+            .Distinct()
+            .ToList();
+    }
+
+    private static List<string> GetPackedProjectsFromWorkflow(string workflowPath)
+    {
+        var content = File.ReadAllText(workflowPath);
         var matches = Regex.Matches(content, @"dotnet pack src/([^/]+)/[^ ]+\.csproj");
         return matches.Select(m => m.Groups[1].Value).Distinct().ToList();
     }
