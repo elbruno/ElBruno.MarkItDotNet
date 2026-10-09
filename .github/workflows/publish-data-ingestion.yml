@@ -1,0 +1,70 @@
+name: Publish DataIngestion adapter preview
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Prerelease package version"
+        required: true
+        default: "0.9.3-preview.1"
+        type: string
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    environment: release
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: |
+            8.0.x
+            10.0.x
+
+      - name: Validate version
+        id: version
+        env:
+          INPUT_VERSION: ${{ inputs.version }}
+        run: |
+          if ! [[ "$INPUT_VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+-preview\.[0-9]+$ ]]; then
+            echo "Invalid prerelease version: '$INPUT_VERSION'"
+            exit 1
+          fi
+          echo "version=$INPUT_VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: Restore
+        run: dotnet restore src/tests/ElBruno.MarkItDotNet.DataIngestion.Tests/ElBruno.MarkItDotNet.DataIngestion.Tests.csproj
+
+      - name: Test
+        run: dotnet test src/tests/ElBruno.MarkItDotNet.DataIngestion.Tests/ElBruno.MarkItDotNet.DataIngestion.Tests.csproj -c Release --no-restore --framework net8.0 -p:Version=${{ steps.version.outputs.version }}
+
+      - name: Test (.NET 10)
+        run: dotnet test src/tests/ElBruno.MarkItDotNet.DataIngestion.Tests/ElBruno.MarkItDotNet.DataIngestion.Tests.csproj -c Release --no-restore --framework net10.0 -p:Version=${{ steps.version.outputs.version }}
+
+      - name: Build adapter for all target frameworks
+        run: dotnet build src/ElBruno.MarkItDotNet.DataIngestion/ElBruno.MarkItDotNet.DataIngestion.csproj -c Release --no-restore -p:Version=${{ steps.version.outputs.version }}
+
+      - name: Pack
+        run: |
+          dotnet pack src/ElBruno.MarkItDotNet.CoreModel/ElBruno.MarkItDotNet.CoreModel.csproj -c Release --no-build -p:Version=${{ steps.version.outputs.version }} -o artifacts
+          dotnet pack src/ElBruno.MarkItDotNet.DataIngestion/ElBruno.MarkItDotNet.DataIngestion.csproj -c Release --no-build -p:Version=${{ steps.version.outputs.version }} -o artifacts
+
+      - name: NuGet login (OIDC trusted publishing)
+        uses: NuGet/login@v1
+        id: nuget-login
+        with:
+          user: ${{ secrets.NUGET_USER }}
+
+      - name: Push to NuGet.org
+        run: dotnet nuget push artifacts/*.nupkg --api-key ${{ steps.nuget-login.outputs.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
+
+      - name: Upload package artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: data-ingestion-preview
+          path: artifacts/*.nupkg

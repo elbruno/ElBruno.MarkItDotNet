@@ -18,6 +18,7 @@
 | [ElBruno.MarkItDotNet.Evals](https://www.nuget.org/packages/ElBruno.MarkItDotNet.Evals) | [![NuGet](https://img.shields.io/nuget/v/ElBruno.MarkItDotNet.Evals.svg?style=flat-square)](https://www.nuget.org/packages/ElBruno.MarkItDotNet.Evals) | [![Downloads](https://img.shields.io/nuget/dt/ElBruno.MarkItDotNet.Evals.svg?style=flat-square)](https://www.nuget.org/packages/ElBruno.MarkItDotNet.Evals) | Conversion quality evaluation and scoring |
 | [ElBruno.MarkItDotNet.Cli](https://www.nuget.org/packages/ElBruno.MarkItDotNet.Cli) | [![NuGet](https://img.shields.io/nuget/v/ElBruno.MarkItDotNet.Cli.svg?style=flat-square)](https://www.nuget.org/packages/ElBruno.MarkItDotNet.Cli) | [![Downloads](https://img.shields.io/nuget/dt/ElBruno.MarkItDotNet.Cli.svg?style=flat-square)](https://www.nuget.org/packages/ElBruno.MarkItDotNet.Cli) | Command-line tool (`markitdown-dotnet` command) |
 | [ElBruno.MarkItDotNet.Markdown](https://www.nuget.org/packages/ElBruno.MarkItDotNet.Markdown) | [![NuGet](https://img.shields.io/nuget/v/ElBruno.MarkItDotNet.Markdown.svg?style=flat-square)](https://www.nuget.org/packages/ElBruno.MarkItDotNet.Markdown) | [![Downloads](https://img.shields.io/nuget/dt/ElBruno.MarkItDotNet.Markdown.svg?style=flat-square)](https://www.nuget.org/packages/ElBruno.MarkItDotNet.Markdown) | Parse Markdown into structured CoreModel documents |
+| [ElBruno.MarkItDotNet.DataIngestion](https://www.nuget.org/packages/ElBruno.MarkItDotNet.DataIngestion) | [![NuGet](https://img.shields.io/nuget/v/ElBruno.MarkItDotNet.DataIngestion.svg?style=flat-square)](https://www.nuget.org/packages/ElBruno.MarkItDotNet.DataIngestion) | [![Downloads](https://img.shields.io/nuget/dt/ElBruno.MarkItDotNet.DataIngestion.svg?style=flat-square)](https://www.nuget.org/packages/ElBruno.MarkItDotNet.DataIngestion) | Bridge CoreModel documents to Microsoft.Extensions.DataIngestion |
 
 ## Description
 
@@ -178,6 +179,14 @@ dotnet add package ElBruno.MarkItDotNet.Connectors
 ```
 
 Provides the `IDocumentSource` contract, `SourceDocument`, `FileSystemConnector`, and `ZipArchiveConnector`. ZIP entries are streamed on demand without being extracted to disk, with configurable archive, entry-count, and uncompressed-content limits. See the [ZIP connector guide](docs/zip-connector.md).
+
+**ElBruno.MarkItDotNet.DataIngestion** — Optional adapter for Microsoft.Extensions.DataIngestion.
+
+```bash
+dotnet add package ElBruno.MarkItDotNet.DataIngestion --prerelease
+```
+
+Converts structured CoreModel documents into `IngestionDocument` instances for use with Microsoft ingestion chunkers and processors. The prerelease dependency is isolated in this package; Markdown parsing remains provided by `ElBruno.MarkItDotNet.Markdown`.
 
 **ElBruno.MarkItDotNet.Connectors.AzureBlob** — Azure Blob source ingestion connector.
 
