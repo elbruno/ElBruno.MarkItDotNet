@@ -54,6 +54,13 @@ public static class MarkdownRenderer
 
     private static void RenderBlock(StringBuilder sb, DocumentBlock block)
     {
+        if (block.OriginalMarkdown is not null)
+        {
+            sb.AppendLine(block.OriginalMarkdown);
+            sb.AppendLine();
+            return;
+        }
+
         switch (block)
         {
             case HeadingBlock heading:
@@ -73,6 +80,16 @@ public static class MarkdownRenderer
                 break;
             case ListItemBlock listItem:
                 RenderListItem(sb, listItem, indent: 0, ordered: false, index: 1);
+                sb.AppendLine();
+                break;
+            case CodeBlock code:
+                RenderCodeBlock(sb, code);
+                break;
+            case QuoteBlock quote:
+                RenderQuote(sb, quote);
+                break;
+            case RawMarkdownBlock raw:
+                sb.AppendLine(raw.Content);
                 sb.AppendLine();
                 break;
         }
@@ -142,11 +159,36 @@ public static class MarkdownRenderer
     {
         var indentation = new string(' ', indent * 2);
         var marker = ordered ? $"{index}." : "-";
-        sb.AppendLine($"{indentation}{marker} {item.Text}");
+        var taskMarker = item.IsChecked.HasValue ? (item.IsChecked.Value ? "[x] " : "[ ] ") : string.Empty;
+        sb.AppendLine($"{indentation}{marker} {taskMarker}{item.Text}");
 
         for (var i = 0; i < item.SubItems.Count; i++)
         {
             RenderListItem(sb, item.SubItems[i], indent + 1, ordered: false, index: i + 1);
         }
+    }
+
+    private static void RenderCodeBlock(StringBuilder sb, CodeBlock code)
+    {
+        sb.Append("```").AppendLine(code.Language ?? string.Empty);
+        sb.AppendLine(code.Content);
+        sb.AppendLine("```");
+        sb.AppendLine();
+    }
+
+    private static void RenderQuote(StringBuilder sb, QuoteBlock quote)
+    {
+        var content = new StringBuilder();
+        foreach (var block in quote.Blocks)
+        {
+            RenderBlock(content, block);
+        }
+
+        foreach (var line in content.ToString().TrimEnd().Split(Environment.NewLine))
+        {
+            sb.Append("> ").AppendLine(line);
+        }
+
+        sb.AppendLine();
     }
 }

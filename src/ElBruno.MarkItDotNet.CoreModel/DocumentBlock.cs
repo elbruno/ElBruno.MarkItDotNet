@@ -16,6 +16,9 @@ namespace ElBruno.MarkItDotNet.CoreModel;
 [JsonDerivedType(typeof(FigureBlock), "figure")]
 [JsonDerivedType(typeof(ListBlock), "list")]
 [JsonDerivedType(typeof(ListItemBlock), "listItem")]
+[JsonDerivedType(typeof(CodeBlock), "code")]
+[JsonDerivedType(typeof(QuoteBlock), "quote")]
+[JsonDerivedType(typeof(RawMarkdownBlock), "rawMarkdown")]
 public abstract record DocumentBlock
 {
     /// <summary>
@@ -27,6 +30,12 @@ public abstract record DocumentBlock
     /// Optional reference to the source location of this block.
     /// </summary>
     public SourceReference? Source { get; init; }
+
+    /// <summary>
+    /// Original Markdown source for this block when it was parsed from Markdown.
+    /// Renderers can use this to preserve inline syntax and formatting exactly.
+    /// </summary>
+    public string? OriginalMarkdown { get; init; }
 
     /// <summary>
     /// Extensible property bag for additional block-specific metadata.

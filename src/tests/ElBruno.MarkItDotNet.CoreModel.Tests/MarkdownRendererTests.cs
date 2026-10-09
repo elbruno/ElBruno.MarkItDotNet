@@ -242,6 +242,82 @@ public class MarkdownRendererTests
     }
 
     [Fact]
+    public void Render_CodeBlock_UsesLanguageFence()
+    {
+        var doc = new Document
+        {
+            Sections =
+            [
+                new DocumentSection
+                {
+                    Blocks = [new CodeBlock { Language = "csharp", Content = "Console.WriteLine();" }]
+                }
+            ]
+        };
+
+        var md = MarkdownRenderer.Render(doc);
+
+        md.Should().Contain("```csharp");
+        md.Should().Contain("Console.WriteLine();");
+        md.Should().Contain("```");
+    }
+
+    [Fact]
+    public void Render_QuoteBlock_PrefixesNestedParagraph()
+    {
+        var doc = new Document
+        {
+            Sections =
+            [
+                new DocumentSection
+                {
+                    Blocks =
+                    [
+                        new QuoteBlock
+                        {
+                            Blocks = [new ParagraphBlock { Text = "Quoted text." }]
+                        }
+                    ]
+                }
+            ]
+        };
+
+        var md = MarkdownRenderer.Render(doc);
+
+        md.Should().Contain("> Quoted text.");
+    }
+
+    [Fact]
+    public void Render_TaskListItems_IncludesCheckedState()
+    {
+        var doc = new Document
+        {
+            Sections =
+            [
+                new DocumentSection
+                {
+                    Blocks =
+                    [
+                        new ListBlock
+                        {
+                            Items =
+                            [
+                                new ListItemBlock { Text = "Done", IsChecked = true },
+                                new ListItemBlock { Text = "Pending", IsChecked = false }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        };
+
+        var md = MarkdownRenderer.Render(doc);
+
+        md.Should().Contain("- [x] Done");
+        md.Should().Contain("- [ ] Pending");
+    }
+
+    [Fact]
     public void Render_EmptyTable_ProducesNothing()
     {
         var doc = new Document

@@ -7,6 +7,7 @@
     <Project Path="src/ElBruno.MarkItDotNet.AI/ElBruno.MarkItDotNet.AI.csproj" />
     <Project Path="src/ElBruno.MarkItDotNet.Whisper/ElBruno.MarkItDotNet.Whisper.csproj" />
     <Project Path="src/ElBruno.MarkItDotNet.CoreModel/ElBruno.MarkItDotNet.CoreModel.csproj" />
+    <Project Path="src/ElBruno.MarkItDotNet.Markdown/ElBruno.MarkItDotNet.Markdown.csproj" />
     <Project Path="src/ElBruno.MarkItDotNet.Chunking/ElBruno.MarkItDotNet.Chunking.csproj" />
     <Project Path="src/ElBruno.MarkItDotNet.DocumentIntelligence/ElBruno.MarkItDotNet.DocumentIntelligence.csproj" />
     <Project Path="src/ElBruno.MarkItDotNet.Citations/ElBruno.MarkItDotNet.Citations.csproj" />
@@ -31,6 +32,7 @@
     <Project Path="src/tests/ElBruno.MarkItDotNet.GoldenTests/ElBruno.MarkItDotNet.GoldenTests.csproj" />
     <Project Path="src/tests/ElBruno.MarkItDotNet.ConnectorsDemo.Tests/ElBruno.MarkItDotNet.ConnectorsDemo.Tests.csproj" />
     <Project Path="src/tests/ElBruno.MarkItDotNet.CoreModel.Tests/ElBruno.MarkItDotNet.CoreModel.Tests.csproj" />
+    <Project Path="src/tests/ElBruno.MarkItDotNet.Markdown.Tests/ElBruno.MarkItDotNet.Markdown.Tests.csproj" />
     <Project Path="src/tests/ElBruno.MarkItDotNet.Chunking.Tests/ElBruno.MarkItDotNet.Chunking.Tests.csproj" />
     <Project Path="src/tests/ElBruno.MarkItDotNet.DocumentIntelligence.Tests/ElBruno.MarkItDotNet.DocumentIntelligence.Tests.csproj" />
     <Project Path="src/tests/ElBruno.MarkItDotNet.Citations.Tests/ElBruno.MarkItDotNet.Citations.Tests.csproj" />

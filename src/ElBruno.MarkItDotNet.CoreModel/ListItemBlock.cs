@@ -17,4 +17,10 @@ public record ListItemBlock : DocumentBlock
     /// Nested sub-items under this list item.
     /// </summary>
     public IReadOnlyList<ListItemBlock> SubItems { get; init; } = [];
+
+    /// <summary>
+    /// Gets whether this item is a checked or unchecked task list item.
+    /// A null value indicates a regular list item.
+    /// </summary>
+    public bool? IsChecked { get; init; }
 }

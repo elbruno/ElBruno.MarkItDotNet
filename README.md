@@ -17,6 +17,7 @@
 | [ElBruno.MarkItDotNet.Security](https://www.nuget.org/packages/ElBruno.MarkItDotNet.Security) | [![NuGet](https://img.shields.io/nuget/v/ElBruno.MarkItDotNet.Security.svg?style=flat-square)](https://www.nuget.org/packages/ElBruno.MarkItDotNet.Security) | [![Downloads](https://img.shields.io/nuget/dt/ElBruno.MarkItDotNet.Security.svg?style=flat-square)](https://www.nuget.org/packages/ElBruno.MarkItDotNet.Security) | Markdown security scanning and issue reporting |
 | [ElBruno.MarkItDotNet.Evals](https://www.nuget.org/packages/ElBruno.MarkItDotNet.Evals) | [![NuGet](https://img.shields.io/nuget/v/ElBruno.MarkItDotNet.Evals.svg?style=flat-square)](https://www.nuget.org/packages/ElBruno.MarkItDotNet.Evals) | [![Downloads](https://img.shields.io/nuget/dt/ElBruno.MarkItDotNet.Evals.svg?style=flat-square)](https://www.nuget.org/packages/ElBruno.MarkItDotNet.Evals) | Conversion quality evaluation and scoring |
 | [ElBruno.MarkItDotNet.Cli](https://www.nuget.org/packages/ElBruno.MarkItDotNet.Cli) | [![NuGet](https://img.shields.io/nuget/v/ElBruno.MarkItDotNet.Cli.svg?style=flat-square)](https://www.nuget.org/packages/ElBruno.MarkItDotNet.Cli) | [![Downloads](https://img.shields.io/nuget/dt/ElBruno.MarkItDotNet.Cli.svg?style=flat-square)](https://www.nuget.org/packages/ElBruno.MarkItDotNet.Cli) | Command-line tool (`markitdown-dotnet` command) |
+| [ElBruno.MarkItDotNet.Markdown](https://www.nuget.org/packages/ElBruno.MarkItDotNet.Markdown) | [![NuGet](https://img.shields.io/nuget/v/ElBruno.MarkItDotNet.Markdown.svg?style=flat-square)](https://www.nuget.org/packages/ElBruno.MarkItDotNet.Markdown) | [![Downloads](https://img.shields.io/nuget/dt/ElBruno.MarkItDotNet.Markdown.svg?style=flat-square)](https://www.nuget.org/packages/ElBruno.MarkItDotNet.Markdown) | Parse Markdown into structured CoreModel documents |
 
 ## Description
 
@@ -107,6 +108,14 @@ dotnet add package ElBruno.MarkItDotNet
 ```
 
 Includes: Plain text, JSON, HTML, **URLs (web pages)**, Word, PDF, RTF, EPUB, images, CSV, XML, YAML.
+
+**ElBruno.MarkItDotNet.Markdown** — Optional Markdig-backed parser from CommonMark and advanced Markdown syntax to structured CoreModel documents.
+
+```bash
+dotnet add package ElBruno.MarkItDotNet.Markdown
+```
+
+See the [structured Markdown import guide](docs/markdown-import.md).
 
 ### Satellite Packages
 
