@@ -9,7 +9,7 @@ dotnet add package ElBruno.MarkItDotNet.DataIngestion --prerelease
 dotnet add package ElBruno.MarkItDotNet.Markdown
 ```
 
-Prerelease releases are published separately from the stable package train with the **Publish DataIngestion adapter preview** manual workflow. It publishes the matching CoreModel prerelease first, which the adapter needs because the package uses the current CoreModel API.
+Prerelease releases use the **Publish to NuGet** manual workflow with `channel: adapter-preview` and a version such as `0.9.3-preview.1`. This channel publishes only the adapter and its matching CoreModel prerelease. Stable releases do not publish the adapter. Both channels use the existing `publish.yml` trusted publisher identity.
 
 The adapter depends only on `Microsoft.Extensions.DataIngestion.Abstractions`, not on Microsoft's Markdig reader or its pipeline utilities. This avoids duplicating Markdown parsing and keeps the prerelease dependency out of the CoreModel package.
 

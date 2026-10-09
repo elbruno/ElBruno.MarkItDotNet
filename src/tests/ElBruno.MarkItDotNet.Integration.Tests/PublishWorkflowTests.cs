@@ -13,7 +13,6 @@ public class PublishWorkflowTests
 {
     private static readonly string RepoRoot = FindRepoRoot();
     private static readonly string PublishWorkflowPath = Path.Combine(RepoRoot, ".github", "workflows", "publish.yml");
-    private static readonly string PreviewWorkflowPath = Path.Combine(RepoRoot, ".github", "workflows", "publish-data-ingestion.yml");
     private static readonly string SolutionPath = Path.Combine(RepoRoot, "ElBruno.MarkItDotNet.slnx");
 
     [Fact]
@@ -57,26 +56,31 @@ public class PublishWorkflowTests
     [Fact]
     public void PublishWorkflow_AllProjectReferenceDependenciesArePacked()
     {
-        foreach (var workflowPath in new[] { PublishWorkflowPath, PreviewWorkflowPath })
-        {
-            AssertProjectReferenceDependenciesArePacked(workflowPath);
-        }
+        var workflow = File.ReadAllText(PublishWorkflowPath);
+        var channelSections = workflow.Split("# Stable packages", StringSplitOptions.None);
+        AssertProjectReferenceDependenciesArePacked(channelSections[0]);
+        AssertProjectReferenceDependenciesArePacked(channelSections[1]);
     }
 
     [Fact]
-    public void PreviewWorkflow_KeepsAdapterSeparateAndPacksCoreModelFirst()
+    public void PreviewChannel_KeepsAdapterSeparateAndPacksCoreModelFirst()
     {
-        var stableProjects = GetPackedProjectsFromWorkflow(PublishWorkflowPath);
-        var previewProjects = GetPackedProjectsFromWorkflow(PreviewWorkflowPath);
+        var workflow = File.ReadAllText(PublishWorkflowPath);
+        var channelSections = workflow.Split("# Stable packages", StringSplitOptions.None);
+        channelSections.Should().HaveCount(2);
+        var previewProjects = GetPackedProjectsFromContent(channelSections[0]);
+        var stableProjects = GetPackedProjectsFromContent(channelSections[1]);
 
         stableProjects.Should().Contain("ElBruno.MarkItDotNet.Markdown");
         stableProjects.Should().NotContain("ElBruno.MarkItDotNet.DataIngestion");
         previewProjects.Should().Equal("ElBruno.MarkItDotNet.CoreModel", "ElBruno.MarkItDotNet.DataIngestion");
+        channelSections[0].Should().Contain("if [[ \"$CHANNEL\" == \"adapter-preview\" ]]");
+        channelSections[0].Should().Contain("exit 0");
     }
 
-    private static void AssertProjectReferenceDependenciesArePacked(string workflowPath)
+    private static void AssertProjectReferenceDependenciesArePacked(string workflowContent)
     {
-        var packedProjects = GetPackedProjectsFromWorkflow(workflowPath);
+        var packedProjects = GetPackedProjectsFromContent(workflowContent);
         var srcDir = Path.Combine(RepoRoot, "src");
 
         foreach (var projectName in packedProjects)
@@ -105,7 +109,7 @@ public class PublishWorkflowTests
                 {
                     packedProjects.Should().Contain(dep,
                         $"'{projectName}' has a ProjectReference to '{dep}' which is packable. " +
-                        $"'{dep}' must also be in {Path.GetFileName(workflowPath)} or NuGet consumers will get missing package errors.");
+                        $"'{dep}' must also be packed in the same publishing channel or NuGet consumers will get missing package errors.");
                 }
             }
         }
@@ -171,15 +175,11 @@ public class PublishWorkflowTests
 
     private static List<string> GetPackedProjectsFromWorkflow()
     {
-        return GetPackedProjectsFromWorkflow(PublishWorkflowPath)
-            .Concat(GetPackedProjectsFromWorkflow(PreviewWorkflowPath))
-            .Distinct()
-            .ToList();
+        return GetPackedProjectsFromContent(File.ReadAllText(PublishWorkflowPath));
     }
 
-    private static List<string> GetPackedProjectsFromWorkflow(string workflowPath)
+    private static List<string> GetPackedProjectsFromContent(string content)
     {
-        var content = File.ReadAllText(workflowPath);
         var matches = Regex.Matches(content, @"dotnet pack src/([^/]+)/[^ ]+\.csproj");
         return matches.Select(m => m.Groups[1].Value).Distinct().ToList();
     }

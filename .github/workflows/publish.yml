@@ -9,6 +9,14 @@ on:
         description: "Package version (leave empty to use csproj version)"
         required: false
         type: string
+      channel:
+        description: "Stable package train or isolated DataIngestion preview"
+        required: true
+        default: stable
+        type: choice
+        options:
+          - stable
+          - adapter-preview
 
 jobs:
   publish:
@@ -29,17 +37,26 @@ jobs:
 
       - name: Determine version
         id: version
+        env:
+          INPUT_VERSION: ${{ inputs.version }}
+          CHANNEL: ${{ inputs.channel }}
+          RELEASE_TAG: ${{ github.event.release.tag_name }}
         run: |
           if [[ "${{ github.event_name }}" == "release" ]]; then
-            VERSION="${{ github.event.release.tag_name }}"
+            VERSION="$RELEASE_TAG"
             VERSION="${VERSION#v}"
             VERSION="${VERSION#.}"
-          elif [[ -n "${{ inputs.version }}" ]]; then
-            VERSION="${{ inputs.version }}"
+          elif [[ -n "$INPUT_VERSION" ]]; then
+            VERSION="$INPUT_VERSION"
           else
             VERSION=$(grep -oP '<Version>\K[^<]+' src/ElBruno.MarkItDotNet/ElBruno.MarkItDotNet.csproj)
           fi
-          if ! [[ "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+          if [[ "$CHANNEL" == "adapter-preview" ]]; then
+            VERSION_PATTERN='^[0-9]+\.[0-9]+\.[0-9]+-preview\.[0-9]+$'
+          else
+            VERSION_PATTERN='^[0-9]+\.[0-9]+\.[0-9]+$'
+          fi
+          if ! [[ "$VERSION" =~ $VERSION_PATTERN ]]; then
             echo "❌ Invalid version: '$VERSION'"; exit 1
           fi
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
@@ -58,7 +75,16 @@ jobs:
         run: dotnet test ElBruno.MarkItDotNet.slnx -c Release --no-build --framework net10.0 --verbosity normal
 
       - name: Pack all packages
+        env:
+          CHANNEL: ${{ inputs.channel }}
         run: |
+          # Adapter preview packages
+          if [[ "$CHANNEL" == "adapter-preview" ]]; then
+            dotnet pack src/ElBruno.MarkItDotNet.CoreModel/ElBruno.MarkItDotNet.CoreModel.csproj -c Release --no-build -p:Version=${{ steps.version.outputs.version }} -o artifacts
+            dotnet pack src/ElBruno.MarkItDotNet.DataIngestion/ElBruno.MarkItDotNet.DataIngestion.csproj -c Release --no-build -p:Version=${{ steps.version.outputs.version }} -o artifacts
+            exit 0
+          fi
+          # Stable packages
           # CoreModel must be packed first — other packages depend on it
           dotnet pack src/ElBruno.MarkItDotNet.CoreModel/ElBruno.MarkItDotNet.CoreModel.csproj -c Release --no-build -p:Version=${{ steps.version.outputs.version }} -o artifacts
           dotnet pack src/ElBruno.MarkItDotNet.Markdown/ElBruno.MarkItDotNet.Markdown.csproj -c Release --no-build -p:Version=${{ steps.version.outputs.version }} -o artifacts
