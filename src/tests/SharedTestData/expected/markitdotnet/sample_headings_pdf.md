@@ -2,9 +2,7 @@
 
 ## Section One
 
-This is the first body paragraph.
-
-It should stay as a paragraph.
+This is the first body paragraph. It should stay as a paragraph.
 
 ### Subsection A
 

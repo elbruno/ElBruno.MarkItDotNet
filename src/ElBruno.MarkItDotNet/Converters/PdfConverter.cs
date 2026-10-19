@@ -13,7 +13,9 @@ namespace ElBruno.MarkItDotNet.Converters;
 public class PdfConverter : IStreamingMarkdownConverter
 {
     private const double LineYTolerance = 3.0;
-    private const double ParagraphSpacingFactor = 1.5;
+    private const double TypicalLineSpacingMultiplier = 1.25;
+    private const double FallbackLineSpacingRatio = 1.5;
+    private const double ColumnGapFactor = 2.0;
     private const double HeadingMinimumSizeRatio = 1.15;
     private const double HeadingMinimumBoldSizeRatio = 1.05;
     private const int MaxHeadingLevel = 3;
@@ -185,9 +187,11 @@ public class PdfConverter : IStreamingMarkdownConverter
             ? 0
             : letters.Count(l => IsBoldFontName(l.FontName)) / (double)letters.Count;
         var y = sorted.Average(w => w.BoundingBox.Bottom);
-        var height = sorted.Max(w => w.BoundingBox.Height);
+        var hasColumnGap = avgFontSize > 0 && sorted
+            .Zip(sorted.Skip(1), (left, right) => right.BoundingBox.Left - left.BoundingBox.Right)
+            .Any(gap => gap > avgFontSize * ColumnGapFactor);
 
-        return new TextLine(text, y, height, avgFontSize, boldRatio);
+        return new TextLine(text, y, avgFontSize, boldRatio, hasColumnGap);
     }
 
     /// <summary>
@@ -210,6 +214,7 @@ public class PdfConverter : IStreamingMarkdownConverter
         if (lines.Count == 0)
             return paragraphs;
 
+        var typicalLineSpacingRatio = DetectTypicalLineSpacingRatio(lines);
         var currentLines = new List<TextLine> { lines[0] };
 
         for (var i = 1; i < lines.Count; i++)
@@ -219,13 +224,16 @@ public class PdfConverter : IStreamingMarkdownConverter
 
             // Lines are ordered top-to-bottom (Y descending), so spacing = prev.Y - current.Y
             var spacing = prevLine.Y - currentLine.Y;
-            var avgHeight = (prevLine.Height + currentLine.Height) / 2;
-            var isNewParagraph = avgHeight > 0 && spacing > avgHeight * ParagraphSpacingFactor;
+            var fontSize = Math.Max(prevLine.FontSize, currentLine.FontSize);
+            var isNewParagraph = fontSize > 0 &&
+                                 spacing > fontSize * typicalLineSpacingRatio * TypicalLineSpacingMultiplier;
+            var startsListItem = IsListItemLine(currentLine.Text);
+            var hasColumnGap = prevLine.HasColumnGap || currentLine.HasColumnGap;
 
             // Also break paragraph if font size changes significantly
             var fontSizeChanged = Math.Abs(prevLine.FontSize - currentLine.FontSize) > 1.0;
 
-            if (isNewParagraph || fontSizeChanged)
+            if (isNewParagraph || fontSizeChanged || startsListItem || hasColumnGap)
             {
                 paragraphs.Add(CreateParagraph(currentLines));
                 currentLines = [currentLine];
@@ -240,6 +248,52 @@ public class PdfConverter : IStreamingMarkdownConverter
             paragraphs.Add(CreateParagraph(currentLines));
 
         return paragraphs;
+    }
+
+    private static double DetectTypicalLineSpacingRatio(List<TextLine> lines)
+    {
+        var ratios = new List<double>();
+        for (var i = 1; i < lines.Count; i++)
+        {
+            var previousLine = lines[i - 1];
+            var currentLine = lines[i];
+            var fontSize = Math.Max(previousLine.FontSize, currentLine.FontSize);
+            if (fontSize <= 0 || Math.Abs(previousLine.FontSize - currentLine.FontSize) > 1.0)
+                continue;
+
+            var ratio = (previousLine.Y - currentLine.Y) / fontSize;
+            if (ratio > 0.8 && ratio < 1.9)
+                ratios.Add(Math.Round(ratio, 1));
+        }
+
+        if (ratios.Count < 2)
+            return FallbackLineSpacingRatio;
+
+        return ratios
+            .GroupBy(ratio => ratio)
+            .OrderByDescending(group => group.Count())
+            .ThenBy(group => group.Key)
+            .First()
+            .Key;
+    }
+
+    private static bool IsListItemLine(string text)
+    {
+        var trimmed = text.AsSpan().TrimStart();
+        if (trimmed.Length < 2)
+            return false;
+
+        if ("•‣⁃▪◦-*+".IndexOf(trimmed[0]) >= 0)
+            return char.IsWhiteSpace(trimmed[1]);
+
+        var digitCount = 0;
+        while (digitCount < trimmed.Length && char.IsDigit(trimmed[digitCount]))
+            digitCount++;
+
+        return digitCount > 0 &&
+               digitCount < trimmed.Length - 1 &&
+               trimmed[digitCount] is '.' or ')' or ']' &&
+               char.IsWhiteSpace(trimmed[digitCount + 1]);
     }
 
     private static ParagraphInfo CreateParagraph(List<TextLine> lines)
@@ -299,6 +353,6 @@ public class PdfConverter : IStreamingMarkdownConverter
                normalized.Contains("demi", StringComparison.Ordinal);
     }
 
-    private sealed record TextLine(string Text, double Y, double Height, double FontSize, double BoldRatio);
+    private sealed record TextLine(string Text, double Y, double FontSize, double BoldRatio, bool HasColumnGap);
     private sealed record ParagraphInfo(string Text, double FontSize, double BoldRatio, int LineCount);
 }

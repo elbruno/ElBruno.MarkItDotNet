@@ -49,6 +49,58 @@ public class PdfConverterTests
         result.Should().Contain("Hello from PDF");
     }
 
+    [Theory]
+    [InlineData(14)]
+    [InlineData(20)]
+    public async Task ConvertAsync_MultiLineParagraph_GroupsNormalLineSpacing(int lineSpacing)
+    {
+        using var pdfStream = CreatePdfWithLines(
+            ("This report provides an overview of office", lineSpacing),
+            ("supply purchases in the third quarter.", lineSpacing),
+            ("The figures are taken from the purchasing system.", 28),
+            ("A separate paragraph begins here.", 0));
+
+        var result = await _converter.ConvertAsync(pdfStream, ".pdf");
+
+        result.Should().Contain("This report provides an overview of office supply purchases in the third quarter. The figures are taken from the purchasing system.");
+        result.Should().Contain($"{Environment.NewLine}{Environment.NewLine}A separate paragraph begins here.");
+    }
+
+    [Fact]
+    public async Task ConvertAsync_TwoLineParagraphWithOneAndHalfSpacing_StaysTogether()
+    {
+        using var pdfStream = CreatePdfWithLines(
+            ("This paragraph has one and a half line spacing", 20),
+            ("and only two lines.", 0));
+
+        var result = await _converter.ConvertAsync(pdfStream, ".pdf");
+
+        result.Should().Contain("This paragraph has one and a half line spacing and only two lines.");
+    }
+
+    [Fact]
+    public async Task ConvertAsync_ListItems_RemainsSeparateParagraphs()
+    {
+        using var pdfStream = CreatePdfWithLines(
+            ("- First item", 14),
+            ("- Second item", 0));
+
+        var result = await _converter.ConvertAsync(pdfStream, ".pdf");
+
+        result.Should().Contain($"- First item{Environment.NewLine}{Environment.NewLine}- Second item");
+    }
+
+    [Fact]
+    public async Task ConvertAsync_TableRows_RemainSeparateParagraphs()
+    {
+        const string streamContent = "BT /F1 12 Tf 72 700 Td (Item) Tj 150 0 Td (Quantity) Tj -150 -14 Td (Paper) Tj 150 0 Td (10) Tj ET";
+        using var pdfStream = CreatePdfFromContentStream(streamContent);
+
+        var result = await _converter.ConvertAsync(pdfStream, ".pdf");
+
+        result.Should().Contain($"Item Quantity{Environment.NewLine}{Environment.NewLine}Paper 10");
+    }
+
     [Fact]
     public async Task ConvertAsync_EmptyPdf_ReturnsEmptyOrMinimalContent()
     {
@@ -99,6 +151,26 @@ public class PdfConverterTests
     {
         var escapedText = text.Replace("\\", "\\\\").Replace("(", "\\(").Replace(")", "\\)");
         var streamContent = $"BT /F1 12 Tf 100 700 Td ({escapedText}) Tj ET";
+        return CreatePdfFromContentStream(streamContent);
+    }
+
+    private static MemoryStream CreatePdfWithLines(params (string Text, int SpacingAfter)[] lines)
+    {
+        var streamContent = new System.Text.StringBuilder("BT /F1 12 Tf 100 700 Td ");
+        for (var i = 0; i < lines.Length; i++)
+        {
+            var escapedText = lines[i].Text.Replace("\\", "\\\\").Replace("(", "\\(").Replace(")", "\\)");
+            streamContent.Append('(').Append(escapedText).Append(") Tj ");
+            if (lines[i].SpacingAfter > 0)
+                streamContent.Append("0 -").Append(lines[i].SpacingAfter).Append(" Td ");
+        }
+
+        streamContent.Append("ET");
+        return CreatePdfFromContentStream(streamContent.ToString());
+    }
+
+    private static MemoryStream CreatePdfFromContentStream(string streamContent)
+    {
         var streamBytes = System.Text.Encoding.ASCII.GetBytes(streamContent);
 
         var pdf = new System.Text.StringBuilder();

@@ -356,6 +356,8 @@ await foreach (var chunk in converter.ConvertStreamingAsync(stream, ".pdf"))
 
 The streaming API yields Markdown chunks asynchronously (e.g., page-by-page for PDFs), enabling memory-efficient processing of large files.
 
+PDF conversion joins lines with typical line spacing into paragraphs, while larger vertical gaps separate paragraphs. List items and lines with clear column gaps remain separate.
+
 ## AI-Powered Conversion
 
 The `ElBruno.MarkItDotNet.AI` package provides converters that use LLM vision and audio APIs for advanced capabilities:
@@ -644,7 +646,7 @@ See the `src/samples/` projects below for detailed walkthroughs.
 | [BasicConversion](src/samples/BasicConversion) | Text, JSON, and HTML conversion with DI | `dotnet run --project src/samples/BasicConversion/BasicConversion.csproj` |
 | [CsvConversion](src/samples/CsvConversion) | CSV and TSV → Markdown tables | `dotnet run --project src/samples/CsvConversion/CsvConversion.csproj` |
 | [XmlYamlConversion](src/samples/XmlYamlConversion) | XML and YAML → fenced code blocks | `dotnet run --project src/samples/XmlYamlConversion/XmlYamlConversion.csproj` |
-| [PdfConversion](src/samples/PdfConversion) | PDF → Markdown with page metadata + streaming | `dotnet run --project src/samples/PdfConversion/PdfConversion.csproj` |
+| [PdfConversion](src/samples/PdfConversion) | PDF → Markdown with paragraph grouping, lists, and page-by-page streaming | `dotnet run --project src/samples/PdfConversion/PdfConversion.csproj` |
 | [DocxConversion](src/samples/DocxConversion) | DOCX → Markdown with headings, tables, links | `dotnet run --project src/samples/DocxConversion/DocxConversion.csproj` |
 | [RtfEpubConversion](src/samples/RtfEpubConversion) | RTF and EPUB → Markdown | `dotnet run --project src/samples/RtfEpubConversion/RtfEpubConversion.csproj` |
 | [ExcelConversion](src/samples/ExcelConversion) | Excel .xlsx → Markdown tables (Excel package) | `dotnet run --project src/samples/ExcelConversion/ExcelConversion.csproj` |

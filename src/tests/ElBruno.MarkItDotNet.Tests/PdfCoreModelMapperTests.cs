@@ -71,6 +71,28 @@ public class PdfCoreModelMapperTests
     }
 
     [Fact]
+    public async Task ConvertToDocumentAsync_MultiLineParagraph_GroupsNormalLineSpacing()
+    {
+        using var pdfStream = CreatePdfWithLines(
+            ("This report provides an overview of office", 14),
+            ("supply purchases in the third quarter.", 14),
+            ("The figures are taken from the purchasing system.", 28),
+            ("A separate paragraph begins here.", 0));
+
+        var result = await _mapper.ConvertToDocumentAsync(pdfStream, "test.pdf");
+
+        var paragraphs = result.Sections
+            .SelectMany(section => section.Blocks)
+            .OfType<CoreModel.ParagraphBlock>()
+            .Select(paragraph => paragraph.Text)
+            .ToList();
+
+        paragraphs.Should().Contain("This report provides an overview of office supply purchases in the third quarter. The figures are taken from the purchasing system.");
+        paragraphs.Should().Contain("A separate paragraph begins here.");
+        paragraphs.Should().HaveCount(2);
+    }
+
+    [Fact]
     public async Task ConvertToDocumentAsync_MinimalPdf_SetsPageNumberInSource()
     {
         using var pdfStream = CreateMinimalPdf("Test content");
@@ -126,6 +148,26 @@ public class PdfCoreModelMapperTests
     {
         var escapedText = text.Replace("\\", "\\\\").Replace("(", "\\(").Replace(")", "\\)");
         var streamContent = $"BT /F1 12 Tf 100 700 Td ({escapedText}) Tj ET";
+        return CreatePdfFromContentStream(streamContent);
+    }
+
+    private static MemoryStream CreatePdfWithLines(params (string Text, int SpacingAfter)[] lines)
+    {
+        var streamContent = new System.Text.StringBuilder("BT /F1 12 Tf 100 700 Td ");
+        for (var i = 0; i < lines.Length; i++)
+        {
+            var escapedText = lines[i].Text.Replace("\\", "\\\\").Replace("(", "\\(").Replace(")", "\\)");
+            streamContent.Append('(').Append(escapedText).Append(") Tj ");
+            if (lines[i].SpacingAfter > 0)
+                streamContent.Append("0 -").Append(lines[i].SpacingAfter).Append(" Td ");
+        }
+
+        streamContent.Append("ET");
+        return CreatePdfFromContentStream(streamContent.ToString());
+    }
+
+    private static MemoryStream CreatePdfFromContentStream(string streamContent)
+    {
         var streamBytes = System.Text.Encoding.ASCII.GetBytes(streamContent);
 
         var pdf = new System.Text.StringBuilder();
