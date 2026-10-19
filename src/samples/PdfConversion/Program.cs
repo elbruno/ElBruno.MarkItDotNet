@@ -71,6 +71,8 @@ static byte[] CreateSamplePdf()
     page1.AddText("This is page one of the sample PDF document.", 12, new UglyToad.PdfPig.Core.PdfPoint(72, 660), font);
     page1.AddText("It demonstrates in-memory PDF creation and conversion.", 12, new UglyToad.PdfPig.Core.PdfPoint(72, 640), font);
     page1.AddText("Features: PDF to Markdown, streaming support, heading detection.", 12, new UglyToad.PdfPig.Core.PdfPoint(72, 620), font);
+    page1.AddText("- Paragraph lines are joined using their typical line spacing.", 12, new UglyToad.PdfPig.Core.PdfPoint(72, 580), font);
+    page1.AddText("- List items remain separate in the Markdown output.", 12, new UglyToad.PdfPig.Core.PdfPoint(72, 560), font);
 
     // Page 2
     var page2 = builder.AddPage(UglyToad.PdfPig.Content.PageSize.Letter);
