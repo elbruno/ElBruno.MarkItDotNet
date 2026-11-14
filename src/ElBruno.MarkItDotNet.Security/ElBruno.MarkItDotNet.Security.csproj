@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>net8.0;net10.0</TargetFrameworks>
+    <TargetFrameworks>net8.0;net10.0;net11.0</TargetFrameworks>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <PackageId>ElBruno.MarkItDotNet.Security</PackageId>
     <Description>Security scanning and policy evaluation helpers for ElBruno.MarkItDotNet pipelines.</Description>
@@ -8,7 +8,7 @@
     <PackageIcon>nuget_logo.png</PackageIcon>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageTags>markdown;security;scanning;ingestion;pii;secrets</PackageTags>
-    <Version>0.9.0</Version>
+    <Version>0.9.4</Version>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>

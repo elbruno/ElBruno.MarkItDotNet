@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>net8.0;net10.0</TargetFrameworks>
+    <TargetFrameworks>net8.0;net10.0;net11.0</TargetFrameworks>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <PackageId>ElBruno.MarkItDotNet.DataIngestion</PackageId>
     <Description>Adapters between MarkItDotNet CoreModel documents and Microsoft.Extensions.DataIngestion.</Description>
@@ -8,7 +8,7 @@
     <PackageIcon>nuget_logo.png</PackageIcon>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageTags>markdown;data-ingestion;document-model;adapter</PackageTags>
-    <Version>0.9.3-preview.1</Version>
+    <Version>0.9.4</Version>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>

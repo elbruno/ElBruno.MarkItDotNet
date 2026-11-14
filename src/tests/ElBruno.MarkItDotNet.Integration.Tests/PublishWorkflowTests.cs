@@ -63,7 +63,7 @@ public class PublishWorkflowTests
     }
 
     [Fact]
-    public void PreviewChannel_KeepsAdapterSeparateAndPacksCoreModelFirst()
+    public void PreviewAndStableChannels_PackAdapterAndCoreModelFirst()
     {
         var workflow = File.ReadAllText(PublishWorkflowPath);
         var channelSections = workflow.Split("# Stable packages", StringSplitOptions.None);
@@ -72,7 +72,9 @@ public class PublishWorkflowTests
         var stableProjects = GetPackedProjectsFromContent(channelSections[1]);
 
         stableProjects.Should().Contain("ElBruno.MarkItDotNet.Markdown");
-        stableProjects.Should().NotContain("ElBruno.MarkItDotNet.DataIngestion");
+        stableProjects.Should().Contain("ElBruno.MarkItDotNet.DataIngestion");
+        stableProjects.IndexOf("ElBruno.MarkItDotNet.CoreModel")
+            .Should().BeLessThan(stableProjects.IndexOf("ElBruno.MarkItDotNet.DataIngestion"));
         previewProjects.Should().Equal("ElBruno.MarkItDotNet.CoreModel", "ElBruno.MarkItDotNet.DataIngestion");
         channelSections[0].Should().Contain("if [[ \"$CHANNEL\" == \"adapter-preview\" ]]");
         channelSections[0].Should().Contain("exit 0");

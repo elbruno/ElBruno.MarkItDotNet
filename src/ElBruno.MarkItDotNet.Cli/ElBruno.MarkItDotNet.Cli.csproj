@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFrameworks>net8.0;net10.0</TargetFrameworks>
+    <TargetFrameworks>net8.0;net10.0;net11.0</TargetFrameworks>
     <PackAsTool>true</PackAsTool>
     <ToolCommandName>markitdown-dotnet</ToolCommandName>
     <PackageId>ElBruno.MarkItDotNet.Cli</PackageId>
@@ -10,7 +10,7 @@
     <PackageIcon>nuget_logo.png</PackageIcon>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageTags>markdown;converter;cli;dotnet-tool;markitdown;pdf;docx;html;excel;powerpoint</PackageTags>
-    <Version>0.9.1</Version>
+    <Version>0.9.4</Version>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>
