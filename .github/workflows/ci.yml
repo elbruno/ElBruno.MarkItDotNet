@@ -21,6 +21,7 @@ jobs:
           dotnet-version: |
             8.0.x
             10.0.x
+            11.0.x
 
       - name: Restore
         run: dotnet restore ElBruno.MarkItDotNet.slnx
@@ -33,6 +34,9 @@ jobs:
 
       - name: Run tests (net10.0)
         run: dotnet test ElBruno.MarkItDotNet.slnx --no-build --framework net10.0 --verbosity normal --logger "trx;LogFileName=test-results-net10.trx"
+
+      - name: Run tests (net11.0)
+        run: dotnet test ElBruno.MarkItDotNet.slnx --no-build --framework net11.0 --verbosity normal --logger "trx;LogFileName=test-results-net11.trx"
 
       - name: Upload test results
         uses: actions/upload-artifact@v4

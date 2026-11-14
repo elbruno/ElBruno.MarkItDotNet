@@ -166,4 +166,4 @@ This pattern separates UI concerns from conversion protocol concerns and support
 - **Optional streaming** — `IStreamingMarkdownConverter` for memory-efficient processing of large files
 - **AI-powered extensions** — vision and audio APIs in a separate package, keeping core lightweight
 - **No OCR built-in** — plain `ImageConverter` provides metadata only; OCR available via AI package
-- **Multi-target net8.0 + net10.0** — supports current LTS and latest .NET
+- **Multi-target net8.0 + net10.0 + net11.0** — preserves existing targets and adds the latest .NET

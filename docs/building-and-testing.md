@@ -2,7 +2,7 @@
 
 ## Prerequisites
 
-- [.NET 8.0 SDK](https://dotnet.microsoft.com/download/dotnet/8.0) or later
+- [.NET 11 SDK](https://dotnet.microsoft.com/download/dotnet/11.0) or later
 - Git
 
 ## Clone the Repository
@@ -18,11 +18,13 @@ cd ElBruno.MarkItDotNet
 dotnet build ElBruno.MarkItDotNet.slnx
 ```
 
-To build for a specific framework (e.g., when .NET 10 SDK is not installed):
+To build only the .NET 8 target:
 
 ```bash
 dotnet build -p:TargetFrameworks=net8.0
 ```
+
+The libraries, test projects, and multi-targeted ingestion sample support `net8.0`, `net10.0`, and `net11.0`.
 
 ## Run Tests
 

@@ -1118,7 +1118,7 @@ This provides the strongest visible value with the least ambiguity. The bridge m
 | **Streaming** | `IStreamingMarkdownConverter` → `IAsyncEnumerable<string>` |
 | **Result model** | `ConversionResult` + `ConversionMetadata` (string, format, WordCount, ProcessingTime) |
 | **Document model** | None — no blocks, sections, pages, or structured representation |
-| **Target frameworks** | `net8.0;net10.0` (multi-target) |
+| **Target frameworks** | `net8.0;net10.0;net11.0` (multi-target) |
 | **DI pattern** | `ConverterRegistry` with manual plugin registration via `IConverterPlugin` |
 | **Satellite packages** | Excel, PowerPoint (correct DI), AI (broken DI — doesn't auto-register), Whisper |
 | **Test infrastructure** | xUnit + FluentAssertions, golden-file tests with comparison to Python markitdown |
