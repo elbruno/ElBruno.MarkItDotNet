@@ -7,24 +7,29 @@
     <PackageVersion Include="Azure.AI.DocumentIntelligence" Version="1.0.0" />
     <PackageVersion Include="Azure.Identity" Version="1.21.0" />
     <PackageVersion Include="Azure.Search.Documents" Version="12.0.0" />
-    <PackageVersion Include="Azure.Storage.Blobs" Version="12.27.0" />
-    <PackageVersion Include="ClosedXML" Version="0.105.0" />
+    <PackageVersion Include="Azure.Storage.Blobs" Version="12.30.1" />
+    <PackageVersion Include="ClosedXML" Version="0.105.1" />
     <PackageVersion Include="coverlet.collector" Version="10.0.1" />
     <PackageVersion Include="DocumentFormat.OpenXml" Version="3.5.1" />
-    <PackageVersion Include="ElBruno.Whisper" Version="0.2.0" />
+    <PackageVersion Include="ElBruno.Whisper" Version="0.10.1" />
     <PackageVersion Include="FluentAssertions" Version="8.10.0" />
     <PackageVersion Include="Microsoft.AspNetCore.OpenApi" Version="8.0.16" />
-    <PackageVersion Include="Microsoft.Extensions.AI" Version="10.7.0" />
-    <PackageVersion Include="Microsoft.Extensions.AI.Abstractions" Version="10.7.0" />
+    <PackageVersion Include="Microsoft.Extensions.AI" Version="11.0.0" />
+    <PackageVersion Include="Microsoft.Extensions.AI.Abstractions" Version="11.0.0" />
     <PackageVersion Include="Microsoft.Extensions.DataIngestion.Abstractions" Version="10.10.0-preview.1.26459.2" />
-    <PackageVersion Include="Microsoft.Extensions.DependencyInjection" Version="10.0.9" />
-    <PackageVersion Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.9" />
-    <PackageVersion Include="Microsoft.Extensions.Hosting" Version="10.0.9" />
+    <!-- Microsoft 11 runtime packages do not support net8.0. -->
+    <PackageVersion Include="Microsoft.Extensions.DependencyInjection" Version="10.0.15" Condition="'$(TargetFramework)' == 'net8.0'" />
+    <PackageVersion Include="Microsoft.Extensions.DependencyInjection" Version="11.0.0" Condition="'$(TargetFramework)' != 'net8.0'" />
+    <PackageVersion Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.15" Condition="'$(TargetFramework)' == 'net8.0'" />
+    <PackageVersion Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="11.0.0" Condition="'$(TargetFramework)' != 'net8.0'" />
+    <PackageVersion Include="Microsoft.Extensions.Hosting" Version="10.0.15" Condition="'$(TargetFramework)' == 'net8.0'" />
+    <PackageVersion Include="Microsoft.Extensions.Hosting" Version="11.0.0" Condition="'$(TargetFramework)' != 'net8.0'" />
     <PackageVersion Include="Microsoft.Extensions.Http.Resilience" Version="9.0.0" />
-    <PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.9" />
+    <PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.15" Condition="'$(TargetFramework)' == 'net8.0'" />
+    <PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="11.0.0" Condition="'$(TargetFramework)' != 'net8.0'" />
     <PackageVersion Include="Microsoft.Extensions.ServiceDiscovery" Version="10.1.0" />
-    <PackageVersion Include="Microsoft.Extensions.VectorData.Abstractions" Version="10.7.0" />
-    <PackageVersion Include="Markdig" Version="1.4.0" />
+    <PackageVersion Include="Microsoft.Extensions.VectorData.Abstractions" Version="11.0.0" />
+    <PackageVersion Include="Markdig" Version="1.6.0" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.6.0" />
     <PackageVersion Include="NSubstitute" Version="5.3.0" />
     <PackageVersion Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.10.0" />
@@ -32,13 +37,15 @@
     <PackageVersion Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.10.0" />
     <PackageVersion Include="OpenTelemetry.Instrumentation.Http" Version="1.10.0" />
     <PackageVersion Include="OpenTelemetry.Instrumentation.Runtime" Version="1.10.0" />
-    <PackageVersion Include="PdfPig" Version="0.1.14" />
-    <PackageVersion Include="ReverseMarkdown" Version="5.4.0" />
+    <PackageVersion Include="PdfPig" Version="0.1.16" />
+    <PackageVersion Include="ReverseMarkdown" Version="5.5.0" />
     <PackageVersion Include="RtfPipe" Version="2.0.7677.4303" />
     <PackageVersion Include="Swashbuckle.AspNetCore" Version="10.2.1" />
-    <PackageVersion Include="System.CommandLine" Version="2.0.9" />
-    <PackageVersion Include="System.Text.Encoding.CodePages" Version="10.0.9" />
-    <PackageVersion Include="System.Text.Json" Version="10.0.9" />
+    <PackageVersion Include="System.CommandLine" Version="3.0.0" />
+    <PackageVersion Include="System.Text.Encoding.CodePages" Version="10.0.15" Condition="'$(TargetFramework)' == 'net8.0'" />
+    <PackageVersion Include="System.Text.Encoding.CodePages" Version="11.0.0" Condition="'$(TargetFramework)' != 'net8.0'" />
+    <PackageVersion Include="System.Text.Json" Version="10.0.15" Condition="'$(TargetFramework)' == 'net8.0'" />
+    <PackageVersion Include="System.Text.Json" Version="11.0.0" Condition="'$(TargetFramework)' != 'net8.0'" />
     <PackageVersion Include="VersOne.Epub" Version="3.3.6" />
     <PackageVersion Include="xunit" Version="2.9.3" />
     <PackageVersion Include="xunit.runner.visualstudio" Version="3.1.5" />
