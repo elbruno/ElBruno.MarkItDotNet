@@ -1,5 +1,20 @@
 # Dependency Baseline Report
 
+## Upgrade follow-up
+
+The later dependency upgrade preserves the `net8.0`, `net10.0`, and `net11.0`
+library targets. Microsoft runtime packages use 10.0.15 for `net8.0` and 11.0.0
+for newer targets because the 11.0.0 runtime packages do not support `net8.0`.
+Other direct library dependencies were updated to their latest suitable stable
+versions, with these exceptions:
+
+- ReverseMarkdown is at 5.5.0. Versions 6.0.0, 6.1.1, 6.2.1, and 6.3.0
+  change the HTML blockquote output covered by the existing golden test.
+- Microsoft.Extensions.DataIngestion.Abstractions remains at
+  10.10.0-preview.1.26459.2 because no stable release is available.
+
+The report below is the original historical baseline, not a live package list.
+
 Date: 2026-06-10
 
 This baseline captures package usage across all projects in `ElBruno.MarkItDotNet.slnx` and compares current versions against latest stable versions on NuGet.
